@@ -1,5 +1,6 @@
 package PokeSmart;
 
+
 public class Item extends Entity {
     private boolean status; /** permet de savoir si l'item est utilisé ou non */
 

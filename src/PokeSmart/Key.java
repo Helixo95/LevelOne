@@ -2,11 +2,11 @@ package PokeSmart;
 
 import javafx.scene.image.Image;
 
-public class Key extends Entity {
+public class Key extends Item {
     private Image image;
     public Key(double x, double y) {
-        //super(x, y, false);
-        super(x, y, 0, 0);
+        super(x, y, false);
+        //super(x, y, 0, 0);
         this.image = new Image("file:src/PokeSmart/Object/key.png");
     }
 

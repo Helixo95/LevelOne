@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestTileGrid extends Application {
     private final int TILE_SIZE = 48; // Taille d'une tuile en pixels
@@ -27,6 +29,7 @@ public class TestTileGrid extends Application {
     private Key key;
     private NPC npc;
     private boolean[][] collisionMap;
+    private List<Item> items;
 
     private void initWorld(){
         player = new Player("Popo", 6, 1, 0, 0, 100, 100, 2, 100, 1000, 3);
@@ -35,6 +38,11 @@ public class TestTileGrid extends Application {
         monster = new Monster("Papa", 7, 2, 0, 0, 1, "OFFENSIVE", 1, 1, 1, 1);
         key = new Key(7,5);
         npc = new NPC("Jojo", 7,8,0,0,1,3);
+
+        items = new ArrayList<Item>();
+        items.add(key);
+        items.add(healPotion);
+        items.add(wallPotion);
     }
 
     @Override
@@ -108,9 +116,23 @@ public class TestTileGrid extends Application {
             }
             playerImageView.setLayoutX(player.getX() * TILE_SIZE);
             playerImageView.setLayoutY(player.getY() * TILE_SIZE);
+
+            checkForItemPickup();
         });
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private void checkForItemPickup() {
+        List<Item> pickedUpItems = new ArrayList<>();
+        for (Item item : items) {
+            if (player.getX() == item.getX() && player.getY() == item.getY()) {
+                player.addItem(item);
+                pickedUpItems.add(item);
+                System.out.println("Item picked up");
+            }
+        }
+        items.removeAll(pickedUpItems);
     }
 
     private Image[][] loadTileImages(String filePath) {
@@ -200,8 +222,32 @@ public class TestTileGrid extends Application {
         npcImageView.setLayoutY(npc.getY() * TILE_SIZE);
 
 
+        for (Item item : items) {
+            if (item == key) {
+                ImageView itemImageView = new ImageView(key.getImage());
+                itemImageView.setFitWidth(TILE_SIZE);
+                itemImageView.setFitHeight(TILE_SIZE);
+                root.getChildren().add(itemImageView);
+                itemImageView.setLayoutX(item.getX() * TILE_SIZE);
+                itemImageView.setLayoutY(item.getY() * TILE_SIZE);
+            } else if (item == healPotion) {
+                ImageView itemImageView = new ImageView(healPotion.getImg());
+                itemImageView.setFitWidth(TILE_SIZE);
+                itemImageView.setFitHeight(TILE_SIZE);
+                root.getChildren().add(itemImageView);
+                itemImageView.setLayoutX(item.getX() * TILE_SIZE);
+                itemImageView.setLayoutY(item.getY() * TILE_SIZE);
+            } else { //wall potion
+                ImageView itemImageView = new ImageView(wallPotion.getImg());
+                itemImageView.setFitWidth(TILE_SIZE);
+                itemImageView.setFitHeight(TILE_SIZE);
+                root.getChildren().add(itemImageView);
+                itemImageView.setLayoutX(item.getX() * TILE_SIZE);
+                itemImageView.setLayoutY(item.getY() * TILE_SIZE);
+            }
+        }
         // key
-        ImageView keyImageView = new ImageView(key.getImage());
+        /*ImageView keyImageView = new ImageView(key.getImage());
         keyImageView.setFitWidth(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
         keyImageView.setFitHeight(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
         root.getChildren().add(keyImageView); // Ajout de l'ImageView du joueur à la scène
@@ -227,7 +273,7 @@ public class TestTileGrid extends Application {
         root.getChildren().add(wallPotionImageView); // Ajout de l'ImageView du joueur à la scène
 
         wallPotionImageView.setLayoutX(wallPotion.getX() * TILE_SIZE);
-        wallPotionImageView.setLayoutY(wallPotion.getY() * TILE_SIZE);
+        wallPotionImageView.setLayoutY(wallPotion.getY() * TILE_SIZE);*/
     }
 
     public static void main(String[] args) {
