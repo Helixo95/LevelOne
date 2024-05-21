@@ -73,39 +73,31 @@ public class TestTileGrid extends Application {
             double y = player.getY();
             switch (e.getCode()) {
                 case UP:
+                    playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_up_1.png"));
                     if (y > 0 && !collisionMap[(int) x][(int) y - 1]) {
                         y--;
                         player.setY(y);
-                        String imagePathUp = "src/PokeSmart/Player/Walking sprites/boy_up_1.png";
-                        Image image = new Image("file:"+imagePathUp);
-                        playerImageView.setImage(image);
                     }
                     break;
                 case DOWN:
+                    playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_down_1.png"));
                     if (y < NUM_TILES_Y - 1 && !collisionMap[(int) x][(int) y + 1]) {
                         y++;
                         player.setY(y);
-                        String imagePathDown = "src/PokeSmart/Player/Walking sprites/boy_down_1.png";
-                        Image image = new Image("file:"+imagePathDown);
-                        playerImageView.setImage(image);
                     }
                     break;
                 case LEFT:
+                    playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_left_1.png"));
                     if(x > 0 && !collisionMap[(int) x - 1][(int) y]) {
                         x--;
                         player.setX(x);
-                        String imagePathLeft = "src/PokeSmart/Player/Walking sprites/boy_left_1.png";
-                        Image image = new Image("file:"+imagePathLeft);
-                        playerImageView.setImage(image);
                     }
                     break;
                 case RIGHT:
+                    playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_right_1.png"));
                     if (x < NUM_TILES_X - 1 && !collisionMap[(int) x + 1][(int) y]) {
                         x++;
                         player.setX(x);
-                        String imagePathRight = "src/PokeSmart/Player/Walking sprites/boy_right_1.png";
-                        Image image = new Image("file:"+imagePathRight);
-                        playerImageView.setImage(image);
                     }
                     break;
                 default:
