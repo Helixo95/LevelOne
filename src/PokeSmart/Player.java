@@ -15,6 +15,7 @@ public class Player extends Entity {
     private double type; //if 0 young, if 1 villager, if 2 old, if 3 special
     private Image playerImage;
 
+
     public Player(String nom, double x, double y, double vx, double vy, double healthPoints, double strength, double attacks, double defences, double money, double type) {
         super(x, y, vx, vy);
         this.name = nom;

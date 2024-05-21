@@ -1,8 +1,11 @@
 package PokeSmart;
 
 
+import javafx.scene.image.Image;
+
 public class Item extends Entity {
     private boolean status; /** permet de savoir si l'item est utilisé ou non */
+    private Image image;
 
     /** constructeur d'item
      * permet de créer un item, lui associer des coordonnées et de savoir s'il est dans l'inventaire ou non
@@ -12,9 +15,10 @@ public class Item extends Entity {
      * @param status
      *
      */
-    public Item(double x, double y, boolean status) {
+    public Item(double x, double y, boolean status, String imagePath) {
         super(x, y, 0, 0);
         this.status = status;
+        this.image = new Image("file:"+imagePath);
     }
 
     /**
@@ -33,5 +37,13 @@ public class Item extends Entity {
      */
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 }

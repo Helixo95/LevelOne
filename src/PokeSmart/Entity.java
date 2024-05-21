@@ -123,12 +123,18 @@ public class Entity {
     public void addItem(Item item) {
         inventory.add(item);
     }
-
     public List<Item> getInventory() {
         return inventory;
     }
-
     public void setInventory(List<Item> inventory) {
         this.inventory = inventory;
     }
+    public String getInventoryAsString() {
+        StringBuilder inventoryString = new StringBuilder("Inventory:\n");
+        for (Item item : inventory) {
+            inventoryString.append(item.getClass().getSimpleName()).append("\n");
+        }
+        return inventoryString.toString();
+    }
+
 }

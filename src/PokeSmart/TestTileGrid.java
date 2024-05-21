@@ -3,6 +3,7 @@ package PokeSmart;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -31,18 +32,17 @@ public class TestTileGrid extends Application {
     private boolean[][] collisionMap;
     private List<Item> items;
 
+    private VBox inventoryBox;
+
     private void initWorld(){
         player = new Player("Popo", 6, 1, 0, 0, 100, 100, 2, 100, 1000, 3);
-        healPotion = new HealPotion(7,3);
-        wallPotion = new WallPotion(7,4);
         monster = new Monster("Papa", 7, 2, 0, 0, 1, "OFFENSIVE", 1, 1, 1, 1);
-        key = new Key(7,5);
         npc = new NPC("Jojo", 7,8,0,0,1,3);
 
         items = new ArrayList<Item>();
-        items.add(key);
-        items.add(healPotion);
-        items.add(wallPotion);
+        items.add(key = new Key(7,5));
+        items.add(healPotion = new HealPotion(7,3));
+        items.add(wallPotion = new WallPotion(7,4));
     }
 
     @Override
@@ -64,6 +64,10 @@ public class TestTileGrid extends Application {
         VBox vBox = new VBox();
         // Ajoutez vos éléments supplémentaires ici, par exemple :
         // vBox.getChildren().add(new Button("Button"));
+        // Create inventory VBox
+        inventoryBox = new VBox();
+        inventoryBox.setPrefWidth(200);
+        //updateInventoryBox();
 
         // Création de la scène
         Group root = new Group();
@@ -134,6 +138,13 @@ public class TestTileGrid extends Application {
         }
         items.removeAll(pickedUpItems);
     }
+
+    private void updateInventoryBox() {
+        inventoryBox.getChildren().clear();
+        Label inventoryLabel = new Label(player.getInventoryAsString());
+        inventoryBox.getChildren().add(inventoryLabel);
+    }
+
 
     private Image[][] loadTileImages(String filePath) {
         Image[][] tileImages = new Image[NUM_TILES_X][NUM_TILES_Y];
