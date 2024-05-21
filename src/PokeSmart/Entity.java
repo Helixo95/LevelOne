@@ -1,11 +1,15 @@
 package PokeSmart;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Entity {
     private double x; // coordonnée en abscisse
     private double y; // coordonnée en ordonnée (inversée en java)
     private double vx; // vitesse en x
     private double vy; // vitesse en y
     private boolean destoyed = false; // permet de détruite l'individu en cas de perte de vie par exemple
+    private List<Item> inventory = new ArrayList<>();
 
     /**
      * constructeur de l'entité
@@ -113,5 +117,18 @@ public class Entity {
      */
     public void setDestoyed() {
         this.destoyed = true;
+    }
+
+
+    public void addItem(Item item) {
+        inventory.add(item);
+    }
+
+    public List<Item> getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(List<Item> inventory) {
+        this.inventory = inventory;
     }
 }

@@ -14,7 +14,6 @@ public class Player extends Entity {
     private double money;
     private double type; //if 0 young, if 1 villager, if 2 old, if 3 special
     private Image playerImage;
-    private List<Item> inventory;
 
     public Player(String nom, double x, double y, double vx, double vy, double healthPoints, double strength, double attacks, double defences, double money, double type) {
         super(x, y, vx, vy);
@@ -26,7 +25,6 @@ public class Player extends Entity {
         this.money = money;
         this.type = type;
         this.playerImage = new Image("file:src/PokeSmart/Player/Walking sprites/boy_down_1.png");
-        this.inventory = new ArrayList<>();
     }
 
     public String getName() {
