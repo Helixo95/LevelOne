@@ -67,7 +67,7 @@ public class TestTileGrid extends Application {
         // Create inventory VBox
         inventoryBox = new VBox();
         inventoryBox.setPrefWidth(200);
-        //updateInventoryBox();
+        updateInventoryBox();
 
         // Création de la scène
         Group root = new Group();
@@ -234,51 +234,17 @@ public class TestTileGrid extends Application {
 
 
         for (Item item : items) {
-            if (item == key) {
-                ImageView itemImageView = new ImageView(key.getImage());
-                itemImageView.setFitWidth(TILE_SIZE);
-                itemImageView.setFitHeight(TILE_SIZE);
-                root.getChildren().add(itemImageView);
-                itemImageView.setLayoutX(item.getX() * TILE_SIZE);
-                itemImageView.setLayoutY(item.getY() * TILE_SIZE);
-            } else if (item == healPotion) {
-                ImageView itemImageView = new ImageView(healPotion.getImg());
-                itemImageView.setFitWidth(TILE_SIZE);
-                itemImageView.setFitHeight(TILE_SIZE);
-                root.getChildren().add(itemImageView);
-                itemImageView.setLayoutX(item.getX() * TILE_SIZE);
-                itemImageView.setLayoutY(item.getY() * TILE_SIZE);
-            } else { //wall potion
-                ImageView itemImageView = new ImageView(wallPotion.getImg());
-                itemImageView.setFitWidth(TILE_SIZE);
-                itemImageView.setFitHeight(TILE_SIZE);
-                root.getChildren().add(itemImageView);
-                itemImageView.setLayoutX(item.getX() * TILE_SIZE);
-                itemImageView.setLayoutY(item.getY() * TILE_SIZE);
-            }
+            ImageView itemImageView = new ImageView(item.getImage());
+            itemImageView.setFitWidth(TILE_SIZE);
+            itemImageView.setFitHeight(TILE_SIZE);
+            root.getChildren().add(itemImageView);
+            itemImageView.setLayoutX(item.getX() * TILE_SIZE);
+            itemImageView.setLayoutY(item.getY() * TILE_SIZE);
         }
-        // key
-        /*ImageView keyImageView = new ImageView(key.getImage());
-        keyImageView.setFitWidth(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
-        keyImageView.setFitHeight(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
-        root.getChildren().add(keyImageView); // Ajout de l'ImageView du joueur à la scène
-
-        keyImageView.setLayoutX(key.getX() * TILE_SIZE);
-        keyImageView.setLayoutY(key.getY() * TILE_SIZE);
-
-
-        // potion
-        ImageView potionImageView = new ImageView(healPotion.getImg());
-        potionImageView.setFitWidth(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
-        potionImageView.setFitHeight(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
-        root.getChildren().add(potionImageView); // Ajout de l'ImageView du joueur à la scène
-
-        potionImageView.setLayoutX(healPotion.getX() * TILE_SIZE);
-        potionImageView.setLayoutY(healPotion.getY() * TILE_SIZE);
 
 
         // wallPotion
-        ImageView wallPotionImageView = new ImageView(wallPotion.getImg());
+        /*ImageView wallPotionImageView = new ImageView(wallPotion.getImg());
         wallPotionImageView.setFitWidth(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
         wallPotionImageView.setFitHeight(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
         root.getChildren().add(wallPotionImageView); // Ajout de l'ImageView du joueur à la scène

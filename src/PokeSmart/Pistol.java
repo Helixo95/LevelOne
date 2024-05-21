@@ -14,7 +14,7 @@ public class Pistol extends Item {
      * @param y coordonée de l'ordonnée du pistolet
      */
     public Pistol(double x, double y) {
-        super(x, y, false);
+        super(x, y, false, "Items/Pistol.PNG");
         damages = 45;
     }
 
