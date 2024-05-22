@@ -46,9 +46,9 @@ public class Item extends Entity {
                 else if(entity.getCapacities() == 2) { entity.setCapacities(6);} // si swimc alors lé et swim
                 else if(entity.getCapacities() == 3) { entity.setCapacities(7);} // si wall et swim alors clé et wall et swim
             }
-            case NEWWORLD -> {
-                entity.setX(0);
-                entity.setY(0);
+            case NEWWORLD -> { // à changer
+                //entity.setX(0);
+                //entity.setY(0);
             }
         }
     }

@@ -2,6 +2,7 @@ package PokeSmart;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -47,8 +48,9 @@ public class TestTileGrid extends Application {
 
         items = new ArrayList<Item>();
         items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
-        items.add(new Item(7,4,"WallPotion", "no more walls", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_blue.png"));
-        items.add(new Item(7,5,"Key", "this can open doors", Effet.OPENDOOR,1,"src/PokeSmart/Object/key.png"));
+        items.add(new Item(7,4,"WallPotion", "no more walls", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_grey.png"));
+        items.add(new Item(7,5,"SwimPotion", "no more water", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png"));
+        items.add(new Item(7,6,"Key", "this can open doors", Effet.OPENDOOR,1,"src/PokeSmart/Object/key.png"));
         items.add(new Item(14,10,"Door", "go to an other world", Effet.NEWWORLD,1,"src/PokeSmart/Object/door_iron.png"));
     }
 
@@ -189,13 +191,6 @@ public class TestTileGrid extends Application {
 
 
             checkForItemPickup(root, tileImages, worldPath, primaryStage);
-
-            // vérifier si le joueur est sur la porte du monde 1
-            /*if (player.getX() == 14 && player.getY() == 10) {
-                System.out.println("You win!");
-                primaryStage.close();
-                createNewWorld();
-            }*/
         });
     }
 
@@ -218,7 +213,7 @@ public class TestTileGrid extends Application {
                     if ((player.getCapacities() == 1 || player.getCapacities() == 3 || player.getCapacities() == 5 || player.getCapacities() == 7) && intValue == 0) { // s'il a la potion, il traverse les murs
                         collisionMap[columnIndex][rowIndex] = false;
                     }
-                    if ((player.getCapacities() == 4 || player.getCapacities() == 5 || player.getCapacities() == 6 || player.getCapacities() == 7) && intValue == 5) {
+                    if ((player.getCapacities() == 2 || player.getCapacities() == 3 || player.getCapacities() == 6 || player.getCapacities() == 7) && intValue == 1) {
                         collisionMap[columnIndex][rowIndex] = false;
                     }
                     columnIndex++;
@@ -236,18 +231,32 @@ public class TestTileGrid extends Application {
         List<Item> pickedUpItems = new ArrayList<>();
         for (Item item : items) {
             if (player.getX() == item.getX() && player.getY() == item.getY()) {
-                player.addItem(item);
-                if (item.getEffet() == Effet.NEWWORLD) {
+                if (item.getEffet() != Effet.NEWWORLD){
+                    player.addItem(item);
+                    pickedUpItems.add(item);
+                    System.out.println("Item picked up");
+                    root.getChildren().remove(item.getImage());
+                    updateInventoryBox();
+                    item.useItem(player); // A METTRE DANS L'INVENTAIRE POUR QUE LE PLAYER SELECTIONNE ET PUISSE CHOISIR D'UTILISER L'ITEM
+                    System.out.println(player.getCapacities());
+                }
+                if ((player.getCapacities() == 4 || player.getCapacities() == 5 || player.getCapacities() == 6 || player.getCapacities() == 7) && item.getEffet() == Effet.NEWWORLD) {
                     System.out.println("You finish first world !");
                     primaryStage.close();
                     createNewWorld();
                 }
-                pickedUpItems.add(item);
-                System.out.println("Item picked up");
-                root.getChildren().remove(item.getImage());
-                updateInventoryBox();
-                item.useItem(player);
-                System.out.println(player.getCapacities());
+                if (item.getEffet() == Effet.NEWWORLD) {
+                    System.out.println("You need a key to open the door");
+                    Alert alertNewWorld1 = new Alert(Alert.AlertType.INFORMATION);
+                    alertNewWorld1.setTitle("Information Dialog");
+                    alertNewWorld1.setHeaderText(null);
+                    alertNewWorld1.setContentText("You need a key to open the door ! (Your player is behind the door.");
+                    alertNewWorld1.showAndWait();
+                }
+                if (item.getEffet() == Effet.DEATH) {
+                    System.out.println("You are dead !");
+                    primaryStage.close();
+                }
             }
         }
         items.removeAll(pickedUpItems);
