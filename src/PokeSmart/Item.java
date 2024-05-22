@@ -36,6 +36,10 @@ public class Item extends Entity {
         }
     }
 
+    public String getItemName() {
+        return itemName;
+    }
+
     public void setItemName(String itemName) {
         this.itemName = itemName;
     }

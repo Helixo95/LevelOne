@@ -168,9 +168,10 @@ public class Entity {
         this.inventory = inventory;
     }
     public String getInventoryAsString() {
-        StringBuilder inventoryString = new StringBuilder("Inventory:\n");
+        StringBuilder inventoryString = new StringBuilder("Your inventory :\n");
         for (Item item : inventory) {
-            inventoryString.append(item.getClass().getSimpleName()).append("\n");
+            //inventoryString.append(item.getClass().getSimpleName()).append("\n");
+            inventoryString.append(item.getItemName()).append("\n");
         }
         return inventoryString.toString();
     }

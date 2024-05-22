@@ -73,8 +73,8 @@ public class TestTileGrid extends Application {
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, NUM_TILES_X * TILE_SIZE + 200, NUM_TILES_Y * TILE_SIZE);
         //root.getChildren().addAll(gridPane, vBox);
-        root.setCenter(gridPane);
-        root.setRight(inventoryBox);
+        root.setLeft(gridPane);
+        root.setCenter(inventoryBox);
 
         ImageView playerImageView = player.getImage();
         showEntities(playerImageView, root);
