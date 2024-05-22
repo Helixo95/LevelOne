@@ -49,6 +49,7 @@ public class TestTileGrid extends Application {
         items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
         items.add(new Item(7,4,"WallPotion", "no more walls", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_blue.png"));
         items.add(new Item(7,5,"Key", "this can open doors", Effet.OPENDOOR,1,"src/PokeSmart/Object/key.png"));
+        items.add(new Item(14,10,"Door", "go to an other world", Effet.NEWWORLD,1,"src/PokeSmart/Object/door_iron.png"));
     }
 
 
@@ -187,14 +188,14 @@ public class TestTileGrid extends Application {
             playerImageView.setLayoutY(player.getY() * TILE_SIZE);
 
 
-            checkForItemPickup(root, tileImages, worldPath);
+            checkForItemPickup(root, tileImages, worldPath, primaryStage);
 
             // vérifier si le joueur est sur la porte du monde 1
-            if (player.getX() == 14 && player.getY() == 10) {
+            /*if (player.getX() == 14 && player.getY() == 10) {
                 System.out.println("You win!");
                 primaryStage.close();
                 createNewWorld();
-            }
+            }*/
         });
     }
 
@@ -231,11 +232,16 @@ public class TestTileGrid extends Application {
 
 
 
-    private void checkForItemPickup(BorderPane root, Image[][] tileImages, String filePath) {
+    private void checkForItemPickup(BorderPane root, Image[][] tileImages, String filePath, Stage primaryStage) {
         List<Item> pickedUpItems = new ArrayList<>();
         for (Item item : items) {
             if (player.getX() == item.getX() && player.getY() == item.getY()) {
                 player.addItem(item);
+                if (item.getEffet() == Effet.NEWWORLD) {
+                    System.out.println("You finish first world !");
+                    primaryStage.close();
+                    createNewWorld();
+                }
                 pickedUpItems.add(item);
                 System.out.println("Item picked up");
                 root.getChildren().remove(item.getImage());
@@ -264,12 +270,11 @@ public class TestTileGrid extends Application {
 
     private void initCaractersWorld2(){
         entities = new ArrayList<Entity>();
-        //entities.add(new Player("Popo", 6, 1, 0, 0, 100, 0,100, 2, 100, 1000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png"));
-        entities.add(new Monster("Papa", 7, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1,"src/PokeSmart/Monster/orc_down_2.png"));
+        entities.add(new Monster("BatMan", 7, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1,"src/PokeSmart/Monster/bat_down_2.png"));
+        entities.add(new Monster("Skeleton", 10, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1,"src/PokeSmart/Monster/skeletonlord_down_1.png"));
 
         items = new ArrayList<Item>();
         items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
-        items.add(new Item(7,4,"WallPotion", "no more walls", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_blue.png"));
     }
 
 
@@ -286,8 +291,8 @@ public class TestTileGrid extends Application {
                 return "file:src/PokeSmart/Tiles/ground/earth.png";
             case 4:
                 return "file:src/PokeSmart/Tiles/ground/grass.png";
-            case 5:
-                return "file:src/PokeSmart/Object/door_iron.png";
+            /*case 5:
+                return "file:src/PokeSmart/Object/door_iron.png";*/
             // Ajoute case
             default:
                 return null;

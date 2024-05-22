@@ -8,8 +8,8 @@ public enum Effet {
     HEAL,
     OPENDOOR,
     OVERWALL,
+    NEWWORLD,
     SWIM,
-    OVER,
     DEATH,
     NULL,
 }
