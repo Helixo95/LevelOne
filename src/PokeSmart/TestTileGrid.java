@@ -120,7 +120,6 @@ public class TestTileGrid extends Application {
 
 
             checkForItemPickup(root, tileImages, worldPath);
-            System.out.println(player.getCapacities());
         });
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -160,14 +159,14 @@ public class TestTileGrid extends Application {
                 for (String value : values) {
                     int intValue = Integer.parseInt(value.trim());
                     String imagePath = getImagePathForValue(intValue);
-                    tileImages[columnIndex][rowIndex] = new Image(imagePath);
-                    if (intValue == 0) { // collision avec les murs
+                    tileImages[columnIndex][rowIndex] = new Image(imagePath); //imageView.getImage();
+                    if (intValue == 0 || intValue == 1 || intValue == 5) { // collision avec les murs
                         collisionMap[columnIndex][rowIndex] = true;
                     }
-                    if (intValue == 1) { // collision avec l'eau
-                        collisionMap[columnIndex][rowIndex] = true;
+                    if ((player.getCapacities() == 1 || player.getCapacities() == 3 || player.getCapacities() == 5 || player.getCapacities() == 7) && intValue == 0) { // s'il a la potion, il traverse les murs
+                        collisionMap[columnIndex][rowIndex] = false;
                     }
-                    if ((player.getCapacities() == 1 || player.getCapacities() == 3 || player.getCapacities() == 5 || player.getCapacities() == 7)&& intValue == 0) { // s'il a la potion, il traverse les murs
+                    if ((player.getCapacities() == 4 || player.getCapacities() == 5 || player.getCapacities() == 6 || player.getCapacities() == 7) && intValue == 5) {
                         collisionMap[columnIndex][rowIndex] = false;
                     }
                     columnIndex++;
@@ -184,33 +183,6 @@ public class TestTileGrid extends Application {
         Image[][] tileImages = new Image[NUM_TILES_X][NUM_TILES_Y];
         collisionMap = new boolean[NUM_TILES_X][NUM_TILES_Y];
         updateCollisionMap(tileImages, filePath);
-        /*try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            int rowIndex = 0;
-            while ((line = reader.readLine()) != null && rowIndex < NUM_TILES_Y) {
-                String[] values = line.split(",");
-                int columnIndex = 0;
-                for (String value : values) {
-                    int intValue = Integer.parseInt(value.trim());
-                    String imagePath = getImagePathForValue(intValue);
-                    tileImages[columnIndex][rowIndex] = new Image(imagePath);
-                    if (intValue == 0) { // collision avec les murs
-                        collisionMap[columnIndex][rowIndex] = true;
-                    }
-                    if (intValue == 1) { // collision avec l'eau
-                        collisionMap[columnIndex][rowIndex] = true;
-                    }
-                    if (player.getCapacities() == 1 && intValue == 0) { // s'il a la potion, il traverse les murs
-                        collisionMap[columnIndex][rowIndex] = false;
-                    }
-
-                    columnIndex++;
-                }
-                rowIndex++;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
         return tileImages;
     }
 
@@ -226,7 +198,9 @@ public class TestTileGrid extends Application {
                 return "file:src/PokeSmart/Tiles/ground/earth.png";
             case 4:
                 return "file:src/PokeSmart/Tiles/ground/grass.png";
-                // Ajoutez d'autres cas selon vos besoins
+            case 5:
+                return "file:src/PokeSmart/Object/door_iron.png";
+            // Ajoute case
             default:
                 return null;
         }
