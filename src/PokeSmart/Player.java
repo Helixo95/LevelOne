@@ -13,18 +13,18 @@ public class Player extends Entity {
     private double defences;
     private double money;
     private double type; //if 0 young, if 1 villager, if 2 old, if 3 special
-    private ImageView playerImage;
+
+    // imagePath = src/PokeSmart/Player/Walking sprites/boy_down_1.png
 
 
-    public Player(String nom, double x, double y, double vx, double vy, double healthPoints, int capacities, double strength, double attacks, double defences, double money, double type) {
-        super(x, y, vx, vy, healthPoints, capacities);
+    public Player(String nom, double x, double y, double vx, double vy, double healthPoints, int capacities, double strength, double attacks, double defences, double money, double type, String imagePath) {
+        super(x, y, vx, vy, healthPoints, capacities, imagePath);
         this.name = nom;
         this.strength = strength;
         this.attacks = attacks;
         this.defences = defences;
         this.money = money;
         this.type = type;
-        this.playerImage = new ImageView("file:src/PokeSmart/Player/Walking sprites/boy_down_1.png");
     }
 
     public String getName() {
@@ -68,12 +68,5 @@ public class Player extends Entity {
     }
     public void setType(double type) {
         this.type = type;
-    }
-
-    public ImageView getImage() {
-        return playerImage;
-    }
-    public void setImage(ImageView playerImage) {
-        this.playerImage = playerImage;
     }
 }

@@ -1,5 +1,7 @@
 package PokeSmart;
 
+import javafx.scene.image.ImageView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +12,7 @@ public class Entity {
     private double vy; // vitesse en y
     private double healthPoints;
     private int capacities; // if = 1 => overwall
+    private ImageView Image;
     private boolean destoyed = false; // permet de détruite l'individu en cas de perte de vie par exemple
     private List<Item> inventory = new ArrayList<>();
 
@@ -23,13 +26,14 @@ public class Entity {
      * @param vy
      *
      */
-    public Entity(double x, double y, double vx, double vy, double healthPoints, int capacities) {
+    public Entity(double x, double y, double vx, double vy, double healthPoints, int capacities, String imagePath) {
         this.x = x;
         this.y = y;
         this.vx = vx;
         this.vy = vy;
         this.healthPoints = healthPoints;
         this.capacities = capacities;
+        this.Image = new ImageView("file:"+imagePath);
     }
 
     /**
@@ -144,6 +148,14 @@ public class Entity {
 
     public void setCapacities(int capacities) {
         this.capacities = capacities;
+    }
+
+    public ImageView getImage() {
+        return Image;
+    }
+
+    public void setImage(ImageView itemImage) {
+        this.Image = itemImage;
     }
 
     public void addItem(Item item) {

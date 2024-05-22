@@ -31,13 +31,16 @@ public class TestTileGrid extends Application {
     private NPC npc;
     private boolean[][] collisionMap;
     private List<Item> items;
+    private List<Entity> entities;
 
     private VBox inventoryBox;
 
     private void initCaracters(){
-        player = new Player("Popo", 6, 1, 0, 0, 100, 0,100, 2, 100, 1000, 3);
-        monster = new Monster("Papa", 7, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1);
-        npc = new NPC("Jojo", 7,8,0,0,1,3,0);
+        player = new Player("Popo", 6, 1, 0, 0, 100, 0,100, 2, 100, 1000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png");
+        entities = new ArrayList<Entity>();
+        //entities.add(new Player("Popo", 6, 1, 0, 0, 100, 0,100, 2, 100, 1000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png"));
+        entities.add(new Monster("Papa", 7, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1,"src/PokeSmart/Monster/orc_down_2.png"));
+        entities.add(new NPC("Jojo", 7,8,0,0,1,3,0,"src/PokeSmart/NPC/oldman_down_1.png"));
 
         items = new ArrayList<Item>();
         items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
@@ -138,7 +141,7 @@ public class TestTileGrid extends Application {
                 player.addItem(item);
                 pickedUpItems.add(item);
                 System.out.println("Item picked up");
-                root.getChildren().remove(item.getItemImage());
+                root.getChildren().remove(item.getImage());
             }
         }
         items.removeAll(pickedUpItems);
@@ -226,7 +229,7 @@ public class TestTileGrid extends Application {
 
 
         // monster
-        ImageView monsterImageView = monster.getImage();
+        /*ImageView monsterImageView = monster.getImage();
         monsterImageView.setFitWidth(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
         monsterImageView.setFitHeight(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
         root.getChildren().add(monsterImageView); // Ajout de l'ImageView du joueur à la scène
@@ -242,11 +245,21 @@ public class TestTileGrid extends Application {
         root.getChildren().add(npcImageView); // Ajout de l'ImageView du joueur à la scène
 
         npcImageView.setLayoutX(npc.getX() * TILE_SIZE);
-        npcImageView.setLayoutY(npc.getY() * TILE_SIZE);
+        npcImageView.setLayoutY(npc.getY() * TILE_SIZE);*/
 
+        // entities
+        for (Entity entity : entities) {
+            ImageView entityImageView = entity.getImage();
+            entityImageView.setFitWidth(TILE_SIZE);
+            entityImageView.setFitHeight(TILE_SIZE);
+            root.getChildren().add(entityImageView);
+            entityImageView.setLayoutX(entity.getX() * TILE_SIZE);
+            entityImageView.setLayoutY(entity.getY() * TILE_SIZE);
+        }
 
+        // items
         for (Item item : items) {
-            ImageView itemImageView = item.getItemImage();
+            ImageView itemImageView = item.getImage();
             itemImageView.setFitWidth(TILE_SIZE);
             itemImageView.setFitHeight(TILE_SIZE);
             root.getChildren().add(itemImageView);

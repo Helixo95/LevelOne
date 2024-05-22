@@ -12,17 +12,17 @@ public class Monster extends Entity {
     private double attacks;
     private double defences;
     private double behavior; // if 0 harmless, 1 is low attack, 2 may be like a normal player, 3 is offensive, 4 is totally random
-    private ImageView monsterImage;
 
-    public Monster(String name, double x, double y, double vx, double vy, double HealthPoints, int capacities, String type, double strength, double attacks, double defences, double behavior) {
-        super(x, y, vx, vy, HealthPoints, capacities);
+    // imagePath : src/PokeSmart/Monster/orc_down_2.png
+
+    public Monster(String name, double x, double y, double vx, double vy, double HealthPoints, int capacities, String type, double strength, double attacks, double defences, double behavior, String imagePath) {
+        super(x, y, vx, vy, HealthPoints, capacities, imagePath);
         this.name = name;
         this.type = type;
         this.strength = strength;
         this.attacks = attacks;
         this.defences = defences;
         this.behavior = behavior;
-        this.monsterImage = new ImageView("file:src/PokeSmart/Monster/orc_down_2.png");
     }
 
     public String getName() {
@@ -68,12 +68,6 @@ public class Monster extends Entity {
         this.behavior = behavior;
     }
 
-    public ImageView getImage() {
-        return monsterImage;
-    }
-    public void setImage(ImageView monsterImage) {
-        this.monsterImage = monsterImage;
-    }
 
 
     public void afficheCapacities(Monster monster) {

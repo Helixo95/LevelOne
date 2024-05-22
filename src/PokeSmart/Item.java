@@ -9,7 +9,6 @@ public class Item extends Entity {
     private String itemDescription;
     private Effet effet;
     private int quantity;
-    private ImageView itemImage;
 
     /**
      * constructeur d'item
@@ -23,12 +22,11 @@ public class Item extends Entity {
      * @param imagePath
      */
     public Item(double x, double y, String itemName, String itemDescription, Effet effet, int quantity, String imagePath) {
-        super(x, y, 0, 0,0, 0);
+        super(x, y, 0, 0,0, 0, imagePath);
         this.itemName = itemName;
         this.itemDescription = itemDescription;
         this.effet = effet;
         this.quantity = quantity;
-        this.itemImage = new ImageView("file:"+imagePath);
     }
 
     public void useItem(Entity entity){
@@ -64,13 +62,5 @@ public class Item extends Entity {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public ImageView getItemImage() {
-        return itemImage;
-    }
-
-    public void setItemImage(ImageView itemImage) {
-        this.itemImage = itemImage;
     }
 }
