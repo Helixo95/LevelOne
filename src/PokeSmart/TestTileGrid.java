@@ -38,6 +38,7 @@ public class TestTileGrid extends Application {
         initCaractersWorld1();
         String worldPath1 = "src/PokeSmart/Tiles/world1.csv";
         GenMap(primaryStage, worldPath1, entities, items);
+        updateInventoryBox();
     }
 
     private void initCaractersWorld1(){
@@ -111,23 +112,24 @@ public class TestTileGrid extends Application {
 
 
     private void updateInventoryBox() {
-        //inventoryBox.getChildren().clear();
-        //Label inventoryLabel = new Label(player.getInventoryAsString());
-        //inventoryBox.getChildren().add(inventoryLabel);
-        for (Item item : player.getInventory()) {
-            //Button itemButton = new Button(item.getItemName());
-            /*itemButton.setOnAction(e -> {
+        inventoryBox.getChildren().clear();
+        Label inventoryLabel = new Label(player.getInventoryAsString());
+        inventoryBox.getChildren().add(inventoryLabel);
+        /*for (Item item : player.getInventory()) {
+            Label itemLabel = new Label(item.getItemName());
+
+            Button useButton = new Button("Use");
+            useButton.setOnAction(e -> {
                 item.useItem(player);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Item Used");
                 alert.setHeaderText(null);
                 alert.setContentText(item.getItemDescription());
                 alert.showAndWait();
-                updateInventoryBox();
-            });*/
-            //inventoryBox.getChildren().add(itemButton);
-        }
-        System.out.println("Boutton1");
+                //updateInventoryBox();
+            });
+            inventoryBox.getChildren().addAll(itemLabel, useButton);
+        }*/
     }
 
 
@@ -248,7 +250,8 @@ public class TestTileGrid extends Application {
                     pickedUpItems.add(item);
                     System.out.println("Item picked up");
                     root.getChildren().remove(item.getImage());
-                    //updateInventoryBox();
+                    updateInventoryBox(); // voir pour le bouton
+
                     item.useItem(player); // A METTRE DANS L'INVENTAIRE POUR QUE LE PLAYER SELECTIONNE ET PUISSE CHOISIR D'UTILISER L'ITEM
                     System.out.println(player.getCapacities());
                 }
@@ -259,6 +262,11 @@ public class TestTileGrid extends Application {
                 if (player.getDiscoverNewWorld() == 1 && item.getEffet() == Effet.NEWWORLD) { // condition sur la clé
                     System.out.println("You finish first world !");
                     primaryStage.close();
+                    Alert alertNewWorld = new Alert(Alert.AlertType.INFORMATION);
+                    alertNewWorld.setTitle("Congratulations !");
+                    alertNewWorld.setHeaderText(null);
+                    alertNewWorld.setContentText("You finish first world !");
+                    alertNewWorld.showAndWait();
                     createNewWorld();
                 }
                 if (player.getDiscoverNewWorld() == 0 && item.getEffet() == Effet.NEWWORLD) {
