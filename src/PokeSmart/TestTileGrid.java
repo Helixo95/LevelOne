@@ -240,12 +240,16 @@ public class TestTileGrid extends Application {
                     item.useItem(player); // A METTRE DANS L'INVENTAIRE POUR QUE LE PLAYER SELECTIONNE ET PUISSE CHOISIR D'UTILISER L'ITEM
                     System.out.println(player.getCapacities());
                 }
-                if ((player.getCapacities() == 4 || player.getCapacities() == 5 || player.getCapacities() == 6 || player.getCapacities() == 7) && item.getEffet() == Effet.NEWWORLD) {
+                if (item.getItemName() == "Key") {
+                    System.out.println("You picked up a key !");
+                    player.setDiscoverNewWorld(1);
+                }
+                if (player.getDiscoverNewWorld() == 1 && item.getEffet() == Effet.NEWWORLD) { // condition sur la clé
                     System.out.println("You finish first world !");
                     primaryStage.close();
                     createNewWorld();
                 }
-                if (item.getEffet() == Effet.NEWWORLD) {
+                if (player.getDiscoverNewWorld() == 0 && item.getEffet() == Effet.NEWWORLD) {
                     System.out.println("You need a key to open the door");
                     Alert alertNewWorld1 = new Alert(Alert.AlertType.INFORMATION);
                     alertNewWorld1.setTitle("Information Dialog");

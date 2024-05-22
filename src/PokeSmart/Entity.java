@@ -12,6 +12,7 @@ public class Entity {
     private double vy; // vitesse en y
     private double healthPoints;
     private int capacities; // if = 1 => overwall, 2 overwall and swim, 3 overwall and key and swim
+    private int discoverNewWorld; // if = 1 => can go to first new world
     private ImageView Image;
     private boolean destoyed = false; // permet de détruite l'individu en cas de perte de vie par exemple
     private List<Item> inventory = new ArrayList<>();
@@ -34,6 +35,7 @@ public class Entity {
         this.healthPoints = healthPoints;
         this.capacities = capacities;
         this.Image = new ImageView("file:"+imagePath);
+        this.discoverNewWorld = 0;
     }
 
     /**
@@ -167,6 +169,14 @@ public class Entity {
     public void setInventory(List<Item> inventory) {
         this.inventory = inventory;
     }
+
+    public int getDiscoverNewWorld() {
+        return discoverNewWorld;
+    }
+    public void setDiscoverNewWorld(int discoverNewWorld) {
+        this.discoverNewWorld = discoverNewWorld;
+    }
+
     public String getInventoryAsString() {
         StringBuilder inventoryString = new StringBuilder("Your inventory :\n");
         for (Item item : inventory) {
