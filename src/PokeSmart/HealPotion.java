@@ -2,7 +2,7 @@ package PokeSmart;
 
 import javafx.scene.image.Image;
 
-public class HealPotion extends Item {
+public class HealPotion /*extends Item*/ {
     private double regenHP = 50;
     //public Image img;
 
@@ -15,7 +15,7 @@ public class HealPotion extends Item {
      * @param y
      */
     public HealPotion(double x, double y) {
-        super(x, y, false, "src/PokeSmart/Object/potion_red.png");
+        //super(x, y, false, "src/PokeSmart/Object/potion_red.png");
         //this.img = new Image("file:src/PokeSmart/Object/potion_red.png");
     }
 

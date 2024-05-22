@@ -2,11 +2,11 @@ package PokeSmart;
 
 import javafx.scene.image.Image;
 
-public class WallPotion extends Item {
+public class WallPotion /*extends Item*/ {
     //private Image img; // image de la potion
 
     public WallPotion(double x, double y) {
-        super(x, y, false, "src/PokeSmart/Object/potion_blue.png");
+        //super(x, y, false, "src/PokeSmart/Object/potion_blue.png");
         //this.img = new Image("file:src/PokeSmart/Object/potion_blue.png");
     }
 

@@ -2,48 +2,68 @@ package PokeSmart;
 
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class Item extends Entity {
-    private boolean status; /** permet de savoir si l'item est utilisé ou non */
-    private Image image;
+    private String itemName;
+    private String itemDescription;
+    private Effet effet;
+    private int quantity;
+    private ImageView itemImage;
 
-    /** constructeur d'item
-     * permet de créer un item, lui associer des coordonnées et de savoir s'il est dans l'inventaire ou non
+    /**
+     * constructeur d'item
      *
      * @param x
      * @param y
-     * @param status
-     *
+     * @param itemName
+     * @param itemDescription
+     * @param effet
+     * @param quantity
+     * @param imagePath
      */
-    public Item(double x, double y, boolean status, String imagePath) {
+    public Item(double x, double y, String itemName, String itemDescription, Effet effet, int quantity, String imagePath) {
         super(x, y, 0, 0);
-        this.status = status;
-        this.image = new Image("file:"+imagePath);
+        this.itemName = itemName;
+        this.itemDescription = itemDescription;
+        this.effet = effet;
+        this.quantity = quantity;
+        this.itemImage = new ImageView("file:"+imagePath);
     }
 
-    /**
-     * retourne le statut de l'item
-     *
-     * @return status
-     */
-    public boolean isStatus() {
-        return status;
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 
-    /**
-     * modifie le statut de l'item
-     *
-     * @param status
-     */
-    public void setStatus(boolean status) {
-        this.status = status;
+    public String getItemDescription() {
+        return itemDescription;
     }
 
-    public Image getImage() {
-        return image;
+    public void setItemDescription(String itemDescription) {
+        this.itemDescription = itemDescription;
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    public Effet getEffet() {
+        return effet;
+    }
+
+    public void setEffet(Effet effet) {
+        this.effet = effet;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public ImageView getItemImage() {
+        return itemImage;
+    }
+
+    public void setItemImage(ImageView itemImage) {
+        this.itemImage = itemImage;
     }
 }

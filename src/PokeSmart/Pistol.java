@@ -2,7 +2,7 @@ package PokeSmart;
 
 import javafx.scene.image.Image;
 
-public class Pistol extends Item {
+public class Pistol /*extends Item*/ {
     private double damages;
     public static Image img = new Image("file:Items/Pistol.PNG");
 
@@ -14,7 +14,7 @@ public class Pistol extends Item {
      * @param y coordonée de l'ordonnée du pistolet
      */
     public Pistol(double x, double y) {
-        super(x, y, false, "Items/Pistol.PNG");
+        //super(x, y, false, "Items/Pistol.PNG");
         damages = 45;
     }
 

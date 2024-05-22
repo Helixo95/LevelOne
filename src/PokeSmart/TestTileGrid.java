@@ -40,16 +40,22 @@ public class TestTileGrid extends Application {
         npc = new NPC("Jojo", 7,8,0,0,1,3);
 
         items = new ArrayList<Item>();
+        items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
+        items.add(new Item(7,4,"WallPotion", "no more walls", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_blue.png"));
+        items.add(new Item(7,5,"Key", "this can open doors", Effet.OPENDOOR,1,"src/PokeSmart/Object/key.png"));
+
+
+        /*
         items.add(key = new Key(7,5));
         items.add(healPotion = new HealPotion(7,3));
-        items.add(wallPotion = new WallPotion(7,4));
+        items.add(wallPotion = new WallPotion(7,4));*/
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("PokeSmart");
-        String imagePath = "src/PokeSmart/Tiles/world1.csv";
-        GenMap(primaryStage, imagePath);
+        String worldPath = "src/PokeSmart/Tiles/world1.csv";
+        GenMap(primaryStage, worldPath);
 
     }
 
@@ -66,8 +72,7 @@ public class TestTileGrid extends Application {
         // vBox.getChildren().add(new Button("Button"));
         // Create inventory VBox
         inventoryBox = new VBox();
-        inventoryBox.setPrefWidth(200);
-        updateInventoryBox();
+        //updateInventoryBox();
 
         // Création de la scène
         Group root = new Group();
@@ -121,19 +126,20 @@ public class TestTileGrid extends Application {
             playerImageView.setLayoutX(player.getX() * TILE_SIZE);
             playerImageView.setLayoutY(player.getY() * TILE_SIZE);
 
-            checkForItemPickup();
+            checkForItemPickup(root);
         });
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void checkForItemPickup() {
+    private void checkForItemPickup(Group root) {
         List<Item> pickedUpItems = new ArrayList<>();
         for (Item item : items) {
             if (player.getX() == item.getX() && player.getY() == item.getY()) {
                 player.addItem(item);
                 pickedUpItems.add(item);
                 System.out.println("Item picked up");
+                root.getChildren().remove(item.getItemImage());
             }
         }
         items.removeAll(pickedUpItems);
@@ -234,23 +240,13 @@ public class TestTileGrid extends Application {
 
 
         for (Item item : items) {
-            ImageView itemImageView = new ImageView(item.getImage());
+            ImageView itemImageView = item.getItemImage();
             itemImageView.setFitWidth(TILE_SIZE);
             itemImageView.setFitHeight(TILE_SIZE);
             root.getChildren().add(itemImageView);
             itemImageView.setLayoutX(item.getX() * TILE_SIZE);
             itemImageView.setLayoutY(item.getY() * TILE_SIZE);
         }
-
-
-        // wallPotion
-        /*ImageView wallPotionImageView = new ImageView(wallPotion.getImg());
-        wallPotionImageView.setFitWidth(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
-        wallPotionImageView.setFitHeight(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
-        root.getChildren().add(wallPotionImageView); // Ajout de l'ImageView du joueur à la scène
-
-        wallPotionImageView.setLayoutX(wallPotion.getX() * TILE_SIZE);
-        wallPotionImageView.setLayoutY(wallPotion.getY() * TILE_SIZE);*/
     }
 
     public static void main(String[] args) {
