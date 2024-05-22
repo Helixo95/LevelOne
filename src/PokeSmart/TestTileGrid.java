@@ -18,6 +18,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class TestTileGrid extends Application {
@@ -42,7 +43,7 @@ public class TestTileGrid extends Application {
     }
 
     private void initCaractersWorld1(){
-        player = new Player("Popo", 6, 1, 0, 0, 100, 0,100, 2, 100, 1000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png");
+        player = new Player("Popo", 6, 1, 1, 1, 100, 0,100, 2, 100, 1000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png");
         entities = new ArrayList<Entity>();
         //entities.add(new Player("Popo", 6, 1, 0, 0, 100, 0,100, 2, 100, 1000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png"));
         entities.add(new Monster("Papa", 7, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1,"src/PokeSmart/Monster/orc_down_2.png"));
@@ -172,29 +173,33 @@ public class TestTileGrid extends Application {
             switch (e.getCode()) {
                 case UP:
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_up_1.png"));
-                    if (y > 0 && !collisionMap[(int) x][(int) y - 1]) {
-                        y--;
+                    int minGoY = (int) (y - player.getVy());
+                    if ((y > 0 && !collisionMap[(int) x][(int) y - 1]) && (minGoY >=0)) {
+                        y = y - player.getVy();
                         player.setY(y);
                     }
                     break;
                 case DOWN:
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_down_1.png"));
-                    if (y < NUM_TILES_Y - 1 && !collisionMap[(int) x][(int) y + 1]) {
-                        y++;
+                    int maxGoY = (int) (y + player.getVy());
+                    if ((y < NUM_TILES_Y - 1 && !collisionMap[(int) x][(int) y + 1]) && (maxGoY < NUM_TILES_Y)) {
+                        y = y + player.getVy();
                         player.setY(y);
                     }
                     break;
                 case LEFT:
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_left_1.png"));
-                    if(x > 0 && !collisionMap[(int) x - 1][(int) y]) {
-                        x--;
+                    int minGoX = (int) (x - player.getVx());
+                    if((x > 0 && !collisionMap[(int) x - 1][(int) y]) && (minGoX >= 0)) {
+                        x = x - player.getVx();
                         player.setX(x);
                     }
                     break;
                 case RIGHT:
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_right_1.png"));
-                    if (x < NUM_TILES_X - 1 && !collisionMap[(int) x + 1][(int) y]) {
-                        x++;
+                    int maxGoX = (int) (x + player.getVx());
+                    if ((x < NUM_TILES_X - 1 && !collisionMap[(int) x + 1][(int) y]) && (maxGoX < NUM_TILES_X)) {
+                        x = x + player.getVx();
                         player.setX(x);
                     }
                     break;
@@ -258,6 +263,19 @@ public class TestTileGrid extends Application {
                 if (item.getItemName() == "Key") {
                     System.out.println("You picked up a key !");
                     player.setDiscoverNewWorld(1);
+                    for (Item item1 : items) {
+                        if ("Door".equals(item1.getItemName())) {
+                            root.getChildren().remove(item1.getImage()); // Remove the old image from the scene
+                            ImageView newImage = new ImageView("file:src/PokeSmart/Object/door.png"); // Create a new ImageView
+                            newImage.setFitWidth(TILE_SIZE);
+                            newImage.setFitHeight(TILE_SIZE);
+                            newImage.setLayoutX(item1.getX() * TILE_SIZE); // Set the x-coordinate of the ImageView
+                            newImage.setLayoutY(item1.getY() * TILE_SIZE); // Set the y-coordinate of the ImageView
+                            item1.setImage(newImage); // Update the image of the item
+                            root.getChildren().add(item1.getImage()); // Add the new image to the scene
+                            System.out.println("boucle1");
+                        }
+                    }
                 }
                 if (player.getDiscoverNewWorld() == 1 && item.getEffet() == Effet.NEWWORLD) { // condition sur la clé
                     System.out.println("You finish first world !");
@@ -313,23 +331,14 @@ public class TestTileGrid extends Application {
 
 
     private String getImagePathForValue(int value) {
-        switch (value) {
-            case 0:
-                return "file:src/PokeSmart/Tiles/ground/wall.png";
-            case 1:
-                return "file:src/PokeSmart/Tiles/ground/water.png";
-            case 2:
-                return "file:src/PokeSmart/Tiles/ground/sand.png";
-            case 3:
-                return "file:src/PokeSmart/Tiles/ground/earth.png";
-            case 4:
-                return "file:src/PokeSmart/Tiles/ground/grass.png";
-            /*case 5:
-                return "file:src/PokeSmart/Object/door_iron.png";*/
-            // Ajoute case
-            default:
-                return null;
-        }
+        return switch (value) {
+            case 0 -> "file:src/PokeSmart/Tiles/ground/wall.png";
+            case 1 -> "file:src/PokeSmart/Tiles/ground/water.png";
+            case 2 -> "file:src/PokeSmart/Tiles/ground/sand.png";
+            case 3 -> "file:src/PokeSmart/Tiles/ground/earth.png";
+            case 4 -> "file:src/PokeSmart/Tiles/ground/grass.png";
+            default -> null;
+        };
     }
 
 
