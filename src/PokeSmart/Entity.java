@@ -58,73 +58,42 @@ public class Entity {
     public boolean getDestroyed() {
         return destoyed;
     }
-
     public void setDestoyed(boolean destoyed) {
         this.destoyed = destoyed;
     }
 
-    // retourne l'abscisse de l'entité, ne prend rien en paramètres
     public double getX() {
         return x;
     }
-
-    /**
-     * permet de modifier l'abscisse de l'entité
-     * prend en paramètre la nouvelle abscisse
-     */
     public void setX(double x) {
         this.x = x;
     }
 
-    // retourne l'ordonnée de l'entité, ne prend rien en paramètres
     public double getY() {
         return y;
     }
 
-    /**
-     *  permet de modifier l'ordonnée de l'entité
-     * prend en paramètre la nouvelle ordonnée
-     */
     public void setY(double y) {
         this.y = y;
     }
 
-    // retourne la vitesse horizontale de l'entité
     public double getVx() {
         return vx;
     }
-
-    /**
-     *  modifie vitesse horizontale de l'entité
-     * prend en paramètre la nouvelle vitesse horizontale
-     */
     public void setVx(double vx) {
         this.vx = vx;
     }
 
-    // retourne la vitesse verticale de l'entité
     public double getVy() {
         return vy;
     }
-
-    /**
-     * modifie vitesse verticale de l'entité
-     * prend en paramètre la nouvelle vitesse verticale
-     */
     public void setVy(double vy) {
         this.vy = vy;
     }
 
-    // retourne "true "si l'entité est détruite ou "false" si l'entité est vivante
     public boolean isDestoyed() {
         return destoyed;
     }
-
-    /**
-     * modifie l'état de l'entité
-     * détruit l'entité si on lui passe "True" et l'empêche de mourir si on passe "False"
-     * utile lors de l'usage de potions par exemple
-     */
     public void setDestoyed() {
         this.destoyed = true;
     }
@@ -132,7 +101,6 @@ public class Entity {
     public double getHealthPoints() {
         return healthPoints;
     }
-
     public void setHealthPoints(double healthPoints) {
         if (healthPoints > 100) {
             this.healthPoints = 100;
@@ -147,7 +115,6 @@ public class Entity {
     public int getCapacities() {
         return capacities;
     }
-
     public void setCapacities(int capacities) {
         this.capacities = capacities;
     }
@@ -155,7 +122,6 @@ public class Entity {
     public ImageView getImage() {
         return Image;
     }
-
     public void setImage(ImageView itemImage) {
         this.Image = itemImage;
     }

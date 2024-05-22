@@ -3,6 +3,7 @@ package PokeSmart;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -48,16 +49,15 @@ public class TestTileGrid extends Application {
 
         items = new ArrayList<Item>();
         items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
-        items.add(new Item(7,4,"WallPotion", "no more walls", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_grey.png"));
-        items.add(new Item(7,5,"SwimPotion", "no more water", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png"));
-        items.add(new Item(7,6,"Key", "this can open doors", Effet.OPENDOOR,1,"src/PokeSmart/Object/key.png"));
+        items.add(new Item(7,4,"WallPotion", "walls are no more a problem", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_grey.png"));
+        items.add(new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png"));
+        items.add(new Item(7,6,"Key", "doors can be opened", Effet.OPENDOOR,1,"src/PokeSmart/Object/key.png"));
         items.add(new Item(14,10,"Door", "go to an other world", Effet.NEWWORLD,1,"src/PokeSmart/Object/door_iron.png"));
     }
 
 
 
-    private void GenMap(Stage primaryStage, String wPath, List<Entity> entities, List<Item> items){
-        String worldPath = wPath;
+    private void GenMap(Stage primaryStage, String worldPath, List<Entity> entities, List<Item> items){
         // Chargement des données depuis le fichier CSV
         Image[][] tileImages = loadTileImages(worldPath);
 
@@ -66,7 +66,7 @@ public class TestTileGrid extends Application {
 
         // Création de la boîte d'inventaire
         inventoryBox = new VBox();
-        updateInventoryBox();
+        //updateInventoryBox();
 
         // Création de la scène
         BorderPane root = new BorderPane();
@@ -111,11 +111,24 @@ public class TestTileGrid extends Application {
 
 
     private void updateInventoryBox() {
-        inventoryBox.getChildren().clear();
-        Label inventoryLabel = new Label(player.getInventoryAsString());
-        inventoryBox.getChildren().add(inventoryLabel);
+        //inventoryBox.getChildren().clear();
+        //Label inventoryLabel = new Label(player.getInventoryAsString());
+        //inventoryBox.getChildren().add(inventoryLabel);
+        for (Item item : player.getInventory()) {
+            //Button itemButton = new Button(item.getItemName());
+            /*itemButton.setOnAction(e -> {
+                item.useItem(player);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Item Used");
+                alert.setHeaderText(null);
+                alert.setContentText(item.getItemDescription());
+                alert.showAndWait();
+                updateInventoryBox();
+            });*/
+            //inventoryBox.getChildren().add(itemButton);
+        }
+        System.out.println("Boutton1");
     }
-
 
 
     private void showEntities(ImageView playerImageView, BorderPane root) {
@@ -189,7 +202,6 @@ public class TestTileGrid extends Application {
             playerImageView.setLayoutX(player.getX() * TILE_SIZE);
             playerImageView.setLayoutY(player.getY() * TILE_SIZE);
 
-
             checkForItemPickup(root, tileImages, worldPath, primaryStage);
         });
     }
@@ -213,7 +225,7 @@ public class TestTileGrid extends Application {
                     if ((player.getCapacities() == 1 || player.getCapacities() == 3 || player.getCapacities() == 5 || player.getCapacities() == 7) && intValue == 0) { // s'il a la potion, il traverse les murs
                         collisionMap[columnIndex][rowIndex] = false;
                     }
-                    if ((player.getCapacities() == 2 || player.getCapacities() == 3 || player.getCapacities() == 6 || player.getCapacities() == 7) && intValue == 1) {
+                    if ((player.getCapacities() == 2 || player.getCapacities() == 3 || player.getCapacities() == 6 || player.getCapacities() == 7) && intValue == 1) { // supression de la collision avec l'eau
                         collisionMap[columnIndex][rowIndex] = false;
                     }
                     columnIndex++;
@@ -236,7 +248,7 @@ public class TestTileGrid extends Application {
                     pickedUpItems.add(item);
                     System.out.println("Item picked up");
                     root.getChildren().remove(item.getImage());
-                    updateInventoryBox();
+                    //updateInventoryBox();
                     item.useItem(player); // A METTRE DANS L'INVENTAIRE POUR QUE LE PLAYER SELECTIONNE ET PUISSE CHOISIR D'UTILISER L'ITEM
                     System.out.println(player.getCapacities());
                 }
