@@ -11,7 +11,7 @@ public class Entity {
     private double vx; // vitesse en x
     private double vy; // vitesse en y
     private double healthPoints;
-    private int capacities; // if = 1 => overwall
+    private int capacities; // if = 1 => overwall, 2 overwall and swim, 3 overwall and key and swim
     private ImageView Image;
     private boolean destoyed = false; // permet de détruite l'individu en cas de perte de vie par exemple
     private List<Item> inventory = new ArrayList<>();

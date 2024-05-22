@@ -8,7 +8,7 @@ public enum Effet {
     HEAL,
     OPENDOOR,
     OVERWALL,
-    OVERWATER,
+    SWIM,
     OVER,
     DEATH,
     NULL,

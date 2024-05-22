@@ -51,11 +51,11 @@ public class TestTileGrid extends Application {
 
     }
 
-    private void GenMap(Stage primaryStage, String imagePath){
+    private void GenMap(Stage primaryStage, String wPath){
         initCaracters();
-
+        String worldPath = wPath;
         // Chargement des données depuis le fichier CSV
-        Image[][] tileImages = loadTileImages(imagePath);
+        Image[][] tileImages = loadTileImages(worldPath);
 
         // Création de la carte
         GridPane gridPane = createMap(tileImages);
@@ -119,13 +119,13 @@ public class TestTileGrid extends Application {
             playerImageView.setLayoutY(player.getY() * TILE_SIZE);
 
 
-            checkForItemPickup(root);
+            checkForItemPickup(root, tileImages, worldPath);
         });
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void checkForItemPickup(BorderPane root) {
+    private void checkForItemPickup(BorderPane root, Image[][] tileImages, String filePath) {
         List<Item> pickedUpItems = new ArrayList<>();
         for (Item item : items) {
             if (player.getX() == item.getX() && player.getY() == item.getY()) {
@@ -134,9 +134,13 @@ public class TestTileGrid extends Application {
                 System.out.println("Item picked up");
                 root.getChildren().remove(item.getImage());
                 updateInventoryBox();
+                item.useItem(player);
+                System.out.println(player.getCapacities());
             }
         }
         items.removeAll(pickedUpItems);
+
+        updateCollisionMap(tileImages, filePath); // Mettre à jour la carte des collisions
     }
 
     private void updateInventoryBox() {
@@ -145,11 +149,42 @@ public class TestTileGrid extends Application {
         inventoryBox.getChildren().add(inventoryLabel);
     }
 
+    private void updateCollisionMap(Image[][] tileImages, String filePath) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            int rowIndex = 0;
+            while ((line = reader.readLine()) != null && rowIndex < NUM_TILES_Y) {
+                String[] values = line.split(",");
+                int columnIndex = 0;
+                for (String value : values) {
+                    int intValue = Integer.parseInt(value.trim());
+                    String imagePath = getImagePathForValue(intValue);
+                    tileImages[columnIndex][rowIndex] = new Image(imagePath);
+                    if (intValue == 0) { // collision avec les murs
+                        collisionMap[columnIndex][rowIndex] = true;
+                    }
+                    if (intValue == 1) { // collision avec l'eau
+                        collisionMap[columnIndex][rowIndex] = true;
+                    }
+                    if ((player.getCapacities() == 1 || player.getCapacities() == 3 || player.getCapacities() == 5 || player.getCapacities() == 7)&& intValue == 0) { // s'il a la potion, il traverse les murs
+                        collisionMap[columnIndex][rowIndex] = false;
+                    }
+
+                    columnIndex++;
+                }
+                rowIndex++;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private Image[][] loadTileImages(String filePath) {
         Image[][] tileImages = new Image[NUM_TILES_X][NUM_TILES_Y];
         collisionMap = new boolean[NUM_TILES_X][NUM_TILES_Y];
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+        updateCollisionMap(tileImages, filePath);
+        /*try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             int rowIndex = 0;
             while ((line = reader.readLine()) != null && rowIndex < NUM_TILES_Y) {
@@ -175,7 +210,7 @@ public class TestTileGrid extends Application {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         return tileImages;
     }
 
