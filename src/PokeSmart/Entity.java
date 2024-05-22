@@ -10,7 +10,7 @@ public class Entity {
     private double y; // coordonnée en ordonnée (inversée en java)
     private double vx; // vitesse en x
     private double vy; // vitesse en y
-    private double healthPoints;
+    private int healthPoints;
     private int capacities; // if = 1 => overwall, 2 overwall and swim, 3 overwall and key and swim
     private int discoverNewWorld; // if = 1 => can go to first new world
     private ImageView Image;
@@ -101,7 +101,7 @@ public class Entity {
     public double getHealthPoints() {
         return healthPoints;
     }
-    public void setHealthPoints(double healthPoints) {
+    public void setHealthPoints(int healthPoints) {
         if (healthPoints > 100) {
             this.healthPoints = 100;
         } else if (healthPoints < 0) {

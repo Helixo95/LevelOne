@@ -1,8 +1,5 @@
 package PokeSmart;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
 public class NPC extends Entity {
     private String name;
     private double type; //if 0 young, if 1 villager, if 2 old, if 3 special

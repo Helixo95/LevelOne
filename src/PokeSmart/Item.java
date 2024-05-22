@@ -27,7 +27,7 @@ public class Item extends Entity {
 
     public void useItem(Entity entity){
         switch (effet){
-            case HEAL -> entity.setHealthPoints(entity.getHealthPoints()+20);
+            case HEAL -> entity.setHealthPoints((int) (entity.getHealthPoints()+20));
             case OVERWALL -> {
                 if (entity.getCapacities() == 0) { entity.setCapacities(1);} // si rien alors juste wall
                 else if(entity.getCapacities() == 2) { entity.setCapacities(3);} // si swim alors wall et swim
