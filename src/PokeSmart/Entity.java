@@ -27,7 +27,7 @@ public class Entity {
      * @param vy
      *
      */
-    public Entity(double x, double y, double vx, double vy, double healthPoints, int capacities, String imagePath) {
+    public Entity(double x, double y, double vx, double vy, int healthPoints, int capacities, String imagePath) {
         this.x = x;
         this.y = y;
         this.vx = vx;

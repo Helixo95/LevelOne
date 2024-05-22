@@ -32,7 +32,7 @@ public class TestTileGrid extends Application {
     private List<Item> items;
     private List<Entity> entities;
     private VBox inventoryBox;
-
+    private Label healthPointsLabel;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -50,8 +50,6 @@ public class TestTileGrid extends Application {
         npc = new NPC("Jojo", 7,8,0,0,1,3,0,"src/PokeSmart/NPC/oldman_down_1.png");
         entities.add(monster);
         entities.add(npc);
-        //entities.add(new Monster("Papa", 7, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1,"src/PokeSmart/Monster/orc_down_2.png"));
-        //entities.add(new NPC("Jojo", 7,8,0,0,1,3,0,"src/PokeSmart/NPC/oldman_down_1.png"));
 
         items = new ArrayList<Item>();
         items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
@@ -77,8 +75,14 @@ public class TestTileGrid extends Application {
         // Création de la scène
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, NUM_TILES_X * TILE_SIZE + 200, NUM_TILES_Y * TILE_SIZE);
-        root.setLeft(gridPane);
-        root.setCenter(inventoryBox);
+        root.setCenter(gridPane);
+        root.setLeft(inventoryBox);
+
+        // Création de la barre de vie
+        healthPointsLabel = new Label("Health Points: \n" + player.getHealthPoints());
+        //root.setRight(healthPointsLabel);
+        updateHealthPointsLabel(root);
+        //root.setRight(healthPointsLabel);
 
         // Création de l'ImageView du joueur
         ImageView playerImageView = player.getImage();
@@ -366,6 +370,8 @@ public class TestTileGrid extends Application {
                 if (buttonType == attackButtonType) {
                     // Handle the player attacking the monster
                     // You can add your combat logic here
+                    player.setHealthPoints(50);
+                    updateHealthPointsLabel(root);
                     System.out.println("You attacked the monster!");
                     return "Attacked";
                 } else if (buttonType == runButtonType) {
@@ -404,6 +410,15 @@ public class TestTileGrid extends Application {
         items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
     }
 
+
+
+    private void updateHealthPointsLabel(BorderPane root) {
+        if (healthPointsLabel == null) {
+            healthPointsLabel = new Label();
+        }
+        healthPointsLabel.setText("Health Points: \n" + player.getHealthPoints());
+        root.setRight(healthPointsLabel);
+    }
 
 
     private String getImagePathForValue(int value) {
