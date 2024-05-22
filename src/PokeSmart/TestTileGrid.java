@@ -2,9 +2,7 @@ package PokeSmart;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -19,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 
 public class TestTileGrid extends Application {
@@ -27,6 +26,8 @@ public class TestTileGrid extends Application {
     private final int NUM_TILES_Y = 12; // Nombre de tuiles en hauteur
 
     private Player player;
+    private Monster monster;
+    private NPC npc;
     private boolean[][] collisionMap;
     private List<Item> items;
     private List<Entity> entities;
@@ -45,9 +46,12 @@ public class TestTileGrid extends Application {
     private void initCaractersWorld1(){
         player = new Player("Popo", 6, 1, 1, 1, 100, 0,100, 2, 100, 1000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png");
         entities = new ArrayList<Entity>();
-        //entities.add(new Player("Popo", 6, 1, 0, 0, 100, 0,100, 2, 100, 1000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png"));
-        entities.add(new Monster("Papa", 7, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1,"src/PokeSmart/Monster/orc_down_2.png"));
-        entities.add(new NPC("Jojo", 7,8,0,0,1,3,0,"src/PokeSmart/NPC/oldman_down_1.png"));
+        monster = new Monster("Papa", 7, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1,"src/PokeSmart/Monster/orc_down_2.png");
+        npc = new NPC("Jojo", 7,8,0,0,1,3,0,"src/PokeSmart/NPC/oldman_down_1.png");
+        entities.add(monster);
+        entities.add(npc);
+        //entities.add(new Monster("Papa", 7, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1,"src/PokeSmart/Monster/orc_down_2.png"));
+        //entities.add(new NPC("Jojo", 7,8,0,0,1,3,0,"src/PokeSmart/NPC/oldman_down_1.png"));
 
         items = new ArrayList<Item>();
         items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
@@ -210,6 +214,8 @@ public class TestTileGrid extends Application {
             playerImageView.setLayoutY(player.getY() * TILE_SIZE);
 
             checkForItemPickup(root, tileImages, worldPath, primaryStage);
+            checkForMonsterEncounter(root, playerImageView, primaryStage);
+            checkForNPCEncounter(root, playerImageView, primaryStage);
         });
     }
 
@@ -304,6 +310,76 @@ public class TestTileGrid extends Application {
         items.removeAll(pickedUpItems);
 
         updateCollisionMap(tileImages, filePath); // Mettre à jour la carte des collisions
+    }
+
+
+
+    private void checkForNPCEncounter(BorderPane root, ImageView playerImageView, Stage primaryStage) {
+        if (player.getX() == npc.getX() && player.getY() == npc.getY()) {
+            System.out.println("NPC encountered");
+
+            // Create a dialog
+            Dialog<String> dialog = new Dialog<>();
+            dialog.setTitle("Dialogue with NPC");
+            dialog.setHeaderText("NPC: Hello, I have a quest for you. Do you accept?");
+
+            // Add buttons to the dialog
+            ButtonType acceptButtonType = new ButtonType("Accept", ButtonBar.ButtonData.YES);
+            ButtonType refuseButtonType = new ButtonType("Refuse", ButtonBar.ButtonData.NO);
+            dialog.getDialogPane().getButtonTypes().addAll(acceptButtonType, refuseButtonType);
+
+            // Handle the result
+            dialog.setResultConverter(buttonType -> {
+                if (buttonType == acceptButtonType) {
+                    // Handle the player accepting the quest
+                    System.out.println("You accepted the quest!");
+                    return "Accepted";
+                } else if (buttonType == refuseButtonType) {
+                    // Handle the player refusing the quest
+                    System.out.println("You refused the quest.");
+                    return "Refused";
+                }
+                return null;
+            });
+
+            // Show the dialog
+            Optional<String> result = dialog.showAndWait();
+        }
+    }
+
+    private void checkForMonsterEncounter(BorderPane root, ImageView playerImageView, Stage primaryStage) {
+        if (player.getX() == monster.getX() && player.getY() == monster.getY()) {
+            System.out.println("Monster encountered");
+
+            // Create a dialog
+            Dialog<String> dialog = new Dialog<>();
+            dialog.setTitle("Combat with Monster");
+            dialog.setHeaderText("Monster: I will defeat you! What will you do?");
+
+            // Add buttons to the dialog
+            ButtonType attackButtonType = new ButtonType("Attack", ButtonBar.ButtonData.YES);
+            ButtonType runButtonType = new ButtonType("Run", ButtonBar.ButtonData.NO);
+            dialog.getDialogPane().getButtonTypes().addAll(attackButtonType, runButtonType);
+
+            // Handle the result
+            dialog.setResultConverter(buttonType -> {
+                if (buttonType == attackButtonType) {
+                    // Handle the player attacking the monster
+                    // You can add your combat logic here
+                    System.out.println("You attacked the monster!");
+                    return "Attacked";
+                } else if (buttonType == runButtonType) {
+                    // Handle the player running away
+                    // You can add your escape logic here
+                    System.out.println("You ran away from the monster.");
+                    return "Ran";
+                }
+                return null;
+            });
+
+            // Show the dialog
+            Optional<String> result = dialog.showAndWait();
+        }
     }
 
 
