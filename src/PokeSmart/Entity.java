@@ -8,6 +8,8 @@ public class Entity {
     private double y; // coordonnée en ordonnée (inversée en java)
     private double vx; // vitesse en x
     private double vy; // vitesse en y
+    private double healthPoints;
+    private int capacities; // if = 1 => overwall
     private boolean destoyed = false; // permet de détruite l'individu en cas de perte de vie par exemple
     private List<Item> inventory = new ArrayList<>();
 
@@ -21,11 +23,13 @@ public class Entity {
      * @param vy
      *
      */
-    public Entity(double x, double y, double vx, double vy) {
+    public Entity(double x, double y, double vx, double vy, double healthPoints, int capacities) {
         this.x = x;
         this.y = y;
         this.vx = vx;
         this.vy = vy;
+        this.healthPoints = healthPoints;
+        this.capacities = capacities;
     }
 
     /**
@@ -119,6 +123,28 @@ public class Entity {
         this.destoyed = true;
     }
 
+    public double getHealthPoints() {
+        return healthPoints;
+    }
+
+    public void setHealthPoints(double healthPoints) {
+        if (healthPoints > 100) {
+            this.healthPoints = 100;
+        } else if (healthPoints < 0) {
+            this.healthPoints = 0;
+        }
+        else {
+            this.healthPoints = healthPoints;
+        }
+    }
+
+    public int getCapacities() {
+        return capacities;
+    }
+
+    public void setCapacities(int capacities) {
+        this.capacities = capacities;
+    }
 
     public void addItem(Item item) {
         inventory.add(item);

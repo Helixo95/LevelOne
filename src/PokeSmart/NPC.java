@@ -1,19 +1,20 @@
 package PokeSmart;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class NPC extends Entity {
     private String name;
     private double type; //if 0 young, if 1 villager, if 2 old, if 3 special
     private double interaction; // if 0 nothing, 1 can speak with player, 2 start a quest
-    private Image image;
+    private ImageView image;
 
-    public NPC(String nom, double x, double y, double vx, double vy, double interaction, double type) {
-        super(x, y, vx, vy);
+    public NPC(String nom, double x, double y, double vx, double vy, double interaction, double type, int capacities) {
+        super(x, y, vx, vy, 1000, capacities);
         this.name = nom;
         this.interaction = interaction;
         this.type = type;
-        this.image = new Image("file:src/PokeSmart/NPC/oldman_down_1.png");
+        this.image = new ImageView("file:src/PokeSmart/NPC/oldman_down_1.png");
 
     }
 
@@ -39,10 +40,10 @@ public class NPC extends Entity {
         this.interaction = interaction;
     }
 
-    public Image getImage() {
+    public ImageView getImage() {
         return image;
     }
-    public void setImage(Image image) {
+    public void setImage(ImageView image) {
         this.image = image;
     }
 }

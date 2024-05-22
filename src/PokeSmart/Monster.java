@@ -1,29 +1,28 @@
 package PokeSmart;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.Random;
 
 public class Monster extends Entity {
     private String name;
     private String type;
-    private double healthPoints;
     private double strength;
     private double attacks;
     private double defences;
     private double behavior; // if 0 harmless, 1 is low attack, 2 may be like a normal player, 3 is offensive, 4 is totally random
-    private Image monsterImage;
+    private ImageView monsterImage;
 
-    public Monster(String name, double x, double y, double vx, double vy, double HealthPoints, String type, double strength, double attacks, double defences, double behavior) {
-        super(x, y, vx, vy);
+    public Monster(String name, double x, double y, double vx, double vy, double HealthPoints, int capacities, String type, double strength, double attacks, double defences, double behavior) {
+        super(x, y, vx, vy, HealthPoints, capacities);
         this.name = name;
-        this.healthPoints = HealthPoints;
         this.type = type;
         this.strength = strength;
         this.attacks = attacks;
         this.defences = defences;
         this.behavior = behavior;
-        this.monsterImage = new Image("file:src/PokeSmart/Monster/orc_down_2.png");
+        this.monsterImage = new ImageView("file:src/PokeSmart/Monster/orc_down_2.png");
     }
 
     public String getName() {
@@ -39,14 +38,6 @@ public class Monster extends Entity {
     }
     public void setType(String type) {
         this.type = type;
-    }
-
-    public double getHealthPoints() {
-        return healthPoints;
-    }
-
-    public void setHealthPoints(double healthPoints) {
-        this.healthPoints = healthPoints;
     }
 
     public double getStrength() {
@@ -77,12 +68,13 @@ public class Monster extends Entity {
         this.behavior = behavior;
     }
 
-    public Image getMonsterImage() {
+    public ImageView getImage() {
         return monsterImage;
     }
-    public void setMonsterImage(Image monsterImage) {
+    public void setImage(ImageView monsterImage) {
         this.monsterImage = monsterImage;
     }
+
 
     public void afficheCapacities(Monster monster) {
         implementsBehavior(monster);

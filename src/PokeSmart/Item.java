@@ -23,12 +23,19 @@ public class Item extends Entity {
      * @param imagePath
      */
     public Item(double x, double y, String itemName, String itemDescription, Effet effet, int quantity, String imagePath) {
-        super(x, y, 0, 0);
+        super(x, y, 0, 0,0, 0);
         this.itemName = itemName;
         this.itemDescription = itemDescription;
         this.effet = effet;
         this.quantity = quantity;
         this.itemImage = new ImageView("file:"+imagePath);
+    }
+
+    public void useItem(Entity entity){
+        switch (effet){
+            case HEAL -> entity.setHealthPoints(entity.getHealthPoints()+1);
+            case OVERWALL -> entity.setCapacities(1);
+        }
     }
 
     public void setItemName(String itemName) {

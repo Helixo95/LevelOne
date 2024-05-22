@@ -34,10 +34,10 @@ public class TestTileGrid extends Application {
 
     private VBox inventoryBox;
 
-    private void initWorld(){
-        player = new Player("Popo", 6, 1, 0, 0, 100, 100, 2, 100, 1000, 3);
-        monster = new Monster("Papa", 7, 2, 0, 0, 1, "OFFENSIVE", 1, 1, 1, 1);
-        npc = new NPC("Jojo", 7,8,0,0,1,3);
+    private void initCaracters(){
+        player = new Player("Popo", 6, 1, 0, 0, 100, 0,100, 2, 100, 1000, 3);
+        monster = new Monster("Papa", 7, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1);
+        npc = new NPC("Jojo", 7,8,0,0,1,3,0);
 
         items = new ArrayList<Item>();
         items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
@@ -60,6 +60,8 @@ public class TestTileGrid extends Application {
     }
 
     private void GenMap(Stage primaryStage, String imagePath){
+        initCaracters();
+
         // Chargement des données depuis le fichier CSV
         Image[][] tileImages = loadTileImages(imagePath);
 
@@ -79,9 +81,8 @@ public class TestTileGrid extends Application {
         Scene scene = new Scene(root, NUM_TILES_X * TILE_SIZE + 200, NUM_TILES_Y * TILE_SIZE);
         root.getChildren().addAll(gridPane, vBox);
 
-        initWorld();
 
-        ImageView playerImageView = new ImageView(player.getPlayerImage());
+        ImageView playerImageView = player.getImage();
         showEntities(playerImageView, root);
 
 
@@ -120,11 +121,9 @@ public class TestTileGrid extends Application {
                 default:
                     break;
             }
-            if (e.getCode() == KeyCode.A){
-                System.out.println("A was pressed");
-            }
             playerImageView.setLayoutX(player.getX() * TILE_SIZE);
             playerImageView.setLayoutY(player.getY() * TILE_SIZE);
+
 
             checkForItemPickup(root);
         });
@@ -165,9 +164,16 @@ public class TestTileGrid extends Application {
                     int intValue = Integer.parseInt(value.trim());
                     String imagePath = getImagePathForValue(intValue);
                     tileImages[columnIndex][rowIndex] = new Image(imagePath);
-                    if (intValue == 0 || intValue == 1) {
+                    if (intValue == 0) { // collision avec les murs
                         collisionMap[columnIndex][rowIndex] = true;
                     }
+                    if (intValue == 1) { // collision avec l'eau
+                        collisionMap[columnIndex][rowIndex] = true;
+                    }
+                    if (player.getCapacities() == 1 && intValue == 0) { // s'il a la potion, il traverse les murs
+                        collisionMap[columnIndex][rowIndex] = false;
+                    }
+
                     columnIndex++;
                 }
                 rowIndex++;
@@ -220,7 +226,7 @@ public class TestTileGrid extends Application {
 
 
         // monster
-        ImageView monsterImageView = new ImageView(monster.getMonsterImage());
+        ImageView monsterImageView = monster.getImage();
         monsterImageView.setFitWidth(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
         monsterImageView.setFitHeight(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
         root.getChildren().add(monsterImageView); // Ajout de l'ImageView du joueur à la scène
@@ -230,7 +236,7 @@ public class TestTileGrid extends Application {
 
 
         // npc
-        ImageView npcImageView = new ImageView(npc.getImage());
+        ImageView npcImageView = npc.getImage();
         npcImageView.setFitWidth(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
         npcImageView.setFitHeight(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
         root.getChildren().add(npcImageView); // Ajout de l'ImageView du joueur à la scène

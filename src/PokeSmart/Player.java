@@ -1,31 +1,30 @@
 package PokeSmart;
 
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends Entity {
     private String name;
-    private double healthPoints;
     private double strength;
     private double attacks; // 0 basics, 1 or 2 other attacks
     private double defences;
     private double money;
     private double type; //if 0 young, if 1 villager, if 2 old, if 3 special
-    private Image playerImage;
+    private ImageView playerImage;
 
 
-    public Player(String nom, double x, double y, double vx, double vy, double healthPoints, double strength, double attacks, double defences, double money, double type) {
-        super(x, y, vx, vy);
+    public Player(String nom, double x, double y, double vx, double vy, double healthPoints, int capacities, double strength, double attacks, double defences, double money, double type) {
+        super(x, y, vx, vy, healthPoints, capacities);
         this.name = nom;
-        this.healthPoints = healthPoints;
         this.strength = strength;
         this.attacks = attacks;
         this.defences = defences;
         this.money = money;
         this.type = type;
-        this.playerImage = new Image("file:src/PokeSmart/Player/Walking sprites/boy_down_1.png");
+        this.playerImage = new ImageView("file:src/PokeSmart/Player/Walking sprites/boy_down_1.png");
     }
 
     public String getName() {
@@ -34,14 +33,6 @@ public class Player extends Entity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public double getHealthPoints() {
-        return healthPoints;
-    }
-
-    public void setHealthPoints(double healthPoints) {
-        this.healthPoints = healthPoints;
     }
 
     public double getStrength() {
@@ -79,10 +70,10 @@ public class Player extends Entity {
         this.type = type;
     }
 
-    public Image getPlayerImage() {
+    public ImageView getImage() {
         return playerImage;
     }
-    public void setPlayerImage(Image playerImage) {
+    public void setImage(ImageView playerImage) {
         this.playerImage = playerImage;
     }
 }
