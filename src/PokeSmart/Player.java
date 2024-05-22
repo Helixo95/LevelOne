@@ -1,11 +1,5 @@
 package PokeSmart;
 
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class Player extends Entity {
     private String name;
     private double strength;
@@ -13,9 +7,6 @@ public class Player extends Entity {
     private double defences;
     private double money;
     private double type; //if 0 young, if 1 villager, if 2 old, if 3 special
-
-    // imagePath = src/PokeSmart/Player/Walking sprites/boy_down_1.png
-
 
     public Player(String nom, double x, double y, double vx, double vy, double healthPoints, int capacities, double strength, double attacks, double defences, double money, double type, String imagePath) {
         super(x, y, vx, vy, healthPoints, capacities, imagePath);
