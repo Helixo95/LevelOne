@@ -120,6 +120,7 @@ public class TestTileGrid extends Application {
 
 
             checkForItemPickup(root, tileImages, worldPath);
+            System.out.println(player.getCapacities());
         });
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -169,7 +170,6 @@ public class TestTileGrid extends Application {
                     if ((player.getCapacities() == 1 || player.getCapacities() == 3 || player.getCapacities() == 5 || player.getCapacities() == 7)&& intValue == 0) { // s'il a la potion, il traverse les murs
                         collisionMap[columnIndex][rowIndex] = false;
                     }
-
                     columnIndex++;
                 }
                 rowIndex++;
