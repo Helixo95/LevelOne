@@ -402,12 +402,15 @@ public class TestTileGrid extends Application {
 
 
     private void initCaractersWorld2(){
+        entities.clear(); // vérifier que ça supprime bien les entités du monde précédent
+        // supprimer tous les items précédents et regarder le bug quand on change de monde et récupère un item ça change la carte
         entities = new ArrayList<Entity>();
         entities.add(new Monster("BatMan", 7, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1,"src/PokeSmart/Monster/bat_down_2.png"));
         entities.add(new Monster("Skeleton", 10, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1,"src/PokeSmart/Monster/skeletonlord_down_1.png"));
 
         items = new ArrayList<Item>();
         items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
+        items.add(new Item(7,7,"Car", "this can heal you", Effet.VICTORY,1,"src/PokeSmart/Items/911-removebg-preview.png"));
     }
 
 

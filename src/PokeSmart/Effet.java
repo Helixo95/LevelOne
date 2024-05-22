@@ -9,6 +9,7 @@ public enum Effet {
     OPENDOOR,
     OVERWALL,
     NEWWORLD,
+    VICTORY,
     SWIM,
     DEATH,
     NULL,
