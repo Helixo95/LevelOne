@@ -45,14 +45,13 @@ public class TestTileGrid extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("PokeSmart");
-        String worldPath = "src/PokeSmart/Tiles/world1.csv";
-        GenMap(primaryStage, worldPath);
-
+        primaryStage.setTitle("PokeSmart - world1");
+        initCaracters();
+        String worldPath1 = "src/PokeSmart/Tiles/world1.csv";
+        GenMap(primaryStage, worldPath1);
     }
 
     private void GenMap(Stage primaryStage, String wPath){
-        initCaracters();
         String worldPath = wPath;
         // Chargement des données depuis le fichier CSV
         Image[][] tileImages = loadTileImages(worldPath);
@@ -79,7 +78,13 @@ public class TestTileGrid extends Application {
         ImageView playerImageView = player.getImage();
         showEntities(playerImageView, root);
 
+        keySet(scene, playerImageView, root, tileImages, worldPath, primaryStage);
 
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private void keySet(Scene scene, ImageView playerImageView, BorderPane root, Image[][] tileImages, String worldPath, Stage primaryStage) {
         scene.setOnKeyPressed(e -> {
             double x = player.getX();
             double y = player.getY();
@@ -120,9 +125,22 @@ public class TestTileGrid extends Application {
 
 
             checkForItemPickup(root, tileImages, worldPath);
+
+            // vérifier si le joueur est sur la porte
+            if (player.getX() == 14 && player.getY() == 10) {
+                System.out.println("You win!");
+                //primaryStage.close();
+                createNewWorld();
+            }
         });
-        primaryStage.setScene(scene);
-        primaryStage.show();
+    }
+
+    private void createNewWorld() {
+        // Par exemple, vous pouvez appeler la méthode GenMap avec un nouveau fichier de carte
+        String newWorldPath = "src/PokeSmart/Tiles/world2.csv";
+        Stage newWorldStage = new Stage();
+        newWorldStage.setTitle("PokeSmart - world2");
+        GenMap(newWorldStage, newWorldPath);
     }
 
     private void checkForItemPickup(BorderPane root, Image[][] tileImages, String filePath) {
