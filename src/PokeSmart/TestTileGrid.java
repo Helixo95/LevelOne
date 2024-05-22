@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -24,11 +24,6 @@ public class TestTileGrid extends Application {
     private final int NUM_TILES_Y = 12; // Nombre de tuiles en hauteur
 
     private Player player;
-    private HealPotion healPotion;
-    private WallPotion wallPotion;
-    private Monster monster;
-    private Key key;
-    private NPC npc;
     private boolean[][] collisionMap;
     private List<Item> items;
     private List<Entity> entities;
@@ -46,12 +41,6 @@ public class TestTileGrid extends Application {
         items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
         items.add(new Item(7,4,"WallPotion", "no more walls", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_blue.png"));
         items.add(new Item(7,5,"Key", "this can open doors", Effet.OPENDOOR,1,"src/PokeSmart/Object/key.png"));
-
-
-        /*
-        items.add(key = new Key(7,5));
-        items.add(healPotion = new HealPotion(7,3));
-        items.add(wallPotion = new WallPotion(7,4));*/
     }
 
     @Override
@@ -77,13 +66,15 @@ public class TestTileGrid extends Application {
         // vBox.getChildren().add(new Button("Button"));
         // Create inventory VBox
         inventoryBox = new VBox();
-        //updateInventoryBox();
+        updateInventoryBox();
 
         // Création de la scène
-        Group root = new Group();
+        //Group root = new Group();
+        BorderPane root = new BorderPane();
         Scene scene = new Scene(root, NUM_TILES_X * TILE_SIZE + 200, NUM_TILES_Y * TILE_SIZE);
-        root.getChildren().addAll(gridPane, vBox);
-
+        //root.getChildren().addAll(gridPane, vBox);
+        root.setCenter(gridPane);
+        root.setRight(inventoryBox);
 
         ImageView playerImageView = player.getImage();
         showEntities(playerImageView, root);
@@ -134,7 +125,7 @@ public class TestTileGrid extends Application {
         primaryStage.show();
     }
 
-    private void checkForItemPickup(Group root) {
+    private void checkForItemPickup(BorderPane root) {
         List<Item> pickedUpItems = new ArrayList<>();
         for (Item item : items) {
             if (player.getX() == item.getX() && player.getY() == item.getY()) {
@@ -142,6 +133,7 @@ public class TestTileGrid extends Application {
                 pickedUpItems.add(item);
                 System.out.println("Item picked up");
                 root.getChildren().remove(item.getImage());
+                updateInventoryBox();
             }
         }
         items.removeAll(pickedUpItems);
@@ -218,7 +210,7 @@ public class TestTileGrid extends Application {
         return gridPane;
     }
 
-    private void showEntities(ImageView playerImageView, Group root) {
+    private void showEntities(ImageView playerImageView, BorderPane root) {
         // player
         playerImageView.setFitWidth(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
         playerImageView.setFitHeight(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
@@ -226,26 +218,6 @@ public class TestTileGrid extends Application {
 
         playerImageView.setLayoutX(player.getX() * TILE_SIZE);
         playerImageView.setLayoutY(player.getY() * TILE_SIZE);
-
-
-        // monster
-        /*ImageView monsterImageView = monster.getImage();
-        monsterImageView.setFitWidth(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
-        monsterImageView.setFitHeight(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
-        root.getChildren().add(monsterImageView); // Ajout de l'ImageView du joueur à la scène
-
-        monsterImageView.setLayoutX(monster.getX() * TILE_SIZE);
-        monsterImageView.setLayoutY(monster.getY() * TILE_SIZE);
-
-
-        // npc
-        ImageView npcImageView = npc.getImage();
-        npcImageView.setFitWidth(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
-        npcImageView.setFitHeight(TILE_SIZE); // Ajustez la taille de l'image selon vos besoins
-        root.getChildren().add(npcImageView); // Ajout de l'ImageView du joueur à la scène
-
-        npcImageView.setLayoutX(npc.getX() * TILE_SIZE);
-        npcImageView.setLayoutY(npc.getY() * TILE_SIZE);*/
 
         // entities
         for (Entity entity : entities) {
