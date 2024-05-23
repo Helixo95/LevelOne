@@ -1,14 +1,12 @@
-
-
 import PokeSmart.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -21,6 +19,9 @@ public class Main extends Application {
     private final int TILE_SIZE = 48; // Taille d'une tuile en pixels
     private final int NUM_TILES_X = 16; // Nombre de tuiles en largeur
     private final int NUM_TILES_Y = 12; // Nombre de tuiles en hauteur
+
+    private boolean questAccepted = false;
+    private boolean monsterKilled = false;
 
     private Player player;
     private Monster monster;
@@ -50,9 +51,9 @@ public class Main extends Application {
 
         items = new ArrayList<Item>();
         items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
-        items.add(new Item(7,4,"WallPotion", "walls are no more a problem", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_grey.png"));
+        items.add(new Item(0,11,"WallPotion", "walls are no more a problem", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_grey.png"));
         items.add(new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png"));
-        items.add(new Item(7,6,"Key", "doors can be opened", Effet.OPENDOOR,1,"src/PokeSmart/Object/key.png"));
+        items.add(new Item(15,0,"Key", "doors can be opened", Effet.OPENDOOR,1,"src/PokeSmart/Object/key.png"));
         items.add(new Item(14,10,"Door", "go to an other world", Effet.NEWWORLD,1,"src/PokeSmart/Object/door_iron.png"));
     }
 
@@ -76,9 +77,7 @@ public class Main extends Application {
 
         // Création de la barre de vie
         healthPointsLabel = new Label("Health Points: \n" + player.getHealthPoints());
-        //root.setRight(healthPointsLabel);
         updateHealthPointsLabel(root);
-        //root.setRight(healthPointsLabel);
 
         // Création de l'ImageView du joueur
         ImageView playerImageView = player.getImage();
@@ -213,15 +212,12 @@ public class Main extends Application {
                 else {
                     System.out.println("You can't go there");
                 }
-                // Mettre à jour l'affichage du joueur sur la carte
-                //playerImageView.setLayoutX(x * TILE_SIZE);
-                //playerImageView.setLayoutY(y * TILE_SIZE);
             }
 
 
             checkDestroyedPlayer(primaryStage);
 
-            // met à jour l'image du joueur sur la carte
+            // Met à jour l'image du joueur sur la carte
             playerImageView.setLayoutX(player.getX() * TILE_SIZE);
             playerImageView.setLayoutY(player.getY() * TILE_SIZE);
 
@@ -277,12 +273,6 @@ public class Main extends Application {
                     else {
                         collisionMap[columnIndex][rowIndex] = 0;
                     }
-                    /*if ((player.getCapacities() == 1 || player.getCapacities() == 3 || player.getCapacities() == 5 || player.getCapacities() == 7) && intValue == 0) { // s'il a la potion, il traverse les murs
-                        collisionMap[columnIndex][rowIndex] = 0;
-                    }
-                    if ((player.getCapacities() == 2 || player.getCapacities() == 3 || player.getCapacities() == 6 || player.getCapacities() == 7) && intValue == 1) { // supression de la collision avec l'eau
-                        collisionMap[columnIndex][rowIndex] = 0;
-                    }*/
                     columnIndex++;
                 }
                 rowIndex++;
@@ -308,9 +298,9 @@ public class Main extends Application {
         Scene inventoryScene = new Scene(inventoryGridPane);
 
         // Create labels for the player's name, current money, and life
-        Label nameLabel = new Label("Name: " + player.getName());
-        Label moneyLabel = new Label("Money: " + player.getMoney());
-        Label lifeLabel = new Label("Life: " + player.getHealthPoints());
+        Label nameLabel = new Label("Name : " + player.getName());
+        Label moneyLabel = new Label("Money : " + player.getMoney());
+        Label lifeLabel = new Label("Life : " + player.getHealthPoints());
 
         // Add the labels to the grid pane
         inventoryGridPane.add(nameLabel, 0, 0);
@@ -325,9 +315,6 @@ public class Main extends Application {
             // Create a Label for the name of the inventory item
             Label potionNameLabel = new Label(item.getItemName());
 
-            // Create a Button for the inventory item
-            //Button potionButton = UsePotionButton(item, potionImageView, entities);
-
             Button useButton = new Button("Use");
             useButton.setOnAction(e -> {
                 item.useItem(player);
@@ -341,6 +328,7 @@ public class Main extends Application {
             // Add the Button, the name Label, and the price Label to the grid pane
             inventoryGridPane.add(useButton, 0, rowIndex);
             inventoryGridPane.add(potionNameLabel, 1, rowIndex);
+            inventoryGridPane.add(potionImageView, 2, rowIndex);
             rowIndex++;
         }
         inventoryStage.setScene(inventoryScene);
@@ -409,73 +397,95 @@ public class Main extends Application {
 
 
     private void checkForNPCEncounter(BorderPane root, ImageView playerImageView, Stage primaryStage) {
-        if (player.getX() == npc.getX() && player.getY() == npc.getY()) {
+        if (player.equals(npc)) { //if (player.getX() == npc.getX() && player.getY() == npc.getY()) {
             System.out.println("NPC encountered");
 
-            // Create a dialog
-            Dialog<String> dialog = new Dialog<>();
-            dialog.setTitle("Dialogue with NPC");
-            dialog.setHeaderText("NPC: Hello, I have a quest for you. Do you accept?");
-
-            // Add buttons to the dialog
-            ButtonType acceptButtonType = new ButtonType("Accept", ButtonBar.ButtonData.YES);
-            ButtonType refuseButtonType = new ButtonType("Refuse", ButtonBar.ButtonData.NO);
-            dialog.getDialogPane().getButtonTypes().addAll(acceptButtonType, refuseButtonType);
-
-            // Handle the result
-            dialog.setResultConverter(buttonType -> {
-                if (buttonType == acceptButtonType) {
-                    // Handle the player accepting the quest
-                    System.out.println("You accepted the quest!");
-                    return "Accepted";
-                } else if (buttonType == refuseButtonType) {
-                    // Handle the player refusing the quest
-                    System.out.println("You refused the quest.");
-                    return "Refused";
+            if (questAccepted) {
+                if (monsterKilled) {
+                    System.out.println("Quest completed");
+                    showAlert("Quest completed", null, "You completed the quest! You can go to the next world.");
+                    player.setDiscoverNewWorld(1);
+                    return;
                 }
-                return null;
-            });
-
-            // Show the dialog
-            Optional<String> result = dialog.showAndWait();
+                showAlert("Quest not completed", null, "You have to kill the Monster first.");
+                return;
+            }
+            else {
+                showQuestDialog();
+                return;
+            }
         }
     }
 
+    private void showQuestDialog() {
+        // Create a dialog
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Dialogue with NPC");
+        dialog.setHeaderText("NPC: Hello, I have a quest for you. Do you accept?");
+
+        // Add buttons to the dialog
+        ButtonType acceptButtonType = new ButtonType("Accept", ButtonBar.ButtonData.YES);
+        ButtonType refuseButtonType = new ButtonType("Refuse", ButtonBar.ButtonData.NO);
+        dialog.getDialogPane().getButtonTypes().addAll(acceptButtonType, refuseButtonType);
+
+        // Handle the result
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == acceptButtonType) {
+                questAccepted = true;
+                showAlert("Quest accepted", null, "You accepted the quest! You have to kill the Monster.");
+                return "Accepted";
+            } else if (buttonType == refuseButtonType) {
+                // Handle the player refusing the quest
+                System.out.println("You refused the quest.");
+                return "Refused";
+            }
+            return null;
+        });
+
+        // Show the dialog
+        Optional<String> result = dialog.showAndWait();
+    }
+
+
     private void checkForMonsterEncounter(BorderPane root, ImageView playerImageView, Stage primaryStage) {
-        if (player.getX() == monster.getX() && player.getY() == monster.getY()) {
+        if (player.equals(monster)) { //if (player.getX() == monster.getX() && player.getY() == monster.getY()) {
             System.out.println("Monster encountered");
 
-            // Create a dialog
-            Dialog<String> dialog = new Dialog<>();
-            dialog.setTitle("Combat with Monster");
-            dialog.setHeaderText("Monster: I will defeat you! What will you do?");
 
-            // Add buttons to the dialog
-            ButtonType attackButtonType = new ButtonType("Attack", ButtonBar.ButtonData.YES);
-            ButtonType runButtonType = new ButtonType("Run", ButtonBar.ButtonData.NO);
-            dialog.getDialogPane().getButtonTypes().addAll(attackButtonType, runButtonType);
-
-            // Handle the result
-            dialog.setResultConverter(buttonType -> {
-                if (buttonType == attackButtonType) {
-                    // Handle the player attacking the monster
-                    // You can add your combat logic here
-                    player.setHealthPoints(50);
-                    updateHealthPointsLabel(root);
-                    System.out.println("You attacked the monster!");
-                    return "Attacked";
-                } else if (buttonType == runButtonType) {
-                    // Handle the player running away
-                    // You can add your escape logic here
-                    System.out.println("You ran away from the monster.");
-                    return "Ran";
-                }
-                return null;
-            });
-
-            // Show the dialog
-            Optional<String> result = dialog.showAndWait();
         }
+    }
+
+    private void showMonsterDialog(BorderPane root) {
+        // Create a dialog
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Combat with Monster");
+        dialog.setHeaderText("Monster: I will defeat you! What will you do?");
+
+        // Add buttons to the dialog
+        ButtonType attackButtonType = new ButtonType("Attack", ButtonBar.ButtonData.YES);
+        ButtonType runButtonType = new ButtonType("Run", ButtonBar.ButtonData.NO);
+        dialog.getDialogPane().getButtonTypes().addAll(attackButtonType, runButtonType);
+
+        // Handle the result
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == attackButtonType) {
+                // Handle the player attacking the monster
+                // You can add your combat logic here
+                player.setHealthPoints(50);
+                updateHealthPointsLabel(root);
+                System.out.println("You attacked the monster!");
+                return "Attacked";
+            } else if (buttonType == runButtonType) {
+                // Handle the player running away
+                // You can add your escape logic here
+                System.out.println("You ran away from the monster.");
+                return "Ran";
+            }
+            return null;
+        });
+
+        // Show the dialog
+        Optional<String> result = dialog.showAndWait();
     }
 
 
