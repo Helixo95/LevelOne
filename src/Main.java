@@ -1,5 +1,6 @@
 import PokeSmart.*;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -31,6 +32,7 @@ public class Main extends Application {
     private List<Entity> entities;
     private VBox inventoryBox;
     private Label healthPointsLabel;
+    private Label monsterHealthPointsLabel;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -42,9 +44,9 @@ public class Main extends Application {
     }
 
     private void initCaractersWorld1(){
-        player = new Player("Popo", 6, 1, 1, 1, 100, 0,100, 2, 100, 1000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png");
+        player = new Player("Popo", 6, 1, 1, 1, 100, 0,0, 50, 50, 10000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png");
         entities = new ArrayList<Entity>();
-        monster = new Monster("Papa", 7, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1,"src/PokeSmart/Monster/orc_down_2.png");
+        monster = new Monster("Papa", 7, 2, 0, 0, 1,0, "OFFENSIVE", 1, 30, 100, 1,"src/PokeSmart/Monster/orc_down_2.png");
         npc = new NPC("Jojo", 7,8,0,0,1,3,0,"src/PokeSmart/NPC/oldman_down_1.png");
         entities.add(monster);
         entities.add(npc);
@@ -76,7 +78,8 @@ public class Main extends Application {
         root.setCenter(inventoryBox);
 
         // Création de la barre de vie
-        healthPointsLabel = new Label("Health Points: \n" + player.getHealthPoints());
+        //healthPointsLabel = new Label("Health Points: \n" + player.getHealthPoints());
+        //monsterHealthPointsLabel = new Label("Monster Health Points: \n" + monster.getHealthPoints());
         updateHealthPointsLabel(root);
 
         // Création de l'ImageView du joueur
@@ -213,7 +216,6 @@ public class Main extends Application {
                     System.out.println("You can't go there");
                 }
             }
-
 
             checkDestroyedPlayer(primaryStage);
 
@@ -450,8 +452,13 @@ public class Main extends Application {
     private void checkForMonsterEncounter(BorderPane root, ImageView playerImageView, Stage primaryStage) {
         if (player.equals(monster)) { //if (player.getX() == monster.getX() && player.getY() == monster.getY()) {
             System.out.println("Monster encountered");
-
-
+            if (!questAccepted) {
+                showAlert("Monster encountered", null, "You have to accept the quest first.");
+                return;
+            } else if (questAccepted && !monsterKilled) {
+                showMonsterDialog(root);
+            }
+            //showMonsterDialog(root);
         }
     }
 
@@ -470,8 +477,8 @@ public class Main extends Application {
         dialog.setResultConverter(buttonType -> {
             if (buttonType == attackButtonType) {
                 // Handle the player attacking the monster
-                // You can add your combat logic here
-                player.setHealthPoints(50);
+                player.attack(monster);
+                player.getHealthPoints();
                 updateHealthPointsLabel(root);
                 System.out.println("You attacked the monster!");
                 return "Attacked";
@@ -515,12 +522,31 @@ public class Main extends Application {
 
 
 
-    private void updateHealthPointsLabel(BorderPane root) {
+    /*private void updateHealthPointsLabel(BorderPane root) {
         if (healthPointsLabel == null) {
             healthPointsLabel = new Label();
         }
         healthPointsLabel.setText("Health Points: \n" + player.getHealthPoints());
         root.setRight(healthPointsLabel);
+    }*/
+
+    private void updateHealthPointsLabel(BorderPane root) {
+        if (healthPointsLabel == null) {
+            healthPointsLabel = new Label();
+        }
+        healthPointsLabel.setText("Your HP : \n" + player.getHealthPoints());
+
+        if (monsterHealthPointsLabel == null) {
+            monsterHealthPointsLabel = new Label();
+        }
+        // Remplacez "monstre" par le nom de votre monstre et "getHealthPoints()" par la méthode pour obtenir ses points de vie
+        monsterHealthPointsLabel.setText("Monster HP : \n" + monster.getHealthPoints());
+
+        // Ajoutez les labels des points de vie du joueur et du monstre au root
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(healthPointsLabel, monsterHealthPointsLabel);
+        vBox.setAlignment(Pos.TOP_RIGHT);
+        root.setRight(vBox);
     }
 
 

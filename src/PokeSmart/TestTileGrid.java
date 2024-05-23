@@ -29,6 +29,7 @@ public class TestTileGrid extends Application {
     private List<Entity> entities;
     private VBox inventoryBox;
     private Label healthPointsLabel;
+    private Label monsterHealthPointsLabel;
 
     @Override
     public void start(Stage primaryStage) throws Exception {

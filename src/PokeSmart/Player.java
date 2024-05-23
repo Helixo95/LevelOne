@@ -18,6 +18,21 @@ public class Player extends Entity {
         this.type = type;
     }
 
+    public void attack(Entity entity) {
+        if (entity instanceof Monster) {
+            Monster monster = (Monster) entity;
+            if (monster.getDefences() < this.strength) {
+                entity.setHealthPoints((int) (entity.getHealthPoints()-this.attacks));
+
+                monster.setHealthPoints((int) (monster.getHealthPoints()-this.attacks));
+                this.setHealthPoints((int) (this.getHealthPoints() - monster.getAttacks()));
+            }
+        }
+        else if (entity instanceof Player) {
+            entity.setHealthPoints((int) (entity.getHealthPoints()-this.attacks));
+        }
+    }
+
     public String getName() {
         return name;
     }
