@@ -54,7 +54,7 @@ public class Main extends Application {
         items = new ArrayList<Item>();
         items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
         items.add(new Item(0,11,"WallPotion", "walls are no more a problem", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_grey.png"));
-        items.add(new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png"));
+        //items.add(new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png"));
         items.add(new Item(15,0,"Key", "doors can be opened", Effet.OPENDOOR,1,"src/PokeSmart/Object/key.png"));
         items.add(new Item(14,10,"Door", "go to an other world", Effet.NEWWORLD,1,"src/PokeSmart/Object/door_iron.png"));
     }
@@ -289,8 +289,8 @@ public class Main extends Application {
         // stage for inventory window
         Stage inventoryStage = new Stage();
         inventoryStage.setTitle("Player inventory");
-        inventoryStage.setWidth(500);
-        inventoryStage.setHeight(500);
+        inventoryStage.setWidth(300);
+        inventoryStage.setHeight(300);
 
         // GridPane for inventory items
         GridPane inventoryGridPane = new GridPane();
@@ -311,30 +311,46 @@ public class Main extends Application {
 
         int rowIndex = 1;
         for (Item item : player.getInventory()) {
-            // Create an ImageView for the inventory item
-            ImageView potionImageView = item.getImage();
+            if (item.getQuantity() > 0) {
+                // Create an ImageView for the inventory item
+                ImageView potionImageView = item.getImage();
 
-            // Create a Label for the name of the inventory item
-            Label potionNameLabel = new Label(item.getItemName());
+                // Create a Label for the name of the inventory item
+                Label potionNameLabel = new Label(item.getItemName());
 
-            Button useButton = new Button("Use");
-            useButton.setOnAction(e -> {
-                item.useItem(player);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Item Used");
-                alert.setHeaderText(null);
-                alert.setContentText(item.getItemDescription());
-                alert.showAndWait();
-            });
+                Button useButton = new Button("Use");
+                useButton.setOnAction(e -> {
+                    item.useItem(player);
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Item Used");
+                    alert.setHeaderText(null);
+                    alert.setContentText(item.getItemDescription());
+                    alert.showAndWait();
+                    removeItemInInventory(item);
+                });
 
-            // Add the Button, the name Label, and the price Label to the grid pane
-            inventoryGridPane.add(useButton, 0, rowIndex);
-            inventoryGridPane.add(potionNameLabel, 1, rowIndex);
-            inventoryGridPane.add(potionImageView, 2, rowIndex);
-            rowIndex++;
+                // Add the Button, the name Label, and the price Label to the grid pane
+                inventoryGridPane.add(useButton, 0, rowIndex);
+                inventoryGridPane.add(potionNameLabel, 1, rowIndex);
+                inventoryGridPane.add(new Label(item.getItemDescription()), 2, rowIndex);
+                inventoryGridPane.add(potionImageView, 3, rowIndex);
+                rowIndex++;
+            }
         }
         inventoryStage.setScene(inventoryScene);
         inventoryStage.show();
+    }
+
+
+    private void removeItemInInventory(Item usedItem) {
+        Iterator<Item> iterator = player.getInventory().iterator();
+        while (iterator.hasNext()) {
+            Item item = iterator.next();
+            if (item.equals(usedItem) && (item.getQuantity() == 0)) {
+                iterator.remove();
+                break;
+            }
+        }
     }
 
 
@@ -406,7 +422,17 @@ public class Main extends Application {
                 if (monsterKilled) {
                     System.out.println("Quest completed");
                     showAlert("Quest completed", null, "You completed the quest! You can go to the next world.");
-                    player.setDiscoverNewWorld(1);
+                    //player.setDiscoverNewWorld(1);
+                    Item seaPotion = new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png");
+                    items.add(seaPotion);
+
+                    // afficher l'item sur la carte
+                    ImageView seaPotionImageView = seaPotion.getImage();
+                    seaPotionImageView.setFitWidth(TILE_SIZE);
+                    seaPotionImageView.setFitHeight(TILE_SIZE);
+                    root.getChildren().add(seaPotionImageView);
+                    seaPotionImageView.setLayoutX(seaPotion.getX() * TILE_SIZE);
+                    seaPotionImageView.setLayoutY(seaPotion.getY() * TILE_SIZE);
                     return;
                 }
                 showAlert("Quest not completed", null, "You have to kill the Monster first.");
