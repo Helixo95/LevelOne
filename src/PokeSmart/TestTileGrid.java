@@ -68,7 +68,6 @@ public class TestTileGrid extends Application {
 
         // Création de la boîte d'inventaire
         inventoryBox = new VBox();
-        //updateInventoryBox();
 
         // Création de la scène
         BorderPane root = new BorderPane();
@@ -194,11 +193,11 @@ public class TestTileGrid extends Application {
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_down_1.png"));
                     int maxGoY = (int) (y + player.getVy());
 
-                    if ((x < NUM_TILES_X - 1 && collisionMap[(int) x][(int) y + 1] == 0) && (maxGoY < NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il n'y a pas de collision
+                    if ((x < NUM_TILES_X - 1 && collisionMap[(int) x][(int) y + 1] == 0) && (maxGoY <= NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il n'y a pas de collision
                         y = y + player.getVy();
                         player.setY(y);
                     }
-                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x][(int) y + 1] == 1)) && (maxGoY < NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec un mur
+                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x][(int) y + 1] == 1)) && (maxGoY <= NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec un mur
                         if (player.isCanOverWall()) {
                             y = y + player.getVy();
                             player.setY(y);
@@ -207,7 +206,7 @@ public class TestTileGrid extends Application {
                             showAlert("Collision alert",null,"You can't go over walls. You have to pick up the WallPotion first");
                         }
                     }
-                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x][(int) y + 1] == 2)) && (maxGoY < NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
+                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x][(int) y + 1] == 2)) && (maxGoY <= NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
                         if (player.isCanSwim()) {
                             y = y + player.getVy();
                             player.setY(y);
@@ -386,9 +385,7 @@ public class TestTileGrid extends Application {
                 alert.setHeaderText(null);
                 alert.setContentText(item.getItemDescription());
                 alert.showAndWait();
-                //updateInventoryBox();
             });
-            //inventoryBox.getChildren().addAll(itemLabel, useButton);
 
             // Add the Button, the name Label, and the price Label to the grid pane
             inventoryGridPane.add(useButton, 0, rowIndex);
