@@ -419,6 +419,7 @@ public class Main extends Application {
             if (player.getX() == item.getX() && player.getY() == item.getY()) {
                 if (item.getEffet() != Effet.NEWWORLD){
                     player.addItem(item);
+                    item.useItem(player);
                     pickedUpItems.add(item);
                     System.out.println("Item picked up");
                     root.getChildren().remove(item.getImage());
