@@ -176,7 +176,7 @@ public class TestTileGrid extends Application {
                             player.setY(y);
                         }
                         else {
-                            System.out.println("you can't pass over walls");
+                            showAlert("Collision alert",null,"You can't go over walls. You have to pick up the WallPotion first");
                         }
                     }
                     else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x][(int) y - 1] == 2)) && (minGoY >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
@@ -186,7 +186,7 @@ public class TestTileGrid extends Application {
                         }
                         else {
                             player.setDestoyed(true);
-                            System.out.println("You can't swim");
+                            showAlert("Collision alert", null, "You can't swim. You have to pick up the SwimPotion first");
                         }
                     }
                     break;
@@ -204,7 +204,7 @@ public class TestTileGrid extends Application {
                             player.setY(y);
                         }
                         else {
-                            System.out.println("you can't pass over walls");
+                            showAlert("Collision alert",null,"You can't go over walls. You have to pick up the WallPotion first");
                         }
                     }
                     else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x][(int) y + 1] == 2)) && (maxGoY < NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
@@ -213,7 +213,7 @@ public class TestTileGrid extends Application {
                             player.setY(y);
                         } else {
                             player.setDestoyed(true);
-                            System.out.println("You can't swim");
+                            showAlert("Collision alert", null, "You can't swim. You have to pick up the SwimPotion first");
                         }
                     }
                     break;
@@ -231,7 +231,7 @@ public class TestTileGrid extends Application {
                             player.setX(x);
                         }
                         else {
-                            System.out.println("you can't pass over walls");
+                            showAlert("Collision alert",null,"You can't go over walls. You have to pick up the WallPotion first");
                         }
                     }
                     else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x - 1][(int) y] == 2)) && (minGoX >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
@@ -241,9 +241,7 @@ public class TestTileGrid extends Application {
                         }
                         else {
                             player.setDestoyed(true);
-                            System.out.println("Joueur : "+player.getX()+";"+player.getY());
-                            System.out.println("Map : "+x+"+1;"+"y : "+y);
-                            System.out.println("You can't swim");
+                            showAlert("Collision alert", null, "You can't swim. You have to pick up the SwimPotion first");
                         }
                     }
                     break;
@@ -260,7 +258,7 @@ public class TestTileGrid extends Application {
                             player.setX(x);
                         }
                         else {
-                            System.out.println("you can't pass over walls");
+                            showAlert("Collision alert",null,"You can't go over walls. You have to pick up the WallPotion first");
                         }
                     }
                     else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x + 1][(int) y] == 2)) && (maxGoX < NUM_TILES_X)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
@@ -270,14 +268,11 @@ public class TestTileGrid extends Application {
                         }
                         else {
                             player.setDestoyed(true);
-                            System.out.println("Joueur : "+player.getX()+";"+player.getY());
-                            System.out.println("Map : "+x+"+1;"+"y : "+y);
-                            System.out.println("You can't swim");
+                            showAlert("Collision alert", null, "You can't swim. You have to pick up the SwimPotion first");
                         }
                     }
                     break;
                 case I:
-                    System.out.println("I was pressed");
                     showInventoryWindow(entities);
                 default:
                     break;
@@ -292,6 +287,14 @@ public class TestTileGrid extends Application {
             checkForMonsterEncounter(root, playerImageView, primaryStage);
             checkForNPCEncounter(root, playerImageView, primaryStage);
         });
+    }
+
+    private void showAlert(String title, String header, String phrase) {
+        Alert alterWall = new Alert(Alert.AlertType.INFORMATION);
+        alterWall.setTitle(title);
+        alterWall.setHeaderText(header);
+        alterWall.setContentText(phrase);
+        alterWall.showAndWait();
     }
 
     private void checkDestroyedPlayer(Stage primaryStage) {
@@ -341,7 +344,6 @@ public class TestTileGrid extends Application {
 
 
     private void showInventoryWindow(List<Entity> entities) {
-        System.out.println("fonction");
         // stage for inventory window
         Stage inventoryStage = new Stage();
         inventoryStage.setTitle("Player inventory");
@@ -409,15 +411,12 @@ public class TestTileGrid extends Application {
                     System.out.println("Item picked up");
                     root.getChildren().remove(item.getImage());
                     updateInventoryBox(); // voir pour le bouton
-
-                    item.useItem(player); // A METTRE DANS L'INVENTAIRE POUR QUE LE PLAYER SELECTIONNE ET PUISSE CHOISIR D'UTILISER L'ITEM
                     System.out.println(player.getCapacities());
                 }
                 if (item.getItemName() == "Key") {
                     System.out.println("You picked up a key !");
-                    player.setDiscoverNewWorld(1);
                     for (Item item1 : items) {
-                        if ("Door".equals(item1.getItemName())) {
+                        if ((player.getDiscoverNewWorld() == 1) && "Door".equals(item1.getItemName())) {//("Door".equals(item1.getItemName())) {
                             root.getChildren().remove(item1.getImage()); // Remove the old image from the scene
                             ImageView newImage = new ImageView("file:src/PokeSmart/Object/door.png"); // Create a new ImageView
                             newImage.setFitWidth(TILE_SIZE);

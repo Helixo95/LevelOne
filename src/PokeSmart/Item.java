@@ -42,10 +42,11 @@ public class Item extends Entity {
                 else if(entity.getCapacities() == 5) { entity.setCapacities(7);} // si clé et wall alors clé et wall et swim
             }
             case OPENDOOR -> {
-                if (entity.getCapacities() == 0) { entity.setCapacities(4);} // si rien alors clé
+                entity.setDiscoverNewWorld(1);
+                /*if (entity.getCapacities() == 0) { entity.setCapacities(4);} // si rien alors clé
                 else if(entity.getCapacities() == 1) { entity.setCapacities(5);} // si wall alors clé et wall
                 else if(entity.getCapacities() == 2) { entity.setCapacities(6);} // si swimc alors lé et swim
-                else if(entity.getCapacities() == 3) { entity.setCapacities(7);} // si wall et swim alors clé et wall et swim
+                else if(entity.getCapacities() == 3) { entity.setCapacities(7);} // si wall et swim alors clé et wall et swim*/
             }
             case NEWWORLD -> { // à changer
                 //entity.setX(0);
