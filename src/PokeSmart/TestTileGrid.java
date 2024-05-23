@@ -7,15 +7,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 
 public class TestTileGrid extends Application {
@@ -89,6 +87,8 @@ public class TestTileGrid extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        System.out.println("Player capacities : "+player.getCapacities());
     }
 
 
@@ -160,16 +160,33 @@ public class TestTileGrid extends Application {
         scene.setOnKeyPressed(e -> {
             double x = player.getX();
             double y = player.getY();
+            int minGoY = (int) (y - player.getVy());
             switch (e.getCode()) {
-                case UP:
+                /*case UP:
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_up_1.png"));
-                    int minGoY = (int) (y - player.getVy());
+                    System.out.println("instanciation du y");
+                    System.out.println("minGoY : "+minGoY);
+                    if (minGoY - player.getVy() < 0) {
+                        break;
+                    }
+                    //int minGoY = (int) (y - player.getVy());
+                    minGoY = (int) (y - player.getVy());
+                    System.out.println("minGoY : "+minGoY);
 
-                    if ((x < NUM_TILES_X - 1 && collisionMap[(int) x][(int) y - 1] == 0) && (minGoY >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il n'y a pas de collision
+                    /*if ((x < NUM_TILES_X && collisionMap[(int) x][(int) y - 1] == 0) && (minGoY >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il n'y a pas de collision
                         y = y - player.getVy();
                         player.setY(y);
+                        System.out.println("y = " + y);
                     }
-                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x][(int) y - 1] == 1)) && (minGoY >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec un mur
+                    if (minGoY >= 0) { // Vérifiez d'abord si le joueur est à la limite de la carte
+                        if (x < NUM_TILES_X && collisionMap[(int) x][(int) y - 1] == 0) { // Ensuite, vérifiez les collisions
+                            y = y - player.getVy();
+                            player.setY(y);
+                            System.out.println("y = " + y);
+                        }
+                        // Ajoutez le reste de votre code ici...
+                    }
+                    else if ((x < NUM_TILES_X && (collisionMap[(int) x][(int) y - 1] == 1)) && (minGoY >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec un mur
                         if (player.isCanOverWall()) {
                             y = y - player.getVy();
                             player.setY(y);
@@ -178,7 +195,7 @@ public class TestTileGrid extends Application {
                             showAlert("Collision alert",null,"You can't go over walls. You have to pick up the WallPotion first");
                         }
                     }
-                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x][(int) y - 1] == 2)) && (minGoY >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
+                    else if ((x < NUM_TILES_X && (collisionMap[(int) x][(int) y - 1] == 2)) && (minGoY >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
                         if (player.isCanSwim()) {
                             y = y - player.getVy();
                             player.setY(y);
@@ -188,16 +205,20 @@ public class TestTileGrid extends Application {
                             showAlert("Collision alert", null, "You can't swim. You have to pick up the SwimPotion first");
                         }
                     }
+                    else {
+                        System.out.println("here");
+                        break;
+                    }
                     break;
                 case DOWN:
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_down_1.png"));
                     int maxGoY = (int) (y + player.getVy());
 
-                    if ((x < NUM_TILES_X - 1 && collisionMap[(int) x][(int) y + 1] == 0) && (maxGoY <= NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il n'y a pas de collision
+                    if ((x < NUM_TILES_X && collisionMap[(int) x][(int) y + 1] == 0) && (maxGoY <= NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il n'y a pas de collision
                         y = y + player.getVy();
                         player.setY(y);
                     }
-                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x][(int) y + 1] == 1)) && (maxGoY <= NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec un mur
+                    else if ((x < NUM_TILES_X && (collisionMap[(int) x][(int) y + 1] == 1)) && (maxGoY <= NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec un mur
                         if (player.isCanOverWall()) {
                             y = y + player.getVy();
                             player.setY(y);
@@ -206,7 +227,7 @@ public class TestTileGrid extends Application {
                             showAlert("Collision alert",null,"You can't go over walls. You have to pick up the WallPotion first");
                         }
                     }
-                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x][(int) y + 1] == 2)) && (maxGoY <= NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
+                    else if ((x < NUM_TILES_X && (collisionMap[(int) x][(int) y + 1] == 2)) && (maxGoY <= NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
                         if (player.isCanSwim()) {
                             y = y + player.getVy();
                             player.setY(y);
@@ -220,11 +241,11 @@ public class TestTileGrid extends Application {
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_left_1.png"));
                     int minGoX = (int) (x - player.getVx());
 
-                    if ((x < NUM_TILES_X - 1 && collisionMap[(int) x - 1][(int) y] == 0) && (minGoX >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il n'y a pas de collision
+                    if ((x < NUM_TILES_X && collisionMap[(int) x - 1][(int) y] == 0) && (minGoX >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il n'y a pas de collision
                         x = x - player.getVx();
                         player.setX(x);
                     }
-                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x - 1][(int) y] == 1)) && (minGoX >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec un mur
+                    else if ((x < NUM_TILES_X && (collisionMap[(int) x - 1][(int) y] == 1)) && (minGoX >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec un mur
                         if (player.isCanOverWall()) {
                             x = x - player.getVx();
                             player.setX(x);
@@ -233,7 +254,7 @@ public class TestTileGrid extends Application {
                             showAlert("Collision alert",null,"You can't go over walls. You have to pick up the WallPotion first");
                         }
                     }
-                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x - 1][(int) y] == 2)) && (minGoX >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
+                    else if ((x < NUM_TILES_X && (collisionMap[(int) x - 1][(int) y] == 2)) && (minGoX >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
                         if (player.isCanSwim()) {
                             x = x - player.getVx();
                             player.setX(x);
@@ -247,11 +268,11 @@ public class TestTileGrid extends Application {
                 case RIGHT:
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_right_1.png"));
                     int maxGoX = (int) (x + player.getVx());
-                    if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x + 1][(int) y] == 0)) && (maxGoX < NUM_TILES_X)) { // si le joueur n'est pas en dehors de la carte et qu'il n'y a pas de collision
+                    if ((x < NUM_TILES_X && (collisionMap[(int) x + 1][(int) y] == 0)) && (maxGoX < NUM_TILES_X)) { // si le joueur n'est pas en dehors de la carte et qu'il n'y a pas de collision
                         x = x + player.getVx();
                         player.setX(x);
                     }
-                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x + 1][(int) y] == 1)) && (maxGoX < NUM_TILES_X)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec un mur
+                    else if ((x < NUM_TILES_X && (collisionMap[(int) x + 1][(int) y] == 1)) && (maxGoX < NUM_TILES_X)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec un mur
                         if (player.isCanOverWall()) {
                             x = x + player.getVx();
                             player.setX(x);
@@ -260,7 +281,7 @@ public class TestTileGrid extends Application {
                             showAlert("Collision alert",null,"You can't go over walls. You have to pick up the WallPotion first");
                         }
                     }
-                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x + 1][(int) y] == 2)) && (maxGoX < NUM_TILES_X)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
+                    else if ((x < NUM_TILES_X && (collisionMap[(int) x + 1][(int) y] == 2)) && (maxGoX < NUM_TILES_X)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
                         if (player.isCanSwim()) {
                             x = x + player.getVx();
                             player.setX(x);
@@ -274,11 +295,67 @@ public class TestTileGrid extends Application {
                 case I:
                     showInventoryWindow(entities);
                 default:
+                    break;*/
+                case UP:
+                    playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_up_1.png"));
+                    y -= 1;
                     break;
+                case DOWN:
+                    playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_down_1.png"));
+                    y += 1;
+                    break;
+                case LEFT:
+                    playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_left_1.png"));
+                    x -= 1;
+                    break;
+                case RIGHT:
+                    playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_right_1.png"));
+                    x += 1;
+                    break;
+                case I:
+                    showInventoryWindow(entities);
+                default:
+                    return; // Ne rien faire pour d'autres touches
             }
+
+            // Vérifier si la nouvelle position est à l'intérieur de la carte et n'a pas de collision
+            if (x >= 0 && x < NUM_TILES_X && y >= 0 && y < NUM_TILES_Y) {
+                if (collisionMap[(int) x][(int) y] == 0) {
+                    player.setX(x);
+                    player.setY(y);
+                } else if (collisionMap[(int) x][(int) y] == 1) {
+                    if (player.isCanOverWall()) {
+                        player.setX(x);
+                        player.setY(y);
+                    }
+                    else {
+                        showAlert("Collision alert",null,"You can't go over walls. You have to pick up the WallPotion first");
+                    }
+                } else if (collisionMap[(int) x][(int) y] == 2) {
+                    if (player.isCanSwim()) {
+                        player.setX(x);
+                        player.setY(y);
+                    } else {
+                        showAlert("Collision alert", null, "You can't swim. You have to pick up the SwimPotion first");
+                        Random random = new Random();
+                        int randomNumber = random.nextInt(2); // Générer un nombre aléatoire soit 0 soit 1
+                        if (randomNumber == 1) {
+                            player.setDestoyed(true);
+                        }
+                    }
+                }
+                else {
+                    System.out.println("You can't go there");
+                }
+                // Mettre à jour l'affichage du joueur sur la carte
+                //playerImageView.setLayoutX(x * TILE_SIZE);
+                //playerImageView.setLayoutY(y * TILE_SIZE);
+            }
+
 
             checkDestroyedPlayer(primaryStage);
 
+            // met à jour l'image du joueur sur la carte
             playerImageView.setLayoutX(player.getX() * TILE_SIZE);
             playerImageView.setLayoutY(player.getY() * TILE_SIZE);
 
@@ -296,7 +373,7 @@ public class TestTileGrid extends Application {
         alterWall.showAndWait();
     }
 
-    private void checkDestroyedPlayer(Stage primaryStage) {
+    private void checkDestroyedPlayer(Stage primaryStage/*, Entity entity*/) {
         if (player.getDestroyed()) {
             Alert endGame = new Alert(Alert.AlertType.INFORMATION);
             endGame.setTitle("Game Over");
@@ -306,6 +383,12 @@ public class TestTileGrid extends Application {
             System.out.println("You are dead !");
             primaryStage.close();
         }
+        /*if (entity.getDestroyed()) {
+            ImageView entityImageView = entity.getImage();
+            if (entityImageView != null && entityImageView.getParent() != null) {
+                ((Pane) entityImageView.getParent()).getChildren().remove(entityImageView);
+            }
+        }*/
     }
 
 
@@ -322,16 +405,18 @@ public class TestTileGrid extends Application {
                     tileImages[columnIndex][rowIndex] = new Image(imagePath); //imageView.getImage();
                     if (intValue == 0) { // collision avec les murs
                         collisionMap[columnIndex][rowIndex] = 1;
-                    }
-                    if (intValue == 1) { // collision avec l'eau
+                    } else if  (intValue == 1) { // collision avec l'eau
                         collisionMap[columnIndex][rowIndex] = 2;
                     }
-                    if ((player.getCapacities() == 1 || player.getCapacities() == 3 || player.getCapacities() == 5 || player.getCapacities() == 7) && intValue == 0) { // s'il a la potion, il traverse les murs
+                    else {
+                        collisionMap[columnIndex][rowIndex] = 0;
+                    }
+                    /*if ((player.getCapacities() == 1 || player.getCapacities() == 3 || player.getCapacities() == 5 || player.getCapacities() == 7) && intValue == 0) { // s'il a la potion, il traverse les murs
                         collisionMap[columnIndex][rowIndex] = 0;
                     }
                     if ((player.getCapacities() == 2 || player.getCapacities() == 3 || player.getCapacities() == 6 || player.getCapacities() == 7) && intValue == 1) { // supression de la collision avec l'eau
                         collisionMap[columnIndex][rowIndex] = 0;
-                    }
+                    }*/
                     columnIndex++;
                 }
                 rowIndex++;

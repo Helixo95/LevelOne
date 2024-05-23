@@ -30,23 +30,12 @@ public class Item extends Entity {
             case HEAL -> entity.setHealthPoints((int) (entity.getHealthPoints()+20));
             case OVERWALL -> {
                 entity.setCanOverWall(true);
-                /*if (entity.getCapacities() == 0) { entity.setCapacities(1);} // si rien alors juste wall
-                else if(entity.getCapacities() == 2) { entity.setCapacities(3);} // si swim alors wall et swim
-                else if(entity.getCapacities() == 4) { entity.setCapacities(5);} // si clé alors clé et wall
-                else if(entity.getCapacities() == 6) { entity.setCapacities(7);} // si clé et swim alors clé et wall et swim*/
             }
             case SWIM -> {
-                if (entity.getCapacities() == 0) { entity.setCapacities(2);} // si rien alors juste swim
-                else if(entity.getCapacities() == 1) { entity.setCapacities(3);} // si wall alors wall et swim
-                else if(entity.getCapacities() == 4) { entity.setCapacities(6);} // si clé alors clé et swim
-                else if(entity.getCapacities() == 5) { entity.setCapacities(7);} // si clé et wall alors clé et wall et swim
+                entity.setCanSwim(true);
             }
             case OPENDOOR -> {
                 entity.setDiscoverNewWorld(1);
-                /*if (entity.getCapacities() == 0) { entity.setCapacities(4);} // si rien alors clé
-                else if(entity.getCapacities() == 1) { entity.setCapacities(5);} // si wall alors clé et wall
-                else if(entity.getCapacities() == 2) { entity.setCapacities(6);} // si swimc alors lé et swim
-                else if(entity.getCapacities() == 3) { entity.setCapacities(7);} // si wall et swim alors clé et wall et swim*/
             }
             case NEWWORLD -> { // à changer
                 //entity.setX(0);
