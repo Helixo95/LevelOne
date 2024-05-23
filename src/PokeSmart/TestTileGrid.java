@@ -11,9 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -211,6 +209,9 @@ public class TestTileGrid extends Application {
                         player.setX(x);
                     }
                     break;
+                case I:
+                    System.out.println("I was pressed");
+                    updateInventoryBox();
                 default:
                     break;
             }
@@ -251,6 +252,59 @@ public class TestTileGrid extends Application {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    private void showInventoryWindow(List<Entity> entities) {
+        // stage for inventory window
+        Stage inventoryStage = new Stage();
+        inventoryStage.setTitle("Player inventory");
+        inventoryStage.setWidth(500);
+        inventoryStage.setHeight(500);
+
+        // GridPane for inventory items
+        GridPane inventoryGridPane = new GridPane();
+        inventoryGridPane.setHgap(10);
+        inventoryGridPane.setVgap(10);
+
+        // Create labels for the player's name, current money, and life
+        Label nameLabel = new Label("Name: " + player.getName());
+        Label moneyLabel = new Label("Money: " + player.getMoney());
+        Label lifeLabel = new Label("Life: " + player.getHealthPoints());
+
+        // Add the labels to the grid pane
+        inventoryGridPane.add(nameLabel, 0, 0);
+        inventoryGridPane.add(moneyLabel, 1, 0);
+        inventoryGridPane.add(lifeLabel, 2, 0);
+
+        int rowIndex = 1;
+        for (Item item : player.getInventory()) {
+            // Create an ImageView for the inventory item
+            ImageView potionImageView = item.getImage();
+
+            // Create a Label for the name of the inventory item
+            Label potionNameLabel = new Label(item.getItemName());
+
+            // Create a Button for the inventory item
+            //Button potionButton = UsePotionButton(item, potionImageView, entities);
+
+            Button useButton = new Button("Use");
+            useButton.setOnAction(e -> {
+                item.useItem(player);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Item Used");
+                alert.setHeaderText(null);
+                alert.setContentText(item.getItemDescription());
+                alert.showAndWait();
+                //updateInventoryBox();
+            });
+            //inventoryBox.getChildren().addAll(itemLabel, useButton);
+
+            // Add the Button, the name Label, and the price Label to the grid pane
+            inventoryGridPane.add(useButton, 0, rowIndex);
+            inventoryGridPane.add(potionNameLabel, 1, rowIndex);
+            rowIndex++;
         }
     }
 
