@@ -22,14 +22,12 @@ public class Player extends Entity {
         if (entity instanceof Monster) {
             Monster monster = (Monster) entity;
             if (monster.getDefences() < this.strength) {
-                entity.setHealthPoints((int) (entity.getHealthPoints()-this.attacks));
-
                 monster.setHealthPoints((int) (monster.getHealthPoints()-this.attacks));
                 this.setHealthPoints((int) (this.getHealthPoints() - monster.getAttacks()));
+                System.out.println("Player attacks Monster");
+            } else {
+                System.out.println("Player attacks Monster but Monster is too strong");
             }
-        }
-        else if (entity instanceof Player) {
-            entity.setHealthPoints((int) (entity.getHealthPoints()-this.attacks));
         }
     }
 

@@ -44,9 +44,9 @@ public class Main extends Application {
     }
 
     private void initCaractersWorld1(){
-        player = new Player("Popo", 6, 1, 1, 1, 100, 0,0, 50, 50, 10000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png");
+        player = new Player("Popo", 6, 1, 1, 1, 100, 0,150, 50, 50, 10000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png");
         entities = new ArrayList<Entity>();
-        monster = new Monster("Papa", 7, 2, 0, 0, 1,0, "OFFENSIVE", 1, 30, 100, 1,"src/PokeSmart/Monster/orc_down_2.png");
+        monster = new Monster("Papa", 7, 2, 0, 0, 100,0, "OFFENSIVE", 1, 30, 100, 1,"src/PokeSmart/Monster/orc_down_2.png");
         npc = new NPC("Jojo", 7,8,0,0,1,3,0,"src/PokeSmart/NPC/oldman_down_1.png");
         entities.add(monster);
         entities.add(npc);
@@ -478,8 +478,13 @@ public class Main extends Application {
             if (buttonType == attackButtonType) {
                 // Handle the player attacking the monster
                 player.attack(monster);
-                player.getHealthPoints();
                 updateHealthPointsLabel(root);
+                if (monster.getHealthPoints() <= 0) {
+                    monsterKilled = true;
+                    showAlert("Monster defeated", null, "You defeated the monster!");
+                    root.getChildren().remove(monster.getImage());
+                    return "Defeated";
+                }
                 System.out.println("You attacked the monster!");
                 return "Attacked";
             } else if (buttonType == runButtonType) {
@@ -520,16 +525,6 @@ public class Main extends Application {
         items.add(new Item(7,7,"Car", "this can heal you", Effet.VICTORY,1,"src/PokeSmart/Items/911-removebg-preview.png"));
     }
 
-
-
-    /*private void updateHealthPointsLabel(BorderPane root) {
-        if (healthPointsLabel == null) {
-            healthPointsLabel = new Label();
-        }
-        healthPointsLabel.setText("Health Points: \n" + player.getHealthPoints());
-        root.setRight(healthPointsLabel);
-    }*/
-
     private void updateHealthPointsLabel(BorderPane root) {
         if (healthPointsLabel == null) {
             healthPointsLabel = new Label();
@@ -539,14 +534,21 @@ public class Main extends Application {
         if (monsterHealthPointsLabel == null) {
             monsterHealthPointsLabel = new Label();
         }
-        // Remplacez "monstre" par le nom de votre monstre et "getHealthPoints()" par la méthode pour obtenir ses points de vie
         monsterHealthPointsLabel.setText("Monster HP : \n" + monster.getHealthPoints());
 
-        // Ajoutez les labels des points de vie du joueur et du monstre au root
-        VBox vBox = new VBox();
-        vBox.getChildren().addAll(healthPointsLabel, monsterHealthPointsLabel);
-        vBox.setAlignment(Pos.TOP_RIGHT);
-        root.setRight(vBox);
+        if (monster.getHealthPoints() <= 0) {
+            VBox vBox = new VBox();
+            vBox.getChildren().add(healthPointsLabel);
+            vBox.setAlignment(Pos.TOP_RIGHT);
+            root.setRight(vBox);
+        }
+        else {
+            // Ajoutez les labels des points de vie du joueur et du monstre au root
+            VBox vBox = new VBox();
+            vBox.getChildren().addAll(healthPointsLabel, monsterHealthPointsLabel);
+            vBox.setAlignment(Pos.TOP_RIGHT);
+            root.setRight(vBox);
+        }
     }
 
 
