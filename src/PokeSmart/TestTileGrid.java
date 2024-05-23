@@ -73,8 +73,8 @@ public class TestTileGrid extends Application {
         // Création de la scène
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, NUM_TILES_X * TILE_SIZE + 200, NUM_TILES_Y * TILE_SIZE);
-        root.setCenter(gridPane);
-        root.setLeft(inventoryBox);
+        root.setLeft(gridPane);
+        root.setCenter(inventoryBox);
 
         // Création de la barre de vie
         healthPointsLabel = new Label("Health Points: \n" + player.getHealthPoints());
@@ -122,21 +122,6 @@ public class TestTileGrid extends Application {
         inventoryBox.getChildren().clear();
         Label inventoryLabel = new Label(player.getInventoryAsString());
         inventoryBox.getChildren().add(inventoryLabel);
-        /*for (Item item : player.getInventory()) {
-            Label itemLabel = new Label(item.getItemName());
-
-            Button useButton = new Button("Use");
-            useButton.setOnAction(e -> {
-                item.useItem(player);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Item Used");
-                alert.setHeaderText(null);
-                alert.setContentText(item.getItemDescription());
-                alert.showAndWait();
-                //updateInventoryBox();
-            });
-            inventoryBox.getChildren().addAll(itemLabel, useButton);
-        }*/
     }
 
 
@@ -211,7 +196,7 @@ public class TestTileGrid extends Application {
                     break;
                 case I:
                     System.out.println("I was pressed");
-                    updateInventoryBox();
+                    showInventoryWindow(entities);
                 default:
                     break;
             }
@@ -257,6 +242,7 @@ public class TestTileGrid extends Application {
 
 
     private void showInventoryWindow(List<Entity> entities) {
+        System.out.println("fonction");
         // stage for inventory window
         Stage inventoryStage = new Stage();
         inventoryStage.setTitle("Player inventory");
@@ -267,6 +253,8 @@ public class TestTileGrid extends Application {
         GridPane inventoryGridPane = new GridPane();
         inventoryGridPane.setHgap(10);
         inventoryGridPane.setVgap(10);
+
+        Scene inventoryScene = new Scene(inventoryGridPane);
 
         // Create labels for the player's name, current money, and life
         Label nameLabel = new Label("Name: " + player.getName());
@@ -306,6 +294,8 @@ public class TestTileGrid extends Application {
             inventoryGridPane.add(potionNameLabel, 1, rowIndex);
             rowIndex++;
         }
+        inventoryStage.setScene(inventoryScene);
+        inventoryStage.show();
     }
 
 
