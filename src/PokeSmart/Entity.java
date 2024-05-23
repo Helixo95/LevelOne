@@ -4,6 +4,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Entity {
     private double x; // coordonnée en abscisse
@@ -132,7 +133,7 @@ public class Entity {
     }
 
     public void addItem(Item item) {
-        inventory.add(item);
+        this.inventory.add(item);
     }
     public List<Item> getInventory() {
         return inventory;
@@ -178,5 +179,9 @@ public class Entity {
     }
     public void setCanOpenDoor(boolean canOpenDoor) {
         this.canOpenDoor = canOpenDoor;
+    }
+
+    public int getItemQuantity(Item item) {
+        return this.getInventory().stream().filter(i -> i.getItemName().equals(item.getItemName())).collect(Collectors.toList()).size();
     }
 }

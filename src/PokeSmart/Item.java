@@ -1,5 +1,7 @@
 package PokeSmart;
 
+import java.util.Objects;
+
 public class Item extends Entity {
     private String itemName;
     private String itemDescription;
