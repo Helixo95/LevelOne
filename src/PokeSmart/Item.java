@@ -29,10 +29,11 @@ public class Item extends Entity {
         switch (effet){
             case HEAL -> entity.setHealthPoints((int) (entity.getHealthPoints()+20));
             case OVERWALL -> {
-                if (entity.getCapacities() == 0) { entity.setCapacities(1);} // si rien alors juste wall
+                entity.setCanOverWall(true);
+                /*if (entity.getCapacities() == 0) { entity.setCapacities(1);} // si rien alors juste wall
                 else if(entity.getCapacities() == 2) { entity.setCapacities(3);} // si swim alors wall et swim
                 else if(entity.getCapacities() == 4) { entity.setCapacities(5);} // si clé alors clé et wall
-                else if(entity.getCapacities() == 6) { entity.setCapacities(7);} // si clé et swim alors clé et wall et swim
+                else if(entity.getCapacities() == 6) { entity.setCapacities(7);} // si clé et swim alors clé et wall et swim*/
             }
             case SWIM -> {
                 if (entity.getCapacities() == 0) { entity.setCapacities(2);} // si rien alors juste swim

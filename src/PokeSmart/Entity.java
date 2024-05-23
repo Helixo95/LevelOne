@@ -17,6 +17,11 @@ public class Entity {
     private boolean destoyed = false; // permet de détruite l'individu en cas de perte de vie par exemple
     private List<Item> inventory = new ArrayList<>();
 
+    // Capacités spéciales en fonction des items possédés
+    private boolean canOverWall = false;
+    private boolean canSwim = false;
+    private boolean canOpenDoor = false;
+
     /**
      * constructeur de l'entité
      * permet de lui associer des coordonnées et une vitesse pour ces déplacements, horizontaux ou verticaux
@@ -151,4 +156,27 @@ public class Entity {
         return inventoryString.toString();
     }
 
+
+    // capacités
+
+    public boolean isCanOverWall() {
+        return canOverWall;
+    }
+    public void setCanOverWall(boolean canOverWall) {
+        this.canOverWall = canOverWall;
+    }
+
+    public boolean isCanSwim() {
+        return canSwim;
+    }
+    public void setCanSwim(boolean canSwim) {
+        this.canSwim = canSwim;
+    }
+
+    public boolean isCanOpenDoor() {
+        return canOpenDoor;
+    }
+    public void setCanOpenDoor(boolean canOpenDoor) {
+        this.canOpenDoor = canOpenDoor;
+    }
 }

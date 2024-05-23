@@ -26,7 +26,7 @@ public class TestTileGrid extends Application {
     private Player player;
     private Monster monster;
     private NPC npc;
-    private boolean[][] collisionMap;
+    private int[][] collisionMap;
     private List<Item> items;
     private List<Entity> entities;
     private VBox inventoryBox;
@@ -96,7 +96,7 @@ public class TestTileGrid extends Application {
 
     private Image[][] loadTileImages(String filePath) {
         Image[][] tileImages = new Image[NUM_TILES_X][NUM_TILES_Y];
-        collisionMap = new boolean[NUM_TILES_X][NUM_TILES_Y];
+        collisionMap = new int[NUM_TILES_X][NUM_TILES_Y];
         updateCollisionMap(tileImages, filePath);
         return tileImages;
     }
@@ -165,33 +165,115 @@ public class TestTileGrid extends Application {
                 case UP:
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_up_1.png"));
                     int minGoY = (int) (y - player.getVy());
-                    if ((y > 0 && !collisionMap[(int) x][(int) y - 1]) && (minGoY >=0)) {
+
+                    if ((x < NUM_TILES_X - 1 && collisionMap[(int) x][(int) y - 1] == 0) && (minGoY >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il n'y a pas de collision
                         y = y - player.getVy();
                         player.setY(y);
+                    }
+                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x][(int) y - 1] == 1)) && (minGoY >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec un mur
+                        if (player.isCanOverWall()) {
+                            y = y - player.getVy();
+                            player.setY(y);
+                        }
+                        else {
+                            System.out.println("you can't pass over walls");
+                        }
+                    }
+                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x][(int) y - 1] == 2)) && (minGoY >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
+                        if (player.isCanSwim()) {
+                            y = y - player.getVy();
+                            player.setY(y);
+                        }
+                        else {
+                            player.setDestoyed(true);
+                            System.out.println("You can't swim");
+                        }
                     }
                     break;
                 case DOWN:
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_down_1.png"));
                     int maxGoY = (int) (y + player.getVy());
-                    if ((y < NUM_TILES_Y - 1 && !collisionMap[(int) x][(int) y + 1]) && (maxGoY < NUM_TILES_Y)) {
+
+                    if ((x < NUM_TILES_X - 1 && collisionMap[(int) x][(int) y + 1] == 0) && (maxGoY < NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il n'y a pas de collision
                         y = y + player.getVy();
                         player.setY(y);
+                    }
+                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x][(int) y + 1] == 1)) && (maxGoY < NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec un mur
+                        if (player.isCanOverWall()) {
+                            y = y + player.getVy();
+                            player.setY(y);
+                        }
+                        else {
+                            System.out.println("you can't pass over walls");
+                        }
+                    }
+                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x][(int) y + 1] == 2)) && (maxGoY < NUM_TILES_Y)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
+                        if (player.isCanSwim()) {
+                            y = y + player.getVy();
+                            player.setY(y);
+                        } else {
+                            player.setDestoyed(true);
+                            System.out.println("You can't swim");
+                        }
                     }
                     break;
                 case LEFT:
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_left_1.png"));
                     int minGoX = (int) (x - player.getVx());
-                    if((x > 0 && !collisionMap[(int) x - 1][(int) y]) && (minGoX >= 0)) {
+
+                    if ((x < NUM_TILES_X - 1 && collisionMap[(int) x - 1][(int) y] == 0) && (minGoX >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il n'y a pas de collision
                         x = x - player.getVx();
                         player.setX(x);
+                    }
+                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x - 1][(int) y] == 1)) && (minGoX >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec un mur
+                        if (player.isCanOverWall()) {
+                            x = x - player.getVx();
+                            player.setX(x);
+                        }
+                        else {
+                            System.out.println("you can't pass over walls");
+                        }
+                    }
+                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x - 1][(int) y] == 2)) && (minGoX >= 0)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
+                        if (player.isCanSwim()) {
+                            x = x - player.getVx();
+                            player.setX(x);
+                        }
+                        else {
+                            player.setDestoyed(true);
+                            System.out.println("Joueur : "+player.getX()+";"+player.getY());
+                            System.out.println("Map : "+x+"+1;"+"y : "+y);
+                            System.out.println("You can't swim");
+                        }
                     }
                     break;
                 case RIGHT:
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_right_1.png"));
                     int maxGoX = (int) (x + player.getVx());
-                    if ((x < NUM_TILES_X - 1 && !collisionMap[(int) x + 1][(int) y]) && (maxGoX < NUM_TILES_X)) {
+                    if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x + 1][(int) y] == 0)) && (maxGoX < NUM_TILES_X)) { // si le joueur n'est pas en dehors de la carte et qu'il n'y a pas de collision
                         x = x + player.getVx();
                         player.setX(x);
+                    }
+                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x + 1][(int) y] == 1)) && (maxGoX < NUM_TILES_X)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec un mur
+                        if (player.isCanOverWall()) {
+                            x = x + player.getVx();
+                            player.setX(x);
+                        }
+                        else {
+                            System.out.println("you can't pass over walls");
+                        }
+                    }
+                    else if ((x < NUM_TILES_X - 1 && (collisionMap[(int) x + 1][(int) y] == 2)) && (maxGoX < NUM_TILES_X)) { // si le joueur n'est pas en dehors de la carte et qu'il y a une collision avec de l'eau
+                        if (player.isCanSwim()) {
+                            x = x + player.getVx();
+                            player.setX(x);
+                        }
+                        else {
+                            player.setDestoyed(true);
+                            System.out.println("Joueur : "+player.getX()+";"+player.getY());
+                            System.out.println("Map : "+x+"+1;"+"y : "+y);
+                            System.out.println("You can't swim");
+                        }
                     }
                     break;
                 case I:
@@ -200,6 +282,9 @@ public class TestTileGrid extends Application {
                 default:
                     break;
             }
+
+            checkDestroyedPlayer(primaryStage);
+
             playerImageView.setLayoutX(player.getX() * TILE_SIZE);
             playerImageView.setLayoutY(player.getY() * TILE_SIZE);
 
@@ -209,6 +294,17 @@ public class TestTileGrid extends Application {
         });
     }
 
+    private void checkDestroyedPlayer(Stage primaryStage) {
+        if (player.getDestroyed()) {
+            Alert endGame = new Alert(Alert.AlertType.INFORMATION);
+            endGame.setTitle("Game Over");
+            endGame.setHeaderText(null);
+            endGame.setContentText("You are dead !");
+            endGame.showAndWait();
+            System.out.println("You are dead !");
+            primaryStage.close();
+        }
+    }
 
 
     private void updateCollisionMap(Image[][] tileImages, String filePath) {
@@ -222,14 +318,17 @@ public class TestTileGrid extends Application {
                     int intValue = Integer.parseInt(value.trim());
                     String imagePath = getImagePathForValue(intValue);
                     tileImages[columnIndex][rowIndex] = new Image(imagePath); //imageView.getImage();
-                    if (intValue == 0 || intValue == 1 || intValue == 5) { // collision avec les murs
-                        collisionMap[columnIndex][rowIndex] = true;
+                    if (intValue == 0) { // collision avec les murs
+                        collisionMap[columnIndex][rowIndex] = 1;
+                    }
+                    if (intValue == 1) { // collision avec l'eau
+                        collisionMap[columnIndex][rowIndex] = 2;
                     }
                     if ((player.getCapacities() == 1 || player.getCapacities() == 3 || player.getCapacities() == 5 || player.getCapacities() == 7) && intValue == 0) { // s'il a la potion, il traverse les murs
-                        collisionMap[columnIndex][rowIndex] = false;
+                        collisionMap[columnIndex][rowIndex] = 0;
                     }
                     if ((player.getCapacities() == 2 || player.getCapacities() == 3 || player.getCapacities() == 6 || player.getCapacities() == 7) && intValue == 1) { // supression de la collision avec l'eau
-                        collisionMap[columnIndex][rowIndex] = false;
+                        collisionMap[columnIndex][rowIndex] = 0;
                     }
                     columnIndex++;
                 }
