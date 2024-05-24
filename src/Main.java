@@ -478,38 +478,45 @@ public class Main extends Application {
         if (player.equals(npc) && !firstQuest) { //if (player.getX() == npc.getX() && player.getY() == npc.getY()) {
             System.out.println("NPC encountered");
 
-            if (questAccepted) {
-                if (monsterKilled) {
-                    System.out.println("Quest completed");
-                    showAlert("Quest completed", null, "You completed the quest! You can go to the next world.");
-                    //player.setDiscoverNewWorld(1);
-                    Item seaPotion = new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png");
-                    items.add(seaPotion);
+            firstQuest(root);
 
-                    // afficher l'item sur la carte
-                    ImageView seaPotionImageView = seaPotion.getImage();
-                    seaPotionImageView.setFitWidth(TILE_SIZE);
-                    seaPotionImageView.setFitHeight(TILE_SIZE);
-                    root.getChildren().add(seaPotionImageView);
-                    seaPotionImageView.setLayoutX(seaPotion.getX() * TILE_SIZE);
-                    seaPotionImageView.setLayoutY(seaPotion.getY() * TILE_SIZE);
-
-                    // supprime le pnj
-                    root.getChildren().remove(npc.getImage());
-                    monsterKilled = false;
-                    questAccepted = false;
-                    firstQuest = true;
-                    return;
-                }
-                showAlert("Quest not completed", null, "You have to kill the Monster first.");
-                return;
-            }
-            else {
-                showQuestDialog();
-                return;
-            }
         }
     }
+
+
+    private void firstQuest(BorderPane root) {
+        if (questAccepted) {
+            if (monsterKilled) {
+                System.out.println("Quest completed");
+                showAlert("Quest completed", null, "You completed the quest! You can go to the next world.");
+                //player.setDiscoverNewWorld(1);
+                Item seaPotion = new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png");
+                items.add(seaPotion);
+
+                // afficher l'item sur la carte
+                ImageView seaPotionImageView = seaPotion.getImage();
+                seaPotionImageView.setFitWidth(TILE_SIZE);
+                seaPotionImageView.setFitHeight(TILE_SIZE);
+                root.getChildren().add(seaPotionImageView);
+                seaPotionImageView.setLayoutX(seaPotion.getX() * TILE_SIZE);
+                seaPotionImageView.setLayoutY(seaPotion.getY() * TILE_SIZE);
+
+                // supprime le pnj
+                root.getChildren().remove(npc.getImage());
+                monsterKilled = false;
+                questAccepted = false;
+                firstQuest = true;
+                return;
+            }
+            showAlert("Quest not completed", null, "You have to kill the Monster first.");
+            return;
+        }
+        else {
+            showQuestDialog();
+            return;
+        }
+    }
+
 
     private void showQuestDialog() {
         // Create a dialog
