@@ -42,13 +42,13 @@ public class Main extends Application {
     }
 
     private void initCaractersWorld1(){
-        player = new Player("Popo", 6, 1, 1, 1, 100, 0,150, 50, 50, 10000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png");
+        player = new Player("Popo", 6, 1, 1, 1, 100,150, 50, 50, 10000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png");
         player.setInventory(new ArrayList<Item>());
         entities = new ArrayList<Entity>();
-        monster = new Monster("Papa", 7, 2, 0, 0, 100,0, MonsterType.ORC, 1, 30, 100,"src/PokeSmart/Monster/orc_down_2.png");
+        monster = new Monster("Papa", 7, 2, 0, 0, 100, MonsterType.ORC, 1, 30, 100,"src/PokeSmart/Monster/orc_down_2.png");
         monster.TypeMonster(monster);
         System.out.println("Monster health : "+monster.getHealthPoints());
-        npc = new NPC("Jojo", 7,8,0,0,1,3,0,"src/PokeSmart/NPC/oldman_down_1.png");
+        npc = new NPC("Jojo", 7,8,0,0,1,3,"src/PokeSmart/NPC/oldman_down_1.png");
         entities.add(monster);
         entities.add(npc);
 
@@ -56,13 +56,13 @@ public class Main extends Application {
 
         player.addItem(new Item(7,4,"HealPotionTest", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
 
-        items.add(new Item(7,3,"HealPotion1", "this can heal you", Effet.HEAL,0,"src/PokeSmart/Object/potion_red.png"));
-        items.add(new Item(7,4,"HealPotion2", "this can heal you", Effet.HEAL,0,"src/PokeSmart/Object/potion_red.png"));
-        items.add(new Item(0,11,"WallPotion", "walls are no more a problem", Effet.OVERWALL,0,"src/PokeSmart/Object/potion_grey.png"));
-        items.add(new Item(7,1,"WallPotion", "walls are no more a problem", Effet.OVERWALL,0,"src/PokeSmart/Object/potion_grey.png"));
+        items.add(new Item(7,3,"HealPotion1", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
+        items.add(new Item(7,4,"HealPotion2", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
+        items.add(new Item(0,11,"WallPotion", "walls are no more a problem", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_grey.png"));
+        items.add(new Item(7,1,"WallPotion", "walls are no more a problem", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_grey.png"));
         //items.add(new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png"));
-        items.add(new Item(15,0,"Key", "doors can be opened", Effet.OPENDOOR,0,"src/PokeSmart/Object/key.png"));
-        items.add(new Item(14,10,"Door", "go to an other world", Effet.NEWWORLD,0,"src/PokeSmart/Object/door_iron.png"));
+        items.add(new Item(15,0,"Key", "doors can be opened", Effet.OPENDOOR,1,"src/PokeSmart/Object/key.png"));
+        items.add(new Item(14,10,"Door", "go to an other world", Effet.NEWWORLD,1,"src/PokeSmart/Object/door_iron.png"));
     }
 
 
@@ -94,8 +94,6 @@ public class Main extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
-
-        System.out.println("Player capacities : "+player.getCapacities());
     }
 
 
@@ -314,11 +312,18 @@ public class Main extends Application {
         inventoryGridPane.add(moneyLabel, 1, 0);
         inventoryGridPane.add(lifeLabel, 2, 0);
 
+        // Method to update the labels
+        Runnable updateLabels = () -> {
+            nameLabel.setText("Name : " + player.getName());
+            moneyLabel.setText("Money : " + player.getMoney());
+            lifeLabel.setText("Life : " + player.getHealthPoints());
+        };
+
         int rowIndex = 1;
         for (Item item : player.getInventory()) {
             System.out.println("Item : " + item.getItemName());
             System.out.println("Q : " + item.getQuantity());
-            //if (item.getQuantity() == 0) {
+
             // Create an ImageView for the inventory item
             ImageView potionImageView = item.getImage();
 
@@ -341,16 +346,12 @@ public class Main extends Application {
                     inventoryGridPane.getChildren().remove(potionNameLabel);
                     inventoryGridPane.getChildren().remove(quantityLabel);
                     inventoryGridPane.getChildren().remove(potionImageView);
-                    for (Item item1 : player.getInventory()) {
-                        if (item1.equals(item)) {
-                            player.getInventory().remove(item1);
-                            break;
-                        }
-                    }
+                    player.getInventory().remove(item);
+                } else {
+                    quantityLabel.setText("Quantity : " + item.getQuantity());
                 }
+                updateLabels.run();
                 updateHealthPointsLabel(root);
-                showInventoryWindow(entities, root);
-                removeItemInInventory(item);
             });
 
             // Add the Button, the name Label, and the price Label to the grid pane
@@ -359,117 +360,37 @@ public class Main extends Application {
             inventoryGridPane.add(quantityLabel, 2, rowIndex);
             inventoryGridPane.add(potionImageView, 3, rowIndex);
             rowIndex++;
-            //}
         }
         inventoryStage.setScene(inventoryScene);
         inventoryStage.show();
-    }
-
-    /*public static void showInventoryWindow(Player player) {
-        Stage inventoryStage = new Stage();
-        inventoryStage.setTitle("Player Inventory");
-        inventoryStage.setWidth(400);
-        inventoryStage.setHeight(400);
-
-        // VBox to hold all inventory items
-        VBox inventoryVBox = new VBox(10);
-
-        // Create labels for the player's name, current money, and life
-        Label nameLabel = new Label("Name: " + player.getName());
-        Label moneyLabel = new Label("Money: " + player.getMoney());
-        Label lifeLabel = new Label("Life: " + player.getHealthPoints());
-
-        inventoryVBox.getChildren().addAll(nameLabel, moneyLabel, lifeLabel);
-
-        for (Item item : player.getInventory()) {
-            HBox itemBox = new HBox(10);
-
-            // Create an ImageView for the inventory item (assuming you have one)
-            // ImageView potionImageView = new ImageView(item.getImage());
-
-            // Create a Label for the name of the inventory item
-            Label itemNameLabel = new Label(item.getItemName());
-
-            // Get the current quantity of the item in the player's inventory
-            int currentQuantity = player.getItemQuantity(item);
-
-            // Create a Label for the quantity of the inventory item
-            Label quantityLabel = new Label("Quantity: " + currentQuantity);
-
-            // Create a Button to use the item
-            Button useButton = new Button("Use");
-            useButton.setOnAction(event -> {
-                item.useItem(player);
-                // Update the quantity label after using the item
-                quantityLabel.setText("Quantity: " + (currentQuantity - 1));
-            });
-
-            itemBox.getChildren().addAll(itemNameLabel, quantityLabel, useButton);
-            inventoryVBox.getChildren().add(itemBox);
-        }
-
-        Scene inventoryScene = new Scene(inventoryVBox);
-        inventoryStage.setScene(inventoryScene);
-        inventoryStage.show();
-    }*/
-
-
-
-
-    private void removeItemInInventory(Item usedItem) {
-        Iterator<Item> iterator = player.getInventory().iterator();
-        while (iterator.hasNext()) {
-            Item item = iterator.next();
-            if (item.equals(usedItem) && (item.getQuantity() == 0)) {
-                iterator.remove();
-                break;
-            }
-        }
     }
 
 
 
     private void checkForItemPickup(BorderPane root, Image[][] tileImages, String filePath, Stage primaryStage) {
-        List<Item> pickedUpItems = new ArrayList<>();
+        Item pickedUpItems = null;
         for (Item item : items) {
             if (player.getX() == item.getX() && player.getY() == item.getY()) {
+                pickedUpItems = item;
                 if (item.getEffet() != Effet.NEWWORLD) {
-                    if(item.getQuantity() == 0) {
+                    if(item.getQuantity() == 1) {
                         for (Item item1 : player.getInventory()) {
                             if (item1.getEffet().equals(item.getEffet())) {
                                 item1.setQuantity(item1.getQuantity() + 1);
                                 break;
                             } else {
-                                item.setQuantity(1);
                                 player.addItem(item);
+                                break;
                             }
                         }
                     }
-                    else{
+                    else {
                         item.setQuantity(1);
                         player.addItem(item);
                     }
-
-                    //item.useItem(player);
-                    pickedUpItems.add(item);
-                    System.out.println("Item picked up");
-                    root.getChildren().remove(item.getImage());
-                    updateInventoryBox(); // voir pour le bouton
                 }
                 if (item.getItemName() == "Key") {
                     System.out.println("You picked up a key !");
-                    /*for (Item item1 : items) {
-                        if ((player.getDiscoverNewWorld() == 1) && "Door".equals(item1.getItemName())) {//("Door".equals(item1.getItemName())) {
-                            root.getChildren().remove(item1.getImage()); // Remove the old image from the scene
-                            ImageView newImage = new ImageView("file:src/PokeSmart/Object/door.png"); // Create a new ImageView
-                            newImage.setFitWidth(TILE_SIZE);
-                            newImage.setFitHeight(TILE_SIZE);
-                            newImage.setLayoutX(item1.getX() * TILE_SIZE); // Set the x-coordinate of the ImageView
-                            newImage.setLayoutY(item1.getY() * TILE_SIZE); // Set the y-coordinate of the ImageView
-                            item1.setImage(newImage); // Update the image of the item
-                            root.getChildren().add(item1.getImage()); // Add the new image to the scene
-                        }
-                    }*/
                     updateDoor(root);
                 }
                 if (player.getDiscoverNewWorld() == 1 && item.getEffet() == Effet.NEWWORLD) { // condition sur la clé
@@ -496,8 +417,11 @@ public class Main extends Application {
                 }
             }
         }
-        items.removeAll(pickedUpItems);
-
+        if (pickedUpItems != null) {
+            items.remove(pickedUpItems);
+            root.getChildren().remove(pickedUpItems.getImage());
+        }
+        updateInventoryBox();
         updateCollisionMap(tileImages, filePath); // Mettre à jour la carte des collisions
     }
 
@@ -524,7 +448,6 @@ public class Main extends Application {
             System.out.println("NPC encountered");
 
             firstQuest(root);
-
         }
     }
 
@@ -583,6 +506,7 @@ public class Main extends Application {
                 return "Accepted";
             } else if (buttonType == refuseButtonType) {
                 // Handle the player refusing the quest
+                showAlert("Quest refused", null, "You refused the quest.");
                 System.out.println("You refused the quest.");
                 return "Refused";
             }
@@ -666,8 +590,8 @@ public class Main extends Application {
         checkDestroyedPlayer(primaryStage, npc, root);
 
         entities = new ArrayList<Entity>();
-        entities.add(new Monster("BatMan", 7, 2, 0, 0, 1,0, MonsterType.BAT, 1, 1, 1,"src/PokeSmart/Monster/bat_down_2.png"));
-        entities.add(new Monster("Skeleton", 10, 2, 0, 0, 1,0, MonsterType.SKELETON, 1, 1, 1, "src/PokeSmart/Monster/skeletonlord_down_1.png"));
+        entities.add(new Monster("BatMan", 7, 2, 0, 0, 1, MonsterType.BAT, 1, 1, 1,"src/PokeSmart/Monster/bat_down_2.png"));
+        entities.add(new Monster("Skeleton", 10, 2, 0, 0, 1, MonsterType.SKELETON, 1, 1, 1, "src/PokeSmart/Monster/skeletonlord_down_1.png"));
 
         items = new ArrayList<Item>();
         items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
