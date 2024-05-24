@@ -4,22 +4,39 @@ import java.util.Random;
 
 public class Monster extends Entity {
     private String name;
-    private String type;
+    private MonsterType monsterType;
     private double strength;
     private double attacks;
     private double defences;
-    private double behavior; // if 0 harmless, 1 is low attack, 2 may be like a normal player, 3 is offensive, 4 is totally random
 
     // imagePath : src/PokeSmart/Monster/orc_down_2.png
 
-    public Monster(String name, double x, double y, double vx, double vy, int HealthPoints, int capacities, String type, double strength, double attacks, double defences, double behavior, String imagePath) {
+    public Monster(String name, double x, double y, double vx, double vy, int HealthPoints, int capacities, MonsterType monsterType, double strength, double attacks, double defences, String imagePath) {
         super(x, y, vx, vy, HealthPoints, capacities, imagePath);
         this.name = name;
-        this.type = type;
+        this.monsterType = monsterType;
         this.strength = strength;
         this.attacks = attacks;
         this.defences = defences;
-        this.behavior = behavior;
+    }
+
+    public void TypeMonster(Monster monster) {
+        switch (monsterType) {
+            case ORC -> {
+                monster.setStrength(50);
+                monster.setAttacks(20);
+                monster.setDefences(50);
+                monster.setHealthPoints(150);
+                //monster.setBehavior(1);
+            }
+            case SKELETON -> {
+                monster.setStrength(30);
+                monster.setAttacks(10);
+                monster.setDefences(100);
+                //monster.setBehavior(2);
+
+            }
+        }
     }
 
     public String getName() {
@@ -30,11 +47,12 @@ public class Monster extends Entity {
         this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public MonsterType getMonsterType() {
+        return monsterType;
     }
-    public void setType(String type) {
-        this.type = type;
+
+    public void setMonsterType(MonsterType monsterType) {
+        this.monsterType = monsterType;
     }
 
     public double getStrength() {
@@ -58,21 +76,23 @@ public class Monster extends Entity {
         this.defences = defences;
     }
 
+    /*
     public double getBehavior() {
         return behavior;
     }
     public void setBehavior(double behavior) {
         this.behavior = behavior;
-    }
+    }*/
 
 
 
     public void afficheCapacities(Monster monster) {
-        implementsBehavior(monster);
+        //implementsBehavior(monster);
         System.out.println("Monster attack : "+monster.attacks);
         System.out.println("Monster health : "+monster.getHealthPoints());
-        System.out.println("Monster type : "+monster.type);
+        System.out.println("Monster type : "+monster.getMonsterType());
     }
+    /*
     private void implementsBehavior(Monster monster) { //set attack in terms of behavior
         if (monster.behavior == 0){
             monster.setAttacks(0);
@@ -100,5 +120,5 @@ public class Monster extends Entity {
         else {
             monster.setAttacks(10);
         }
-    }
+    }*/
 }
