@@ -365,54 +365,6 @@ public class Main extends Application {
         inventoryStage.show();
     }
 
-    /*public static void showInventoryWindow(Player player) {
-        Stage inventoryStage = new Stage();
-        inventoryStage.setTitle("Player Inventory");
-        inventoryStage.setWidth(400);
-        inventoryStage.setHeight(400);
-
-        // VBox to hold all inventory items
-        VBox inventoryVBox = new VBox(10);
-
-        // Create labels for the player's name, current money, and life
-        Label nameLabel = new Label("Name: " + player.getName());
-        Label moneyLabel = new Label("Money: " + player.getMoney());
-        Label lifeLabel = new Label("Life: " + player.getHealthPoints());
-
-        inventoryVBox.getChildren().addAll(nameLabel, moneyLabel, lifeLabel);
-
-        for (Item item : player.getInventory()) {
-            HBox itemBox = new HBox(10);
-
-            // Create an ImageView for the inventory item (assuming you have one)
-            // ImageView potionImageView = new ImageView(item.getImage());
-
-            // Create a Label for the name of the inventory item
-            Label itemNameLabel = new Label(item.getItemName());
-
-            // Get the current quantity of the item in the player's inventory
-            int currentQuantity = player.getItemQuantity(item);
-
-            // Create a Label for the quantity of the inventory item
-            Label quantityLabel = new Label("Quantity: " + currentQuantity);
-
-            // Create a Button to use the item
-            Button useButton = new Button("Use");
-            useButton.setOnAction(event -> {
-                item.useItem(player);
-                // Update the quantity label after using the item
-                quantityLabel.setText("Quantity: " + (currentQuantity - 1));
-            });
-
-            itemBox.getChildren().addAll(itemNameLabel, quantityLabel, useButton);
-            inventoryVBox.getChildren().add(itemBox);
-        }
-
-        Scene inventoryScene = new Scene(inventoryVBox);
-        inventoryStage.setScene(inventoryScene);
-        inventoryStage.show();
-    }*/
-
 
 
 
