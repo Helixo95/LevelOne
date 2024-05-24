@@ -59,6 +59,7 @@ public class Main extends Application {
         items.add(new Item(7,3,"HealPotion1", "this can heal you", Effet.HEAL,0,"src/PokeSmart/Object/potion_red.png"));
         items.add(new Item(7,4,"HealPotion2", "this can heal you", Effet.HEAL,0,"src/PokeSmart/Object/potion_red.png"));
         items.add(new Item(0,11,"WallPotion", "walls are no more a problem", Effet.OVERWALL,0,"src/PokeSmart/Object/potion_grey.png"));
+        items.add(new Item(7,1,"WallPotion", "walls are no more a problem", Effet.OVERWALL,0,"src/PokeSmart/Object/potion_grey.png"));
         //items.add(new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png"));
         items.add(new Item(15,0,"Key", "doors can be opened", Effet.OPENDOOR,0,"src/PokeSmart/Object/key.png"));
         items.add(new Item(14,10,"Door", "go to an other world", Effet.NEWWORLD,0,"src/PokeSmart/Object/door_iron.png"));
@@ -82,9 +83,7 @@ public class Main extends Application {
         root.setLeft(gridPane);
         root.setCenter(inventoryBox);
 
-        // Création de la barre de vie
-        //healthPointsLabel = new Label("Health Points: \n" + player.getHealthPoints());
-        //monsterHealthPointsLabel = new Label("Monster Health Points: \n" + monster.getHealthPoints());
+        updateInventoryBox();
         updateHealthPointsLabel(root);
 
         // Création de l'ImageView du joueur
@@ -186,7 +185,7 @@ public class Main extends Application {
                     x += 1;
                     break;
                 case I:
-                    showInventoryWindow(entities);
+                    showInventoryWindow(entities, root);
                 default:
                     return; // Ne rien faire pour d'autres touches
             }
@@ -291,7 +290,7 @@ public class Main extends Application {
     }
 
 
-    private void showInventoryWindow(List<Entity> entities) {
+    private void showInventoryWindow(List<Entity> entities, BorderPane root) {
         // stage for inventory window
         Stage inventoryStage = new Stage();
         inventoryStage.setTitle("Player inventory");
@@ -330,11 +329,27 @@ public class Main extends Application {
             Button useButton = new Button("Use");
             useButton.setOnAction(e -> {
                 item.useItem(player);
+                updateDoor(root);
+                item.setQuantity(item.getQuantity() - 1);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Item Used");
                 alert.setHeaderText(null);
                 alert.setContentText(item.getItemDescription());
                 alert.showAndWait();
+                if (item.getQuantity() == 0) {
+                    inventoryGridPane.getChildren().remove(useButton);
+                    inventoryGridPane.getChildren().remove(potionNameLabel);
+                    inventoryGridPane.getChildren().remove(quantityLabel);
+                    inventoryGridPane.getChildren().remove(potionImageView);
+                    for (Item item1 : player.getInventory()) {
+                        if (item1.equals(item)) {
+                            player.getInventory().remove(item1);
+                            break;
+                        }
+                    }
+                }
+                updateHealthPointsLabel(root);
+                showInventoryWindow(entities, root);
                 removeItemInInventory(item);
             });
 
@@ -419,30 +434,23 @@ public class Main extends Application {
         for (Item item : items) {
             if (player.getX() == item.getX() && player.getY() == item.getY()) {
                 if (item.getEffet() != Effet.NEWWORLD) {
-                    System.out.println("1ère boucle");
-                    System.out.println("Item quantity : " + item.getQuantity());
                     if(item.getQuantity() == 0) {
                         for (Item item1 : player.getInventory()) {
-                            System.out.println("2eme boucle");
                             if (item1.getEffet().equals(item.getEffet())) {
                                 item1.setQuantity(item1.getQuantity() + 1);
-                                System.out.println("Item quantity : " + item1.getQuantity());
                                 break;
                             } else {
                                 item.setQuantity(1);
                                 player.addItem(item);
                             }
-                            System.out.println("Player item : " + item1.getItemName());
-                            System.out.println("Item quantity : " + item1.getQuantity());
                         }
                     }
                     else{
                         item.setQuantity(1);
                         player.addItem(item);
-                        System.out.println("ajout item");
                     }
 
-                    item.useItem(player);
+                    //item.useItem(player);
                     pickedUpItems.add(item);
                     System.out.println("Item picked up");
                     root.getChildren().remove(item.getImage());
@@ -450,7 +458,7 @@ public class Main extends Application {
                 }
                 if (item.getItemName() == "Key") {
                     System.out.println("You picked up a key !");
-                    for (Item item1 : items) {
+                    /*for (Item item1 : items) {
                         if ((player.getDiscoverNewWorld() == 1) && "Door".equals(item1.getItemName())) {//("Door".equals(item1.getItemName())) {
                             root.getChildren().remove(item1.getImage()); // Remove the old image from the scene
                             ImageView newImage = new ImageView("file:src/PokeSmart/Object/door.png"); // Create a new ImageView
@@ -461,7 +469,8 @@ public class Main extends Application {
                             item1.setImage(newImage); // Update the image of the item
                             root.getChildren().add(item1.getImage()); // Add the new image to the scene
                         }
-                    }
+                    }*/
+                    updateDoor(root);
                 }
                 if (player.getDiscoverNewWorld() == 1 && item.getEffet() == Effet.NEWWORLD) { // condition sur la clé
                     System.out.println("You finish first world !");
@@ -490,6 +499,22 @@ public class Main extends Application {
         items.removeAll(pickedUpItems);
 
         updateCollisionMap(tileImages, filePath); // Mettre à jour la carte des collisions
+    }
+
+
+    private void updateDoor(BorderPane root) {
+        for (Item item1 : items) {
+            if ((player.getDiscoverNewWorld() == 1) && "Door".equals(item1.getItemName())) {//("Door".equals(item1.getItemName())) {
+                root.getChildren().remove(item1.getImage()); // Remove the old image from the scene
+                ImageView newImage = new ImageView("file:src/PokeSmart/Object/door.png"); // Create a new ImageView
+                newImage.setFitWidth(TILE_SIZE);
+                newImage.setFitHeight(TILE_SIZE);
+                newImage.setLayoutX(item1.getX() * TILE_SIZE); // Set the x-coordinate of the ImageView
+                newImage.setLayoutY(item1.getY() * TILE_SIZE); // Set the y-coordinate of the ImageView
+                item1.setImage(newImage); // Update the image of the item
+                root.getChildren().add(item1.getImage()); // Add the new image to the scene
+            }
+        }
     }
 
 
