@@ -29,7 +29,9 @@ public class Item extends Entity {
 
     public void useItem(Entity entity){
         switch (effet){
-            case HEAL -> entity.setHealthPoints((int) (entity.getHealthPoints()+20));
+            case HEAL -> {
+                entity.setHealthPoints((int) (entity.getHealthPoints()+20));
+            }
             case OVERWALL -> {
                 entity.setCanOverWall(true);
             }

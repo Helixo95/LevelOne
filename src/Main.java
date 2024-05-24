@@ -53,8 +53,11 @@ public class Main extends Application {
         entities.add(npc);
 
         items = new ArrayList<Item>();
-        items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,0,"src/PokeSmart/Object/potion_red.png"));
-        items.add(new Item(7,4,"HealPotion", "this can heal you", Effet.HEAL,0,"src/PokeSmart/Object/potion_red.png"));
+
+        player.addItem(new Item(7,4,"HealPotionTest", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
+
+        items.add(new Item(7,3,"HealPotion1", "this can heal you", Effet.HEAL,0,"src/PokeSmart/Object/potion_red.png"));
+        items.add(new Item(7,4,"HealPotion2", "this can heal you", Effet.HEAL,0,"src/PokeSmart/Object/potion_red.png"));
         items.add(new Item(0,11,"WallPotion", "walls are no more a problem", Effet.OVERWALL,0,"src/PokeSmart/Object/potion_grey.png"));
         //items.add(new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png"));
         items.add(new Item(15,0,"Key", "doors can be opened", Effet.OPENDOOR,0,"src/PokeSmart/Object/key.png"));
@@ -334,7 +337,6 @@ public class Main extends Application {
                 alert.showAndWait();
                 removeItemInInventory(item);
             });
-            item.setQuantity(item.getQuantity() + 1);
 
             // Add the Button, the name Label, and the price Label to the grid pane
             inventoryGridPane.add(useButton, 0, rowIndex);
@@ -343,10 +345,6 @@ public class Main extends Application {
             inventoryGridPane.add(potionImageView, 3, rowIndex);
             rowIndex++;
             //}
-            if (item.getQuantity() > 0) {
-                item.setQuantity(item.getQuantity() + 1);
-            }
-            System.out.println("Q2 : " + item.getQuantity());
         }
         inventoryStage.setScene(inventoryScene);
         inventoryStage.show();
@@ -420,14 +418,35 @@ public class Main extends Application {
         List<Item> pickedUpItems = new ArrayList<>();
         for (Item item : items) {
             if (player.getX() == item.getX() && player.getY() == item.getY()) {
-                if (item.getEffet() != Effet.NEWWORLD){
-                    player.addItem(item);
+                if (item.getEffet() != Effet.NEWWORLD) {
+                    System.out.println("1ère boucle");
+                    System.out.println("Item quantity : " + item.getQuantity());
+                    if(item.getQuantity() == 0) {
+                        for (Item item1 : player.getInventory()) {
+                            System.out.println("2eme boucle");
+                            if (item1.getEffet().equals(item.getEffet())) {
+                                item1.setQuantity(item1.getQuantity() + 1);
+                                System.out.println("Item quantity : " + item1.getQuantity());
+                                break;
+                            } else {
+                                item.setQuantity(1);
+                                player.addItem(item);
+                            }
+                            System.out.println("Player item : " + item1.getItemName());
+                            System.out.println("Item quantity : " + item1.getQuantity());
+                        }
+                    }
+                    else{
+                        item.setQuantity(1);
+                        player.addItem(item);
+                        System.out.println("ajout item");
+                    }
+
                     item.useItem(player);
                     pickedUpItems.add(item);
                     System.out.println("Item picked up");
                     root.getChildren().remove(item.getImage());
                     updateInventoryBox(); // voir pour le bouton
-                    System.out.println(player.getCapacities());
                 }
                 if (item.getItemName() == "Key") {
                     System.out.println("You picked up a key !");
@@ -441,7 +460,6 @@ public class Main extends Application {
                             newImage.setLayoutY(item1.getY() * TILE_SIZE); // Set the y-coordinate of the ImageView
                             item1.setImage(newImage); // Update the image of the item
                             root.getChildren().add(item1.getImage()); // Add the new image to the scene
-                            System.out.println("boucle1");
                         }
                     }
                 }
@@ -505,6 +523,7 @@ public class Main extends Application {
 
                 // supprime le pnj
                 root.getChildren().remove(npc.getImage());
+                System.out.println("FirstQuest");
                 monsterKilled = false;
                 questAccepted = false;
                 firstQuest = true;
@@ -553,7 +572,7 @@ public class Main extends Application {
     private void checkForMonsterEncounter(BorderPane root, ImageView playerImageView, Stage primaryStage) {
         if (player.equals(monster)) { //if (player.getX() == monster.getX() && player.getY() == monster.getY()) {
             System.out.println("Monster encountered");
-            if (!questAccepted) {
+            if (!questAccepted && !firstQuest) {
                 showAlert("Monster encountered", null, "You have to accept the quest first.");
                 return;
             } else if (questAccepted && !monsterKilled) {
@@ -617,10 +636,8 @@ public class Main extends Application {
     private void initCaractersWorld2(Stage primaryStage, BorderPane root){
         entities.clear(); // vérifier que ça supprime bien les entités du monde précédent
         entities = null;
-        npc.setDestoyed(true);
         entities = new ArrayList<Entity>();
         // supprimer tous les items précédents et regarder le bug quand on change de monde et récupère un item ça change la carte
-        npc.setDestoyed(true);
         checkDestroyedPlayer(primaryStage, npc, root);
 
         entities = new ArrayList<Entity>();
