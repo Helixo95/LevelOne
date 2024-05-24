@@ -314,11 +314,18 @@ public class Main extends Application {
         inventoryGridPane.add(moneyLabel, 1, 0);
         inventoryGridPane.add(lifeLabel, 2, 0);
 
+        // Method to update the labels
+        Runnable updateLabels = () -> {
+            nameLabel.setText("Name : " + player.getName());
+            moneyLabel.setText("Money : " + player.getMoney());
+            lifeLabel.setText("Life : " + player.getHealthPoints());
+        };
+
         int rowIndex = 1;
         for (Item item : player.getInventory()) {
             System.out.println("Item : " + item.getItemName());
             System.out.println("Q : " + item.getQuantity());
-            //if (item.getQuantity() == 0) {
+
             // Create an ImageView for the inventory item
             ImageView potionImageView = item.getImage();
 
@@ -341,16 +348,12 @@ public class Main extends Application {
                     inventoryGridPane.getChildren().remove(potionNameLabel);
                     inventoryGridPane.getChildren().remove(quantityLabel);
                     inventoryGridPane.getChildren().remove(potionImageView);
-                    for (Item item1 : player.getInventory()) {
-                        if (item1.equals(item)) {
-                            player.getInventory().remove(item1);
-                            break;
-                        }
-                    }
+                    player.getInventory().remove(item);
+                } else {
+                    quantityLabel.setText("Quantity : " + item.getQuantity());
                 }
+                updateLabels.run();
                 updateHealthPointsLabel(root);
-                showInventoryWindow(entities, root);
-                removeItemInInventory(item);
             });
 
             // Add the Button, the name Label, and the price Label to the grid pane
@@ -359,12 +362,10 @@ public class Main extends Application {
             inventoryGridPane.add(quantityLabel, 2, rowIndex);
             inventoryGridPane.add(potionImageView, 3, rowIndex);
             rowIndex++;
-            //}
         }
         inventoryStage.setScene(inventoryScene);
         inventoryStage.show();
     }
-
 
 
 
