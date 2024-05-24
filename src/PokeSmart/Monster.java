@@ -25,7 +25,8 @@ public class Monster extends Entity {
             case ORC -> {
                 monster.setStrength(50);
                 monster.setAttacks(20);
-                monster.setDefences(150);
+                monster.setDefences(50);
+                monster.setHealthPoints(150);
                 //monster.setBehavior(1);
             }
             case SKELETON -> {

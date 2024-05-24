@@ -108,14 +108,14 @@ public class Entity {
         return healthPoints;
     }
     public void setHealthPoints(int healthPoints) {
-        if (healthPoints > 100) {
+        /*if (healthPoints > 100) {
             this.healthPoints = 100;
         } else if (healthPoints < 0) {
             this.healthPoints = 0;
         }
-        else {
+        else {*/
             this.healthPoints = healthPoints;
-        }
+        //}
     }
 
     public int getCapacities() {

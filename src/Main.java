@@ -46,7 +46,8 @@ public class Main extends Application {
         player.setInventory(new ArrayList<Item>());
         entities = new ArrayList<Entity>();
         monster = new Monster("Papa", 7, 2, 0, 0, 100,0, MonsterType.ORC, 1, 30, 100,"src/PokeSmart/Monster/orc_down_2.png");
-        //monster.TypeMonster(monster);
+        monster.TypeMonster(monster);
+        System.out.println("Monster health : "+monster.getHealthPoints());
         npc = new NPC("Jojo", 7,8,0,0,1,3,0,"src/PokeSmart/NPC/oldman_down_1.png");
         entities.add(monster);
         entities.add(npc);
