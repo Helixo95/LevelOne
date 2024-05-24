@@ -56,13 +56,13 @@ public class Main extends Application {
 
         player.addItem(new Item(7,4,"HealPotionTest", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
 
-        items.add(new Item(7,3,"HealPotion1", "this can heal you", Effet.HEAL,0,"src/PokeSmart/Object/potion_red.png"));
-        items.add(new Item(7,4,"HealPotion2", "this can heal you", Effet.HEAL,0,"src/PokeSmart/Object/potion_red.png"));
-        items.add(new Item(0,11,"WallPotion", "walls are no more a problem", Effet.OVERWALL,0,"src/PokeSmart/Object/potion_grey.png"));
-        items.add(new Item(7,1,"WallPotion", "walls are no more a problem", Effet.OVERWALL,0,"src/PokeSmart/Object/potion_grey.png"));
+        items.add(new Item(7,3,"HealPotion1", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
+        items.add(new Item(7,4,"HealPotion2", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
+        items.add(new Item(0,11,"WallPotion", "walls are no more a problem", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_grey.png"));
+        items.add(new Item(7,1,"WallPotion", "walls are no more a problem", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_grey.png"));
         //items.add(new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png"));
-        items.add(new Item(15,0,"Key", "doors can be opened", Effet.OPENDOOR,0,"src/PokeSmart/Object/key.png"));
-        items.add(new Item(14,10,"Door", "go to an other world", Effet.NEWWORLD,0,"src/PokeSmart/Object/door_iron.png"));
+        items.add(new Item(15,0,"Key", "doors can be opened", Effet.OPENDOOR,1,"src/PokeSmart/Object/key.png"));
+        items.add(new Item(14,10,"Door", "go to an other world", Effet.NEWWORLD,1,"src/PokeSmart/Object/door_iron.png"));
     }
 
 
@@ -430,46 +430,29 @@ public class Main extends Application {
 
 
     private void checkForItemPickup(BorderPane root, Image[][] tileImages, String filePath, Stage primaryStage) {
-        List<Item> pickedUpItems = new ArrayList<>();
+        Item pickedUpItems = null;
         for (Item item : items) {
             if (player.getX() == item.getX() && player.getY() == item.getY()) {
+                pickedUpItems = item;
                 if (item.getEffet() != Effet.NEWWORLD) {
-                    if(item.getQuantity() == 0) {
+                    if(item.getQuantity() == 1) {
                         for (Item item1 : player.getInventory()) {
                             if (item1.getEffet().equals(item.getEffet())) {
                                 item1.setQuantity(item1.getQuantity() + 1);
                                 break;
                             } else {
-                                item.setQuantity(1);
                                 player.addItem(item);
+                                break;
                             }
                         }
                     }
-                    else{
+                    else {
                         item.setQuantity(1);
                         player.addItem(item);
                     }
-
-                    //item.useItem(player);
-                    pickedUpItems.add(item);
-                    System.out.println("Item picked up");
-                    root.getChildren().remove(item.getImage());
-                    updateInventoryBox(); // voir pour le bouton
                 }
                 if (item.getItemName() == "Key") {
                     System.out.println("You picked up a key !");
-                    /*for (Item item1 : items) {
-                        if ((player.getDiscoverNewWorld() == 1) && "Door".equals(item1.getItemName())) {//("Door".equals(item1.getItemName())) {
-                            root.getChildren().remove(item1.getImage()); // Remove the old image from the scene
-                            ImageView newImage = new ImageView("file:src/PokeSmart/Object/door.png"); // Create a new ImageView
-                            newImage.setFitWidth(TILE_SIZE);
-                            newImage.setFitHeight(TILE_SIZE);
-                            newImage.setLayoutX(item1.getX() * TILE_SIZE); // Set the x-coordinate of the ImageView
-                            newImage.setLayoutY(item1.getY() * TILE_SIZE); // Set the y-coordinate of the ImageView
-                            item1.setImage(newImage); // Update the image of the item
-                            root.getChildren().add(item1.getImage()); // Add the new image to the scene
-                        }
-                    }*/
                     updateDoor(root);
                 }
                 if (player.getDiscoverNewWorld() == 1 && item.getEffet() == Effet.NEWWORLD) { // condition sur la clé
@@ -496,8 +479,13 @@ public class Main extends Application {
                 }
             }
         }
-        items.removeAll(pickedUpItems);
-
+        System.out.println("Les porsche c'est pas ouf en vrai");
+        if (pickedUpItems != null) {
+            items.remove(pickedUpItems);
+            root.getChildren().remove(pickedUpItems.getImage());
+        }
+        updateInventoryBox();
+        System.out.println("update collision");
         updateCollisionMap(tileImages, filePath); // Mettre à jour la carte des collisions
     }
 
