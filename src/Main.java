@@ -20,6 +20,7 @@ public class Main extends Application {
 
     private boolean questAccepted = false;
     private boolean monsterKilled = false;
+    private boolean firstQuest = false;
 
     private Player player;
     private Monster monster;
@@ -474,7 +475,7 @@ public class Main extends Application {
 
 
     private void checkForNPCEncounter(BorderPane root, ImageView playerImageView, Stage primaryStage) {
-        if (player.equals(npc)) { //if (player.getX() == npc.getX() && player.getY() == npc.getY()) {
+        if (player.equals(npc) && !firstQuest) { //if (player.getX() == npc.getX() && player.getY() == npc.getY()) {
             System.out.println("NPC encountered");
 
             if (questAccepted) {
@@ -492,6 +493,12 @@ public class Main extends Application {
                     root.getChildren().add(seaPotionImageView);
                     seaPotionImageView.setLayoutX(seaPotion.getX() * TILE_SIZE);
                     seaPotionImageView.setLayoutY(seaPotion.getY() * TILE_SIZE);
+
+                    // supprime le pnj
+                    root.getChildren().remove(npc.getImage());
+                    monsterKilled = false;
+                    questAccepted = false;
+                    firstQuest = true;
                     return;
                 }
                 showAlert("Quest not completed", null, "You have to kill the Monster first.");
@@ -601,6 +608,7 @@ public class Main extends Application {
     private void initCaractersWorld2(Stage primaryStage, BorderPane root){
         entities.clear(); // vérifier que ça supprime bien les entités du monde précédent
         entities = null;
+        npc.setDestoyed(true);
         entities = new ArrayList<Entity>();
         // supprimer tous les items précédents et regarder le bug quand on change de monde et récupère un item ça change la carte
         npc.setDestoyed(true);
