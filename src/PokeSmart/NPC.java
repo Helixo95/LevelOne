@@ -7,8 +7,8 @@ public class NPC extends Entity {
 
     // imagePath : src/PokeSmart/NPC/oldman_down_1.png
 
-    public NPC(String nom, double x, double y, double vx, double vy, double interaction, double type, int capacities, String imagePath) {
-        super(x, y, vx, vy, 1000, capacities, imagePath);
+    public NPC(String nom, double x, double y, double vx, double vy, double interaction, double type, String imagePath) {
+        super(x, y, vx, vy, 1000, imagePath);
         this.name = nom;
         this.interaction = interaction;
         this.type = type;

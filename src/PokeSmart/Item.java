@@ -20,7 +20,7 @@ public class Item extends Entity {
      * @param imagePath
      */
     public Item(double x, double y, String itemName, String itemDescription, Effet effet, int quantity, String imagePath) {
-        super(x, y, 0, 0,0, 0, imagePath);
+        super(x, y, 0, 0,0, imagePath);
         this.itemName = itemName;
         this.itemDescription = itemDescription;
         this.effet = effet;

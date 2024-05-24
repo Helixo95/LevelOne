@@ -12,7 +12,6 @@ public class Entity {
     private double vx; // vitesse en x
     private double vy; // vitesse en y
     private int healthPoints;
-    private int capacities; // if = 1 => overwall, 2 overwall and swim, 3 overwall and key and swim
     private int discoverNewWorld; // if = 1 => can go to first new world
     private ImageView Image;
     private boolean destoyed = false; // permet de détruite l'individu en cas de perte de vie par exemple
@@ -33,13 +32,12 @@ public class Entity {
      * @param vy
      *
      */
-    public Entity(double x, double y, double vx, double vy, int healthPoints, int capacities, String imagePath) {
+    public Entity(double x, double y, double vx, double vy, int healthPoints, String imagePath) {
         this.x = x;
         this.y = y;
         this.vx = vx;
         this.vy = vy;
         this.healthPoints = healthPoints;
-        this.capacities = capacities;
         this.Image = new ImageView("file:"+imagePath);
         this.discoverNewWorld = 0;
     }
@@ -109,13 +107,6 @@ public class Entity {
     }
     public void setHealthPoints(int healthPoints) {
             this.healthPoints = healthPoints;
-    }
-
-    public int getCapacities() {
-        return capacities;
-    }
-    public void setCapacities(int capacities) {
-        this.capacities = capacities;
     }
 
     public ImageView getImage() {
