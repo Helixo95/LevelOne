@@ -45,7 +45,8 @@ public class Main extends Application {
         player = new Player("Popo", 6, 1, 1, 1, 100, 0,150, 50, 50, 10000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png");
         player.setInventory(new ArrayList<Item>());
         entities = new ArrayList<Entity>();
-        monster = new Monster("Papa", 7, 2, 0, 0, 100,0, "OFFENSIVE", 1, 30, 100, 1,"src/PokeSmart/Monster/orc_down_2.png");
+        monster = new Monster("Papa", 7, 2, 0, 0, 100,0, MonsterType.ORC, 1, 30, 100,"src/PokeSmart/Monster/orc_down_2.png");
+        //monster.TypeMonster(monster);
         npc = new NPC("Jojo", 7,8,0,0,1,3,0,"src/PokeSmart/NPC/oldman_down_1.png");
         entities.add(monster);
         entities.add(npc);
@@ -622,8 +623,8 @@ public class Main extends Application {
         checkDestroyedPlayer(primaryStage, npc, root);
 
         entities = new ArrayList<Entity>();
-        entities.add(new Monster("BatMan", 7, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1,"src/PokeSmart/Monster/bat_down_2.png"));
-        entities.add(new Monster("Skeleton", 10, 2, 0, 0, 1,0, "OFFENSIVE", 1, 1, 1, 1,"src/PokeSmart/Monster/skeletonlord_down_1.png"));
+        entities.add(new Monster("BatMan", 7, 2, 0, 0, 1,0, MonsterType.BAT, 1, 1, 1,"src/PokeSmart/Monster/bat_down_2.png"));
+        entities.add(new Monster("Skeleton", 10, 2, 0, 0, 1,0, MonsterType.SKELETON, 1, 1, 1, "src/PokeSmart/Monster/skeletonlord_down_1.png"));
 
         items = new ArrayList<Item>();
         items.add(new Item(7,3,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
