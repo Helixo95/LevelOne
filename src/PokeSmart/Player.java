@@ -21,13 +21,13 @@ public class Player extends Entity {
     public void attack(Entity entity) {
         if (entity instanceof Monster) {
             Monster monster = (Monster) entity;
-            if (monster.getDefences() < this.strength) {
+            //if (monster.getDefences() < this.strength) {
                 monster.setHealthPoints((int) (monster.getHealthPoints()-this.attacks));
                 this.setHealthPoints((int) (this.getHealthPoints() - monster.getAttacks()));
                 System.out.println("Player attacks Monster");
-            } else {
+            /*} else {
                 System.out.println("Player attacks Monster but Monster is too strong");
-            }
+            }*/
         }
     }
 
