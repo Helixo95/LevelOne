@@ -1,5 +1,6 @@
 package PokeSmart;
 
+import javafx.scene.control.Alert;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
@@ -57,6 +58,14 @@ public class Entity {
             }
         }
         return false;
+    }
+
+    public void showAlert(String title, String header, String phrase) {
+        Alert alterWall = new Alert(Alert.AlertType.INFORMATION);
+        alterWall.setTitle(title);
+        alterWall.setHeaderText(header);
+        alterWall.setContentText(phrase);
+        alterWall.showAndWait();
     }
 
     public boolean getDestroyed() {

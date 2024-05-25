@@ -30,11 +30,29 @@ public class Monster extends Entity {
                 //monster.setBehavior(1);
             }
             case SKELETON -> {
-                monster.setStrength(30);
-                monster.setAttacks(10);
+                monster.setStrength(150);
+                monster.setAttacks(60);
                 monster.setDefences(100);
+                monster.setHealthPoints(250);
                 //monster.setBehavior(2);
+            }
+            case BAT -> {
+                monster.setStrength(100);
+                monster.setAttacks(40);
+                monster.setDefences(80);
+                monster.setHealthPoints(200);
+                //monster.setBehavior(3);
+            }
+        }
+    }
 
+    public void robItem(Monster monster, Player player, Item item) { // permet au monstre de voler un item du joueur selon l'effet voulu
+        if (monster.getMonsterType().equals(MonsterType.BAT)) {
+            for (Item items : player.getInventory()) {
+                if (items.getEffet().equals(item.getEffet())) {
+                    item.setQuantity(item.getQuantity() - 1);
+                    monster.addItem(item);
+                }
             }
         }
     }
