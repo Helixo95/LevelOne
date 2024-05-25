@@ -229,7 +229,7 @@ public class Main extends Application {
             playerImageView.setLayoutY(player.getY() * TILE_SIZE);
 
             checkForItemPickup(root, tileImages, worldPath, primaryStage);
-            checkForMonsterEncounter(root, monster);
+            checkForMonsterEncounter(root, monster, primaryStage);
             checkForNPCEncounter(root, playerImageView, primaryStage);
         });
     }
@@ -447,10 +447,9 @@ public class Main extends Application {
                 npc.showAlert("Villager encountered", null, "Hello " + player.getName() + " I am " + npc.getName());
             } else if (npc.getNPCType().equals(NPCType.SPECIAL)) {
                 System.out.println("Special NPC encountered");
-                npc.showAlert("Special NPC encountered", null, "Hello " + player.getName() + " I am " + npc.getName());
-                npc.giveItem(player, new Item(7,5,"SwimPotion", "water is no more a problem", Effet.ATTAQUEPLUS,1,"src/PokeSmart/Object/sword_normal.png"));
-
-                //firstQuest(root);
+                npc.showAlert("Special NPC encountered", null, "Hello " + player.getName() + " I am " + npc.getName()+ " I have a gift for you !");
+                npc.giveItem(player, new Item(7,5,"Sword", "water is no more a problem", Effet.ATTAQUEPLUS,1,"src/PokeSmart/Object/sword_normal.png"));
+                player.showAlert("Gift received", null, "You received a gift from "+npc.getName()+" !");
             }
         }
     }
@@ -489,7 +488,7 @@ public class Main extends Application {
     }
 
 
-    private void checkForMonsterEncounter(BorderPane root, Monster monster) {
+    private void checkForMonsterEncounter(BorderPane root, Monster monster, Stage stage) {
         if (entities.contains(monster) && player.equals(monster)) { //if (player.getX() == monster.getX() && player.getY() == monster.getY()) {
             System.out.println("Monster encountered");
             if (monster.getMonsterType().equals(MonsterType.ORC)) {
@@ -502,6 +501,15 @@ public class Main extends Application {
                 }
             } else if (monster.getMonsterType().equals(MonsterType.SKELETON)) {
                 System.out.println("Skeleton Monster encountered");
+                showMonsterDialog(root, monster);
+                //player.attack(monster);
+                if (monster.getHealthPoints() <= 0) {
+                    monsterKilled = true;
+                    monster.showAlert("Monster defeated", null, "You defeated the boss !");
+                    player.showAlert("Congratulations !", null, "You finished the game !");
+                    root.getChildren().remove(monster.getImage());
+                    stage.close();
+                }
             }
         }
         for (Monster monster1 : monsters) {
@@ -527,12 +535,12 @@ public class Main extends Application {
         dialog.setResultConverter(buttonType -> {
             if (buttonType == attackButtonType) {
                 // Handle the player attacking the monster
-                player.attack(orc);
+                player.attack(monster);
                 updateHealthPointsLabel(root, monster);
-                if (orc.getHealthPoints() <= 0) {
+                if (monster.getHealthPoints() <= 0) {
                     monsterKilled = true;
-                    orc.showAlert("Monster defeated", null, "You defeated the monster!");
-                    root.getChildren().remove(orc.getImage());
+                    monster.showAlert("Monster defeated", null, "You defeated the monster!");
+                    root.getChildren().remove(monster.getImage());
                     return "Defeated";
                 }
                 System.out.println("You attacked the monster!");
@@ -584,9 +592,9 @@ public class Main extends Application {
         entities = new ArrayList<Entity>();
         monsters = new ArrayList<Monster>();
         entities.add(new Monster("BatMan", 7, 3, 0, 0, 1, MonsterType.BAT, 1, 1, 1,"src/PokeSmart/Monster/bat_down_2.png"));
-        skeleton = new Monster("Skeleton", 10, 2, 0, 0, 1, MonsterType.SKELETON, 1, 1, 1, "src/PokeSmart/Monster/skeletonlord_down_1.png");
+        skeleton = new Monster("Skeleton", 10, 2, 0, 0, 400, MonsterType.SKELETON, 1, 150, 200, "src/PokeSmart/Monster/skeletonlord_down_1.png");
         entities.add(skeleton);
-        npc = new NPC("Villager", 2,4,0,0,NPCType.VILLAGER,"src/PokeSmart/NPC/merchant_down_1.png");
+        npc = new NPC("Momo", 2,4,0,0,NPCType.SPECIAL,"src/PokeSmart/NPC/merchant_down_1.png");
         entities.add(npc);
         monsters.add(new Monster("BatMan", 7, 3, 0, 0, 1, MonsterType.BAT, 1, 1, 1,"src/PokeSmart/Monster/bat_down_2.png"));
         monsters.add(skeleton);
