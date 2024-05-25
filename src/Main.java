@@ -497,11 +497,11 @@ public class Main extends Application {
                     orc.showAlert("Monster encountered", null, "You have to accept the quest first.");
                     return;
                 } else if (npc.isFirstQuestAccepted() && !monsterKilled) {
-                    showMonsterDialog(root, monster);
+                    showMonsterDialog(root, monster, stage);
                 }
             } else if (monster.getMonsterType().equals(MonsterType.SKELETON)) {
                 System.out.println("Skeleton Monster encountered");
-                showMonsterDialog(root, monster);
+                showMonsterDialog(root, monster, stage);
                 if (monster.getHealthPoints() <= 0) {
                     monsterKilled = true;
                     monster.showAlert("Monster defeated", null, "You defeated the boss !");
@@ -514,11 +514,12 @@ public class Main extends Application {
         for (Monster monster1 : monsters) {
             if (monster1.getMonsterType().equals(MonsterType.BAT) && player.equals(monster1)) {
                 System.out.println("Bat Monster encountered");
+                monster1.robItem(monster1, player);
             }
         }
     }
 
-    private void showMonsterDialog(BorderPane root, Monster monster) {
+    private void showMonsterDialog(BorderPane root, Monster monster, Stage stage) {
         // Create a dialog
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Combat with Monster");
@@ -539,6 +540,12 @@ public class Main extends Application {
                     monsterKilled = true;
                     monster.showAlert("Monster defeated", null, "You defeated the monster!");
                     root.getChildren().remove(monster.getImage());
+                    return "Defeated";
+                }
+                if (player.getHealthPoints() <= 0) {
+                    player.setDestoyed(true);
+                    player.showAlert("Game Over", null, "The skeleton killed you !");
+                    checkDestroyedPlayer(stage, monster, root);
                     return "Defeated";
                 }
                 System.out.println("You attacked the monster!");
