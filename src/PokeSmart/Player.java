@@ -8,7 +8,7 @@ public class Player extends Entity {
     private double money;
     private double type; //if 0 young, if 1 villager, if 2 old, if 3 special
 
-    public Player(String nom, double x, double y, double vx, double vy, int healthPoints, double strength, double attacks, double defences, double money, double type, String imagePath) {
+    public Player(String nom, double x, double y, double vx, double vy, double healthPoints, double strength, double attacks, double defences, double money, double type, String imagePath) {
         super(x, y, vx, vy, healthPoints, imagePath);
         this.name = nom;
         this.strength = strength;

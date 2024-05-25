@@ -29,6 +29,7 @@ public class Main extends Application {
     private int[][] collisionMap;
     private List<Item> items;
     private List<Entity> entities;
+    private List<Monster> monsters;
     private VBox inventoryBox;
     private Label healthPointsLabel;
     private Label monsterHealthPointsLabel;
@@ -46,11 +47,13 @@ public class Main extends Application {
         player = new Player("Popo", 6, 1, 1, 1, 100,150, 50, 50, 10000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png");
         player.setInventory(new ArrayList<Item>());
         entities = new ArrayList<Entity>();
+        monsters = new ArrayList<Monster>();
         orc = new Monster("Papa", 7, 2, 0, 0, 100, MonsterType.ORC, 1, 30, 100,"src/PokeSmart/Monster/orc_down_2.png");
         orc.TypeMonster(orc);
         npc = new NPC("Jojo", 7,8,0,0,NPCType.QUEST,"src/PokeSmart/NPC/oldman_down_1.png");
         entities.add(orc);
         entities.add(npc);
+        monsters.add(orc);
 
         items = new ArrayList<Item>();
 
@@ -166,19 +169,19 @@ public class Main extends Application {
             double x = player.getX();
             double y = player.getY();
             switch (e.getCode()) {
-                case UP:
+                case Z:
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_up_1.png"));
                     y -= 1;
                     break;
-                case DOWN:
+                case S:
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_down_1.png"));
                     y += 1;
                     break;
-                case LEFT:
+                case Q:
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_left_1.png"));
                     x -= 1;
                     break;
-                case RIGHT:
+                case D:
                     playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_right_1.png"));
                     x += 1;
                     break;
@@ -328,7 +331,7 @@ public class Main extends Application {
 
             Button useButton = new Button("Use");
             useButton.setOnAction(e -> {
-                item.useItem(player);
+                item.useItem(player, monster);
                 updateDoor(root);
                 item.setQuantity(item.getQuantity() - 1);
                 item.showAlert("Item Used", null, item.getItemDescription());
@@ -445,7 +448,7 @@ public class Main extends Application {
             } else if (npc.getNPCType().equals(NPCType.SPECIAL)) {
                 System.out.println("Special NPC encountered");
                 npc.showAlert("Special NPC encountered", null, "Hello " + player.getName() + " I am " + npc.getName());
-                //npc.giveItem(player, new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png
+                npc.giveItem(player, new Item(7,5,"SwimPotion", "water is no more a problem", Effet.ATTAQUEPLUS,1,"src/PokeSmart/Object/sword_normal.png"));
 
                 //firstQuest(root);
             }
@@ -487,9 +490,9 @@ public class Main extends Application {
 
 
     private void checkForMonsterEncounter(BorderPane root, Monster monster) {
-        if (entities.contains(monster) && player.equals(orc)) { //if (player.getX() == monster.getX() && player.getY() == monster.getY()) {
+        if (entities.contains(monster) && player.equals(monster)) { //if (player.getX() == monster.getX() && player.getY() == monster.getY()) {
             System.out.println("Monster encountered");
-            if (orc.getMonsterType().equals(MonsterType.ORC)) {
+            if (monster.getMonsterType().equals(MonsterType.ORC)) {
                 System.out.println("Orc Monster encountered");
                 if (!npc.isFirstQuestAccepted() && !isFirstQuestSucceded) {
                     orc.showAlert("Monster encountered", null, "You have to accept the quest first.");
@@ -497,11 +500,14 @@ public class Main extends Application {
                 } else if (npc.isFirstQuestAccepted() && !monsterKilled) {
                     showMonsterDialog(root, monster);
                 }
-            } else if (orc.getMonsterType().equals(MonsterType.SKELETON)) {
+            } else if (monster.getMonsterType().equals(MonsterType.SKELETON)) {
                 System.out.println("Skeleton Monster encountered");
-            } else if (orc.getMonsterType().equals(MonsterType.BAT)) {
+            }
+        }
+        for (Monster monster1 : monsters) {
+            if (monster1.getMonsterType().equals(MonsterType.BAT) && player.equals(monster1)) {
                 System.out.println("Bat Monster encountered");
-
+                //showMonsterDialog(root, monster1);
             }
         }
     }
@@ -564,17 +570,26 @@ public class Main extends Application {
         for (Entity entity : entities) {
             root.getChildren().remove(entity.getImage());
         }
+        for (Monster monster : monsters) {
+            root.getChildren().remove(monster.getImage());
+        }
+
         entities.clear(); // vérifier que ça supprime bien les entités du monde précédent
         entities = null;
-        entities = new ArrayList<Entity>();
+        monsters.clear();
+        monsters = null;
         // supprimer tous les items précédents et regarder le bug quand on change de monde et récupère un item ça change la carte
         checkDestroyedPlayer(primaryStage, npc, root);
 
         entities = new ArrayList<Entity>();
+        monsters = new ArrayList<Monster>();
         entities.add(new Monster("BatMan", 7, 3, 0, 0, 1, MonsterType.BAT, 1, 1, 1,"src/PokeSmart/Monster/bat_down_2.png"));
         skeleton = new Monster("Skeleton", 10, 2, 0, 0, 1, MonsterType.SKELETON, 1, 1, 1, "src/PokeSmart/Monster/skeletonlord_down_1.png");
         entities.add(skeleton);
-        entities.add(new NPC("Villager", 2,4,0,0,NPCType.VILLAGER,"src/PokeSmart/NPC/merchant_down_1.png"));
+        npc = new NPC("Villager", 2,4,0,0,NPCType.VILLAGER,"src/PokeSmart/NPC/merchant_down_1.png");
+        entities.add(npc);
+        monsters.add(new Monster("BatMan", 7, 3, 0, 0, 1, MonsterType.BAT, 1, 1, 1,"src/PokeSmart/Monster/bat_down_2.png"));
+        monsters.add(skeleton);
 
         items = new ArrayList<Item>();
         items.add(new Item(7,4,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));

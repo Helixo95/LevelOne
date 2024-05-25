@@ -11,7 +11,7 @@ public class Monster extends Entity {
 
     // imagePath : src/PokeSmart/Monster/orc_down_2.png
 
-    public Monster(String name, double x, double y, double vx, double vy, int HealthPoints, MonsterType monsterType, double strength, double attacks, double defences, String imagePath) {
+    public Monster(String name, double x, double y, double vx, double vy, double HealthPoints, MonsterType monsterType, double strength, double attacks, double defences, String imagePath) {
         super(x, y, vx, vy, HealthPoints, imagePath);
         this.name = name;
         this.monsterType = monsterType;
