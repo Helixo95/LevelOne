@@ -524,7 +524,7 @@ public class Main extends Application {
             } else if (npc.getNPCType().equals(NPCType.SPECIAL)) {
                 System.out.println("Special NPC encountered");
                 npc.showAlert("Special NPC encountered", null, "Hello " + player.getName() + ", I am " + npc.getName()+ " and I have a gift for you !");
-                npc.giveItem(player, new Item(7,5,"Sword", "water is no more a problem", Effet.ATTAQUEPLUS,1,"resources/Object/sword_normal.png"));
+                npc.giveItem(player, new Item(7,5,"Sword", "Monster are no more a problem.", Effet.ATTAQUEPLUS,1,"resources/Object/sword_normal.png"));
                 player.showAlert("Gift received", null, "You received a gift from "+npc.getName()+" !");
             }
         }
