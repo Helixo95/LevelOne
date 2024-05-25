@@ -18,9 +18,9 @@ public class Main extends Application {
     private final int NUM_TILES_X = 16; // Nombre de tuiles en largeur
     private final int NUM_TILES_Y = 12; // Nombre de tuiles en hauteur
 
-    private boolean questAccepted = false;
     private boolean monsterKilled = false;
-    private boolean firstQuest = false;
+    private boolean isFirstQuestSucceded = false;
+    private boolean isInInventory = false;
 
     private Player player;
     private Monster monster;
@@ -230,14 +230,6 @@ public class Main extends Application {
         });
     }
 
-    /*private void showAlert(String title, String header, String phrase) {
-        Alert alterWall = new Alert(Alert.AlertType.INFORMATION);
-        alterWall.setTitle(title);
-        alterWall.setHeaderText(header);
-        alterWall.setContentText(phrase);
-        alterWall.showAndWait();
-    }*/
-
     private void checkDestroyedPlayer(Stage primaryStage, Entity entity, BorderPane root) {
         if (player.getDestroyed()) {
             player.showAlert("Game Over", null, "You are dead !");
@@ -316,6 +308,7 @@ public class Main extends Application {
 
         int rowIndex = 1;
         for (Item item : player.getInventory()) {
+            System.out.println("Inventory bag : ");
             System.out.println("Item : " + item.getItemName());
             System.out.println("Q : " + item.getQuantity());
 
@@ -360,24 +353,26 @@ public class Main extends Application {
 
     private void checkForItemPickup(BorderPane root, Image[][] tileImages, String filePath, Stage primaryStage) {
         Item pickedUpItems = null;
+        isInInventory = false;
         for (Item item : items) {
             if (player.getX() == item.getX() && player.getY() == item.getY()) {
+                System.out.println("Check for items : ");
+                System.out.println("Item : " + item.getItemName());
+                System.out.println("Q : " + item.getQuantity());
                 pickedUpItems = item;
+
                 if (item.getEffet() != Effet.NEWWORLD) {
                     if(item.getQuantity() == 1) {
                         for (Item item1 : player.getInventory()) {
                             if (item1.getEffet().equals(item.getEffet())) {
                                 item1.setQuantity(item1.getQuantity() + 1);
-                                break;
-                            } else {
-                                player.addItem(item);
+                                isInInventory = true;
                                 break;
                             }
                         }
-                    }
-                    else {
-                        item.setQuantity(1);
-                        player.addItem(item);
+                        if (!isInInventory) {
+                            player.addItem(item);
+                        }
                     }
                 }
                 if (item.getItemName() == "Key") {
@@ -429,7 +424,7 @@ public class Main extends Application {
 
 
     private void checkForNPCEncounter(BorderPane root, ImageView playerImageView, Stage primaryStage) {
-        if (player.equals(npc) && !firstQuest) { //if (player.getX() == npc.getX() && player.getY() == npc.getY()) {
+        if (player.equals(npc) /*&& !npc.isFirstQuestAccepted()*/) {
             System.out.println("NPC encountered");
             if (npc.getNPCType().equals(NPCType.QUEST)) {
                 System.out.println("Quest NPC encountered");
@@ -449,7 +444,7 @@ public class Main extends Application {
 
 
     private void firstQuest(BorderPane root) {
-        if (questAccepted) {
+        if (npc.isFirstQuestAccepted()) {
             if (monsterKilled) {
                 System.out.println("Quest completed");
                 npc.showAlert("Quest completed", null, "You completed the quest! Pick up the key and go to the next world.");
@@ -467,10 +462,9 @@ public class Main extends Application {
 
                 // supprime le pnj
                 root.getChildren().remove(npc.getImage());
-                System.out.println("FirstQuest");
+                System.out.println("FirstQuest : true");
                 monsterKilled = false;
-                questAccepted = false;
-                firstQuest = true;
+                isFirstQuestSucceded = true;
                 return;
             }
             npc.showAlert("Quest not completed", null, "You have to kill the Monster first.");
@@ -487,10 +481,10 @@ public class Main extends Application {
     private void checkForMonsterEncounter(BorderPane root, ImageView playerImageView, Stage primaryStage) {
         if (player.equals(monster)) { //if (player.getX() == monster.getX() && player.getY() == monster.getY()) {
             System.out.println("Monster encountered");
-            if (!questAccepted && !firstQuest) {
+            if (!npc.isFirstQuestAccepted() && !isFirstQuestSucceded) {
                 monster.showAlert("Monster encountered", null, "You have to accept the quest first.");
                 return;
-            } else if (questAccepted && !monsterKilled) {
+            } else if (npc.isFirstQuestAccepted() && !monsterKilled) {
                 showMonsterDialog(root);
             }
             //showMonsterDialog(root);

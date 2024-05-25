@@ -11,7 +11,7 @@ import java.util.Optional;
 public class NPC extends Entity {
     private String name;
     private NPCType NPCType;
-    private boolean firstQuest = false;
+    private boolean acceptFirstQuest = false;
     private boolean secondQuest = false;
     private boolean monsterKilled = false;
 
@@ -38,7 +38,9 @@ public class NPC extends Entity {
         // Handle the result
         dialog.setResultConverter(buttonType -> {
             if (buttonType == acceptButtonType) {
-                firstQuest = true;
+                // Handle the player accepting the quest
+                this.setFirstQuestAccepted(true);
+                //acceptFirstQuest = true;
                 this.showAlert("Quest accepted", null, "You accepted the quest! You have to kill the Monster.");
                 return "Accepted";
             } else if (buttonType == refuseButtonType) {
@@ -99,12 +101,12 @@ public class NPC extends Entity {
         this.name = name;
     }
 
-    public boolean isFirstQuest() {
-        return firstQuest;
+    public boolean isFirstQuestAccepted() {
+        return acceptFirstQuest;
     }
 
-    public void setFirstQuest(boolean firstQuest) {
-        this.firstQuest = firstQuest;
+    public void setFirstQuestAccepted(boolean firstQuest) {
+        this.acceptFirstQuest = firstQuest;
     }
 
     public boolean isSecondQuest() {
