@@ -44,20 +44,20 @@ public class Main extends Application {
     }
 
     private void initCaractersWorld1(){
-        player = new Player("Popo", 6, 1, 1, 1, 100,150, 50, 50, 10000, 3, "PokeSmart/Player/Walking sprites/boy_down_1.png");
+        player = new Player("Sasha", 6, 1, 1, 1, 100,150, 50, 50, 10000, 3, "PokeSmart/Player/Walking sprites/boy_down_1.png");
         player.setInventory(new ArrayList<Item>());
         entities = new ArrayList<Entity>();
         monsters = new ArrayList<Monster>();
-        orc = new Monster("Papa", 7, 2, 0, 0, 100, MonsterType.ORC, 1, 30, 100,"PokeSmart/Monster/orc_down_2.png");
+        orc = new Monster("Jabba", 7, 2, 0, 0, 100, MonsterType.ORC, 1, 30, 100,"PokeSmart/Monster/orc_down_2.png");
         orc.TypeMonster(orc);
-        npc = new NPC("Jojo", 7,8,0,0,NPCType.QUEST,"PokeSmart/NPC/oldman_down_1.png");
+        npc = new NPC("Le sage", 7,8,0,0,NPCType.QUEST,"PokeSmart/NPC/oldman_down_1.png");
         entities.add(orc);
         entities.add(npc);
         monsters.add(orc);
 
         items = new ArrayList<Item>();
 
-        player.addItem(new Item(7,4,"HealPotionTest", "this can heal you", Effet.HEAL,1,"PokeSmart/Object/potion_red.png"));
+        player.addItem(new Item(7,4,"HealPotionStart", "this can heal you", Effet.HEAL,1,"PokeSmart/Object/potion_red.png"));
 
         items.add(new Item(7,3,"HealPotion1", "this can heal you", Effet.HEAL,1,"PokeSmart/Object/potion_red.png"));
         items.add(new Item(7,4,"HealPotion2", "this can heal you", Effet.HEAL,1,"PokeSmart/Object/potion_red.png"));
@@ -603,14 +603,14 @@ public class Main extends Application {
         entities.add(new Monster("BatMan", 7, 3, 0, 0, 1, MonsterType.BAT, 1, 1, 1,"PokeSmart/Monster/bat_down_2.png"));
         skeleton = new Monster("Skeleton", 10, 2, 0, 0, 400, MonsterType.SKELETON, 1, 150, 200, "PokeSmart/Monster/skeletonlord_down_1.png");
         entities.add(skeleton);
-        npc = new NPC("Momo", 2,4,0,0,NPCType.SPECIAL,"PokeSmart/NPC/merchant_down_1.png");
+        npc = new NPC("Casper", 2,4,0,0,NPCType.SPECIAL,"PokeSmart/NPC/merchant_down_1.png");
         entities.add(npc);
         monsters.add(new Monster("BatMan", 7, 3, 0, 0, 1, MonsterType.BAT, 1, 1, 1,"PokeSmart/Monster/bat_down_2.png"));
         monsters.add(skeleton);
 
         items = new ArrayList<Item>();
         items.add(new Item(7,4,"HealPotion", "this can heal you", Effet.HEAL,1,"PokeSmart/Object/potion_red.png"));
-        items.add(new Item(7,7,"Car", "this can heal you", Effet.VICTORY,1,"PokeSmart/Items/911-removebg-preview.png"));
+        items.add(new Item(7,7,"911", "this can heal you", Effet.VICTORY,1,"PokeSmart/Items/911-removebg-preview.png"));
     }
 
     private void updateHealthPointsLabel(BorderPane root, Monster monster) {
