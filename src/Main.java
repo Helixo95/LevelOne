@@ -38,7 +38,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("PokeSmart - world1");
         initCaractersWorld1(); // initialisation des personnages, monstres, pnj et items du monde 1
-        String worldPath1 = "PokeSmart/Tiles/world1.csv";
+        String worldPath1 = "resources/Tiles/world1.csv";
         GenMap(primaryStage, worldPath1, orc); // génération de la carte du monde 1 et appel aux autres fonctions
         updateInventoryBox(); // mise à jour de la boîte d'inventaire qui s'affiche à droite de la carte
     }
@@ -47,26 +47,26 @@ public class Main extends Application {
      * initialisation des caractères du monde 1
      */
     private void initCaractersWorld1() {
-        player = new Player("Sasha", 6, 1, 1, 1, 100,150, 50, 50, 10000, 3, "PokeSmart/Player/Walking sprites/boy_down_1.png");
+        player = new Player("Sasha", 6, 1, 1, 1, 100,150, 50, 50, 10000, 3, "resources/Player/Walking sprites/boy_down_1.png");
         player.setInventory(new ArrayList<Item>());
         entities = new ArrayList<Entity>();
         monsters = new ArrayList<Monster>();
-        orc = new Monster("Jabba", 7, 2, 0, 0, 100, MonsterType.ORC, 1, 30, 100,"PokeSmart/Monster/orc_down_2.png");
+        orc = new Monster("Jabba", 7, 2, 0, 0, 100, MonsterType.ORC, 1, 30, 100,"resources/Monster/orc_down_2.png");
         orc.TypeMonster(orc);
-        npc = new NPC("Le sage", 7,8,0,0,NPCType.QUEST,"PokeSmart/NPC/oldman_down_1.png");
+        npc = new NPC("Le sage", 7,8,0,0,NPCType.QUEST,"resources/NPC/oldman_down_1.png");
         entities.add(orc);
         entities.add(npc);
         monsters.add(orc);
 
         items = new ArrayList<Item>();
 
-        player.addItem(new Item(7,4,"HealPotionStart", "this can heal you", Effet.HEAL,1,"PokeSmart/Object/potion_red.png"));
+        player.addItem(new Item(7,4,"HealPotionStart", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
 
-        items.add(new Item(7,3,"HealPotion1", "this can heal you", Effet.HEAL,1,"PokeSmart/Object/potion_red.png"));
-        items.add(new Item(7,4,"HealPotion2", "this can heal you", Effet.HEAL,1,"PokeSmart/Object/potion_red.png"));
-        items.add(new Item(0,11,"WallPotion", "walls are no more a problem", Effet.OVERWALL,1,"PokeSmart/Object/potion_grey.png"));
-        items.add(new Item(15,0,"Key", "doors can be opened", Effet.OPENDOOR,1,"PokeSmart/Object/key.png"));
-        items.add(new Item(14,10,"Door", "go to an other world", Effet.NEWWORLD,1,"PokeSmart/Object/door_iron.png"));
+        items.add(new Item(7,3,"HealPotion1", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
+        items.add(new Item(7,4,"HealPotion2", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
+        items.add(new Item(0,11,"WallPotion", "walls are no more a problem", Effet.OVERWALL,1,"resources/Object/potion_grey.png"));
+        items.add(new Item(15,0,"Key", "doors can be opened", Effet.OPENDOOR,1,"resources/Object/key.png"));
+        items.add(new Item(14,10,"Door", "go to an other world", Effet.NEWWORLD,1,"resources/Object/door_iron.png"));
     }
 
 
@@ -210,19 +210,19 @@ public class Main extends Application {
             double y = player.getY();
             switch (e.getCode()) {
                 case Z:
-                    playerImageView.setImage(new Image("file:PokeSmart/Player/Walking sprites/boy_up_1.png"));
+                    playerImageView.setImage(new Image("file:resources/Player/Walking sprites/boy_up_1.png"));
                     y -= 1;
                     break;
                 case S:
-                    playerImageView.setImage(new Image("file:PokeSmart/Player/Walking sprites/boy_down_1.png"));
+                    playerImageView.setImage(new Image("file:resources/Player/Walking sprites/boy_down_1.png"));
                     y += 1;
                     break;
                 case Q:
-                    playerImageView.setImage(new Image("file:PokeSmart/Player/Walking sprites/boy_left_1.png"));
+                    playerImageView.setImage(new Image("file:resources/Player/Walking sprites/boy_left_1.png"));
                     x -= 1;
                     break;
                 case D:
-                    playerImageView.setImage(new Image("file:PokeSmart/Player/Walking sprites/boy_right_1.png"));
+                    playerImageView.setImage(new Image("file:resources/Player/Walking sprites/boy_right_1.png"));
                     x += 1;
                     break;
                 case I:
@@ -493,7 +493,7 @@ public class Main extends Application {
         for (Item item1 : items) {
             if ((player.getDiscoverNewWorld() == 1) && "Door".equals(item1.getItemName())) {//("Door".equals(item1.getItemName())) {
                 root.getChildren().remove(item1.getImage()); // Remove the old image from the scene
-                ImageView newImage = new ImageView("file:PokeSmart/Object/door.png"); // Create a new ImageView
+                ImageView newImage = new ImageView("file:resources/Object/door.png"); // Create a new ImageView
                 newImage.setFitWidth(TILE_SIZE);
                 newImage.setFitHeight(TILE_SIZE);
                 newImage.setLayoutX(item1.getX() * TILE_SIZE); // Set the x-coordinate of the ImageView
@@ -524,7 +524,7 @@ public class Main extends Application {
             } else if (npc.getNPCType().equals(NPCType.SPECIAL)) {
                 System.out.println("Special NPC encountered");
                 npc.showAlert("Special NPC encountered", null, "Hello " + player.getName() + ", I am " + npc.getName()+ " and I have a gift for you !");
-                npc.giveItem(player, new Item(7,5,"Sword", "water is no more a problem", Effet.ATTAQUEPLUS,1,"PokeSmart/Object/sword_normal.png"));
+                npc.giveItem(player, new Item(7,5,"Sword", "water is no more a problem", Effet.ATTAQUEPLUS,1,"resources/Object/sword_normal.png"));
                 player.showAlert("Gift received", null, "You received a gift from "+npc.getName()+" !");
             }
         }
@@ -541,7 +541,7 @@ public class Main extends Application {
             if (monsterKilled) { // si le joueur a tué le monstre
                 System.out.println("Quest completed");
                 npc.showAlert("Quest completed", null, "You completed the quest! Pick up the key and go to the next world.");
-                Item seaPotion = new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"PokeSmart/Object/potion_blue.png");
+                Item seaPotion = new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"resources/Object/potion_blue.png");
                 items.add(seaPotion);
 
                 // afficher l'item récompense sur la carte
@@ -670,7 +670,7 @@ public class Main extends Application {
      */
     private void createNewWorld(Stage primaryStage, BorderPane root) {
         // Par exemple, vous pouvez appeler la méthode GenMap avec un nouveau fichier de carte
-        String newWorldPath = "PokeSmart/Tiles/world2.csv";
+        String newWorldPath = "resources/Tiles/world2.csv";
         Stage newWorldStage = new Stage();
         newWorldStage.setTitle("PokeSmart - world2");
         initCaractersWorld2(primaryStage, root);
@@ -704,17 +704,17 @@ public class Main extends Application {
 
         entities = new ArrayList<Entity>();
         monsters = new ArrayList<Monster>();
-        entities.add(new Monster("BatMan", 7, 3, 0, 0, 1, MonsterType.BAT, 1, 1, 1,"PokeSmart/Monster/bat_down_2.png"));
-        skeleton = new Monster("Skeleton", 10, 2, 0, 0, 400, MonsterType.SKELETON, 1, 150, 200, "PokeSmart/Monster/skeletonlord_down_1.png");
+        entities.add(new Monster("BatMan", 7, 3, 0, 0, 1, MonsterType.BAT, 1, 1, 1,"resources/Monster/bat_down_2.png"));
+        skeleton = new Monster("Skeleton", 10, 2, 0, 0, 400, MonsterType.SKELETON, 1, 150, 200, "resources/Monster/skeletonlord_down_1.png");
         entities.add(skeleton);
-        npc = new NPC("Casper", 2,4,0,0,NPCType.SPECIAL,"PokeSmart/NPC/merchant_down_1.png");
+        npc = new NPC("Casper", 2,4,0,0,NPCType.SPECIAL,"resources/NPC/merchant_down_1.png");
         entities.add(npc);
-        monsters.add(new Monster("BatMan", 7, 3, 0, 0, 1, MonsterType.BAT, 1, 1, 1,"PokeSmart/Monster/bat_down_2.png"));
+        monsters.add(new Monster("BatMan", 7, 3, 0, 0, 1, MonsterType.BAT, 1, 1, 1,"resources/Monster/bat_down_2.png"));
         monsters.add(skeleton);
 
         items = new ArrayList<Item>();
-        items.add(new Item(7,4,"HealPotion", "this can heal you", Effet.HEAL,1,"PokeSmart/Object/potion_red.png"));
-        items.add(new Item(7,7,"911", "this can heal you", Effet.VICTORY,1,"PokeSmart/Items/911-removebg-preview.png"));
+        items.add(new Item(7,4,"HealPotion", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
+        items.add(new Item(7,7,"911", "Vroum vroum", Effet.VICTORY,1,"resources/Items/911-removebg-preview.png"));
     }
 
 
@@ -759,11 +759,11 @@ public class Main extends Application {
      */
     private String getImagePathForValue(int value) {
         return switch (value) {
-            case 0 -> "file:PokeSmart/Tiles/ground/wall.png";
-            case 1 -> "file:PokeSmart/Tiles/ground/water.png";
-            case 2 -> "file:PokeSmart/Tiles/ground/sand.png";
-            case 3 -> "file:PokeSmart/Tiles/ground/earth.png";
-            case 4 -> "file:PokeSmart/Tiles/ground/grass.png";
+            case 0 -> "file:resources/Tiles/ground/wall.png";
+            case 1 -> "file:resources/Tiles/ground/water.png";
+            case 2 -> "file:resources/Tiles/ground/sand.png";
+            case 3 -> "file:resources/Tiles/ground/earth.png";
+            case 4 -> "file:resources/Tiles/ground/grass.png";
             default -> null;
         };
     }
