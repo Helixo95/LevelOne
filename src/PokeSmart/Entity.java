@@ -12,7 +12,7 @@ public class Entity {
     private double y; // coordonnée en ordonnée (inversée en java)
     private double vx; // vitesse en x
     private double vy; // vitesse en y
-    private int healthPoints;
+    private double healthPoints;
     private int discoverNewWorld; // if = 1 => can go to first new world
     private ImageView Image;
     private boolean destoyed = false; // permet de détruite l'individu en cas de perte de vie par exemple
@@ -33,7 +33,7 @@ public class Entity {
      * @param vy
      *
      */
-    public Entity(double x, double y, double vx, double vy, int healthPoints, String imagePath) {
+    public Entity(double x, double y, double vx, double vy, double healthPoints, String imagePath) {
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -114,7 +114,7 @@ public class Entity {
     public double getHealthPoints() {
         return healthPoints;
     }
-    public void setHealthPoints(int healthPoints) {
+    public void setHealthPoints(double healthPoints) {
             this.healthPoints = healthPoints;
     }
 

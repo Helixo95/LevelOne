@@ -6,6 +6,7 @@ public enum Effet {
     ATTAQUEMOINS,
     ATTAQUEPLUS,
     HEAL,
+    DAMAGE,
     OPENDOOR,
     OVERWALL,
     NEWWORLD,

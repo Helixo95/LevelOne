@@ -27,19 +27,25 @@ public class Item extends Entity {
         this.quantity = quantity;
     }
 
-    public void useItem(Entity entity){
+    public void useItem(Player player, Monster monster){
         switch (effet){
             case HEAL -> {
-                entity.setHealthPoints((int) (entity.getHealthPoints()+20));
+                player.setHealthPoints((int) (player.getHealthPoints()+20));
+            }
+            case DAMAGE -> {
+                monster.setHealthPoints(monster.getHealthPoints() - player.getAttacks());
+            }
+            case ATTAQUEPLUS -> {
+                player.setAttacks(player.getAttacks() + 1000);
             }
             case OVERWALL -> {
-                entity.setCanOverWall(true);
+                player.setCanOverWall(true);
             }
             case SWIM -> {
-                entity.setCanSwim(true);
+                player.setCanSwim(true);
             }
             case OPENDOOR -> {
-                entity.setDiscoverNewWorld(1);
+                player.setDiscoverNewWorld(1);
             }
             case NEWWORLD -> { // à changer
                 //entity.setX(0);
