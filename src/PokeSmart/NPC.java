@@ -1,10 +1,19 @@
 package PokeSmart;
 
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+
+import java.util.Optional;
 
 public class NPC extends Entity {
     private String name;
     private NPCType NPCType;
+    private boolean firstQuest = false;
+    private boolean secondQuest = false;
+    private boolean monsterKilled = false;
 
     // imagePath : src/PokeSmart/NPC/oldman_down_1.png
 
@@ -14,14 +23,41 @@ public class NPC extends Entity {
         this.NPCType = NPCType;
     }
 
-    public void speak(Player player) {
-        System.out.println("Hello " + player.getName() + " I am " + this.name);
+
+    public void showQuestDialog(Player player) {
+        // Create a dialog
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Dialogue with NPC");
+        dialog.setHeaderText("Hello "+player.getName()+", I am "+this.getName()+" and I have a quest for you. Do you accept?");
+
+        // Add buttons to the dialog
+        ButtonType acceptButtonType = new ButtonType("Accept", ButtonBar.ButtonData.YES);
+        ButtonType refuseButtonType = new ButtonType("Refuse", ButtonBar.ButtonData.NO);
+        dialog.getDialogPane().getButtonTypes().addAll(acceptButtonType, refuseButtonType);
+
+        // Handle the result
+        dialog.setResultConverter(buttonType -> {
+            if (buttonType == acceptButtonType) {
+                firstQuest = true;
+                this.showAlert("Quest accepted", null, "You accepted the quest! You have to kill the Monster.");
+                return "Accepted";
+            } else if (buttonType == refuseButtonType) {
+                // Handle the player refusing the quest
+                this.showAlert("Quest refused", null, "You refused the quest.");
+                System.out.println("You refused the quest.");
+                return "Refused";
+            }
+            return null;
+        });
+
+        // Show the dialog
+        Optional<String> result = dialog.showAndWait();
     }
 
-    public void startQuest(Player player, BorderPane borderPane) {
-        System.out.println("Hello " + player.getName() + " I am " + this.name + " I have a quest for you");
-        showAlert("Quest", null, "Hello " + player.getName() + " I am " + this.name + " I have a quest for you");
 
+
+    public void speak(Player player) {
+        System.out.println("Hello " + player.getName() + " I am " + this.name);
     }
 
     public void giveItem(Player player, Item item) {
@@ -61,5 +97,29 @@ public class NPC extends Entity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isFirstQuest() {
+        return firstQuest;
+    }
+
+    public void setFirstQuest(boolean firstQuest) {
+        this.firstQuest = firstQuest;
+    }
+
+    public boolean isSecondQuest() {
+        return secondQuest;
+    }
+
+    public void setSecondQuest(boolean secondQuest) {
+        this.secondQuest = secondQuest;
+    }
+
+    public boolean isMonsterKilled() {
+        return monsterKilled;
+    }
+
+    public void setMonsterKilled(boolean monsterKilled) {
+        this.monsterKilled = monsterKilled;
     }
 }

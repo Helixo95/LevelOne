@@ -432,7 +432,6 @@ public class Main extends Application {
         if (player.equals(npc) && !firstQuest) { //if (player.getX() == npc.getX() && player.getY() == npc.getY()) {
             System.out.println("NPC encountered");
             if (npc.getNPCType().equals(NPCType.QUEST)) {
-                npc.startQuest(player, root);
                 System.out.println("Quest NPC encountered");
                 firstQuest(root);
             } else if (npc.getNPCType().equals(NPCType.VILLAGER)) {
@@ -478,40 +477,10 @@ public class Main extends Application {
             return;
         }
         else {
-            showQuestDialog();
+            npc.showQuestDialog(player);
+            //showQuestDialog();
             return;
         }
-    }
-
-
-    private void showQuestDialog() {
-        // Create a dialog
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Dialogue with NPC");
-        dialog.setHeaderText("NPC: Hello, I have a quest for you. Do you accept?");
-
-        // Add buttons to the dialog
-        ButtonType acceptButtonType = new ButtonType("Accept", ButtonBar.ButtonData.YES);
-        ButtonType refuseButtonType = new ButtonType("Refuse", ButtonBar.ButtonData.NO);
-        dialog.getDialogPane().getButtonTypes().addAll(acceptButtonType, refuseButtonType);
-
-        // Handle the result
-        dialog.setResultConverter(buttonType -> {
-            if (buttonType == acceptButtonType) {
-                questAccepted = true;
-                npc.showAlert("Quest accepted", null, "You accepted the quest! You have to kill the Monster.");
-                return "Accepted";
-            } else if (buttonType == refuseButtonType) {
-                // Handle the player refusing the quest
-                npc.showAlert("Quest refused", null, "You refused the quest.");
-                System.out.println("You refused the quest.");
-                return "Refused";
-            }
-            return null;
-        });
-
-        // Show the dialog
-        Optional<String> result = dialog.showAndWait();
     }
 
 
@@ -532,7 +501,7 @@ public class Main extends Application {
         // Create a dialog
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Combat with Monster");
-        dialog.setHeaderText("Monster: I will defeat you! What will you do?");
+        dialog.setHeaderText("Hi "+player.getName()+", prepare to die, I will defeat you ! What will you do ?");
 
         // Add buttons to the dialog
         ButtonType attackButtonType = new ButtonType("Attack", ButtonBar.ButtonData.YES);
