@@ -38,34 +38,32 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("PokeSmart - world1");
         initCaractersWorld1();
-        String worldPath1 = "src/PokeSmart/Tiles/world1.csv";
+        String worldPath1 = "PokeSmart/Tiles/world1.csv";
         GenMap(primaryStage, worldPath1, entities, items, orc);
         updateInventoryBox();
     }
 
     private void initCaractersWorld1(){
-        player = new Player("Popo", 6, 1, 1, 1, 100,150, 50, 50, 10000, 3, "src/PokeSmart/Player/Walking sprites/boy_down_1.png");
+        player = new Player("Popo", 6, 1, 1, 1, 100,150, 50, 50, 10000, 3, "PokeSmart/Player/Walking sprites/boy_down_1.png");
         player.setInventory(new ArrayList<Item>());
         entities = new ArrayList<Entity>();
         monsters = new ArrayList<Monster>();
-        orc = new Monster("Papa", 7, 2, 0, 0, 100, MonsterType.ORC, 1, 30, 100,"src/PokeSmart/Monster/orc_down_2.png");
+        orc = new Monster("Papa", 7, 2, 0, 0, 100, MonsterType.ORC, 1, 30, 100,"PokeSmart/Monster/orc_down_2.png");
         orc.TypeMonster(orc);
-        npc = new NPC("Jojo", 7,8,0,0,NPCType.QUEST,"src/PokeSmart/NPC/oldman_down_1.png");
+        npc = new NPC("Jojo", 7,8,0,0,NPCType.QUEST,"PokeSmart/NPC/oldman_down_1.png");
         entities.add(orc);
         entities.add(npc);
         monsters.add(orc);
 
         items = new ArrayList<Item>();
 
-        player.addItem(new Item(7,4,"HealPotionTest", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
+        player.addItem(new Item(7,4,"HealPotionTest", "this can heal you", Effet.HEAL,1,"PokeSmart/Object/potion_red.png"));
 
-        items.add(new Item(7,3,"HealPotion1", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
-        items.add(new Item(7,4,"HealPotion2", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
-        items.add(new Item(0,11,"WallPotion", "walls are no more a problem", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_grey.png"));
-        items.add(new Item(7,1,"WallPotion", "walls are no more a problem", Effet.OVERWALL,1,"src/PokeSmart/Object/potion_grey.png"));
-        //items.add(new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png"));
-        items.add(new Item(15,0,"Key", "doors can be opened", Effet.OPENDOOR,1,"src/PokeSmart/Object/key.png"));
-        items.add(new Item(14,10,"Door", "go to an other world", Effet.NEWWORLD,1,"src/PokeSmart/Object/door_iron.png"));
+        items.add(new Item(7,3,"HealPotion1", "this can heal you", Effet.HEAL,1,"PokeSmart/Object/potion_red.png"));
+        items.add(new Item(7,4,"HealPotion2", "this can heal you", Effet.HEAL,1,"PokeSmart/Object/potion_red.png"));
+        items.add(new Item(0,11,"WallPotion", "walls are no more a problem", Effet.OVERWALL,1,"PokeSmart/Object/potion_grey.png"));
+        items.add(new Item(15,0,"Key", "doors can be opened", Effet.OPENDOOR,1,"PokeSmart/Object/key.png"));
+        items.add(new Item(14,10,"Door", "go to an other world", Effet.NEWWORLD,1,"PokeSmart/Object/door_iron.png"));
     }
 
 
@@ -170,19 +168,19 @@ public class Main extends Application {
             double y = player.getY();
             switch (e.getCode()) {
                 case Z:
-                    playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_up_1.png"));
+                    playerImageView.setImage(new Image("file:PokeSmart/Player/Walking sprites/boy_up_1.png"));
                     y -= 1;
                     break;
                 case S:
-                    playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_down_1.png"));
+                    playerImageView.setImage(new Image("file:PokeSmart/Player/Walking sprites/boy_down_1.png"));
                     y += 1;
                     break;
                 case Q:
-                    playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_left_1.png"));
+                    playerImageView.setImage(new Image("file:PokeSmart/Player/Walking sprites/boy_left_1.png"));
                     x -= 1;
                     break;
                 case D:
-                    playerImageView.setImage(new Image("file:src/PokeSmart/Player/Walking sprites/boy_right_1.png"));
+                    playerImageView.setImage(new Image("file:PokeSmart/Player/Walking sprites/boy_right_1.png"));
                     x += 1;
                     break;
                 case I:
@@ -423,7 +421,7 @@ public class Main extends Application {
         for (Item item1 : items) {
             if ((player.getDiscoverNewWorld() == 1) && "Door".equals(item1.getItemName())) {//("Door".equals(item1.getItemName())) {
                 root.getChildren().remove(item1.getImage()); // Remove the old image from the scene
-                ImageView newImage = new ImageView("file:src/PokeSmart/Object/door.png"); // Create a new ImageView
+                ImageView newImage = new ImageView("file:PokeSmart/Object/door.png"); // Create a new ImageView
                 newImage.setFitWidth(TILE_SIZE);
                 newImage.setFitHeight(TILE_SIZE);
                 newImage.setLayoutX(item1.getX() * TILE_SIZE); // Set the x-coordinate of the ImageView
@@ -448,7 +446,7 @@ public class Main extends Application {
             } else if (npc.getNPCType().equals(NPCType.SPECIAL)) {
                 System.out.println("Special NPC encountered");
                 npc.showAlert("Special NPC encountered", null, "Hello " + player.getName() + ", I am " + npc.getName()+ " and I have a gift for you !");
-                npc.giveItem(player, new Item(7,5,"Sword", "water is no more a problem", Effet.ATTAQUEPLUS,1,"src/PokeSmart/Object/sword_normal.png"));
+                npc.giveItem(player, new Item(7,5,"Sword", "water is no more a problem", Effet.ATTAQUEPLUS,1,"PokeSmart/Object/sword_normal.png"));
                 player.showAlert("Gift received", null, "You received a gift from "+npc.getName()+" !");
             }
         }
@@ -460,7 +458,7 @@ public class Main extends Application {
             if (monsterKilled) {
                 System.out.println("Quest completed");
                 npc.showAlert("Quest completed", null, "You completed the quest! Pick up the key and go to the next world.");
-                Item seaPotion = new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png");
+                Item seaPotion = new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"PokeSmart/Object/potion_blue.png");
                 items.add(seaPotion);
 
                 // afficher l'item sur la carte
@@ -472,14 +470,17 @@ public class Main extends Application {
                 seaPotionImageView.setLayoutY(seaPotion.getY() * TILE_SIZE);
 
                 // supprime le pnj
-                root.getChildren().remove(npc.getImage());
+                //root.getChildren().remove(npc.getImage());
                 System.out.println("FirstQuest : true");
                 monsterKilled = false;
                 isFirstQuestSucceded = true;
                 return;
             }
-            npc.showAlert("Quest not completed", null, "You have to kill the Monster first.");
-            return;
+            if (!monsterKilled && !isFirstQuestSucceded) {
+                npc.showAlert("Quest not completed", null, "You have to kill the Monster first.");
+                return;
+            }
+            npc.showAlert("Quest completed", null, "You completed the quest! Pick up the key and go to the next world.");
         }
         else {
             npc.showQuestDialog(player);
@@ -497,12 +498,11 @@ public class Main extends Application {
                     orc.showAlert("Monster encountered", null, "You have to accept the quest first.");
                     return;
                 } else if (npc.isFirstQuestAccepted() && !monsterKilled) {
-                    showMonsterDialog(root, monster);
+                    showMonsterDialog(root, monster, stage);
                 }
             } else if (monster.getMonsterType().equals(MonsterType.SKELETON)) {
                 System.out.println("Skeleton Monster encountered");
-                showMonsterDialog(root, monster);
-                //player.attack(monster);
+                showMonsterDialog(root, monster, stage);
                 if (monster.getHealthPoints() <= 0) {
                     monsterKilled = true;
                     monster.showAlert("Monster defeated", null, "You defeated the boss !");
@@ -515,12 +515,12 @@ public class Main extends Application {
         for (Monster monster1 : monsters) {
             if (monster1.getMonsterType().equals(MonsterType.BAT) && player.equals(monster1)) {
                 System.out.println("Bat Monster encountered");
-                //showMonsterDialog(root, monster1);
+                monster1.robItem(monster1, player);
             }
         }
     }
 
-    private void showMonsterDialog(BorderPane root, Monster monster) {
+    private void showMonsterDialog(BorderPane root, Monster monster, Stage stage) {
         // Create a dialog
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Combat with Monster");
@@ -541,6 +541,13 @@ public class Main extends Application {
                     monsterKilled = true;
                     monster.showAlert("Monster defeated", null, "You defeated the monster!");
                     root.getChildren().remove(monster.getImage());
+                    entities.remove(monster);
+                    return "Defeated";
+                }
+                if (player.getHealthPoints() <= 0) {
+                    player.setDestoyed(true);
+                    player.showAlert("Game Over", null, "The skeleton killed you !");
+                    checkDestroyedPlayer(stage, monster, root);
                     return "Defeated";
                 }
                 System.out.println("You attacked the monster!");
@@ -562,7 +569,7 @@ public class Main extends Application {
 
     private void createNewWorld(Stage primaryStage, BorderPane root) {
         // Par exemple, vous pouvez appeler la méthode GenMap avec un nouveau fichier de carte
-        String newWorldPath = "src/PokeSmart/Tiles/world2.csv";
+        String newWorldPath = "PokeSmart/Tiles/world2.csv";
         Stage newWorldStage = new Stage();
         newWorldStage.setTitle("PokeSmart - world2");
         initCaractersWorld2(primaryStage, root);
@@ -577,31 +584,33 @@ public class Main extends Application {
         }
         for (Entity entity : entities) {
             root.getChildren().remove(entity.getImage());
+            entities.remove(entity);
         }
         for (Monster monster : monsters) {
             root.getChildren().remove(monster.getImage());
+            monsters.remove(monster);
         }
 
-        entities.clear(); // vérifier que ça supprime bien les entités du monde précédent
+        /*entities.clear(); // vérifier que ça supprime bien les entités du monde précédent
         entities = null;
         monsters.clear();
-        monsters = null;
+        monsters = null;*/
         // supprimer tous les items précédents et regarder le bug quand on change de monde et récupère un item ça change la carte
         checkDestroyedPlayer(primaryStage, npc, root);
 
         entities = new ArrayList<Entity>();
         monsters = new ArrayList<Monster>();
-        entities.add(new Monster("BatMan", 7, 3, 0, 0, 1, MonsterType.BAT, 1, 1, 1,"src/PokeSmart/Monster/bat_down_2.png"));
-        skeleton = new Monster("Skeleton", 10, 2, 0, 0, 400, MonsterType.SKELETON, 1, 150, 200, "src/PokeSmart/Monster/skeletonlord_down_1.png");
+        entities.add(new Monster("BatMan", 7, 3, 0, 0, 1, MonsterType.BAT, 1, 1, 1,"PokeSmart/Monster/bat_down_2.png"));
+        skeleton = new Monster("Skeleton", 10, 2, 0, 0, 400, MonsterType.SKELETON, 1, 150, 200, "PokeSmart/Monster/skeletonlord_down_1.png");
         entities.add(skeleton);
-        npc = new NPC("Momo", 2,4,0,0,NPCType.SPECIAL,"src/PokeSmart/NPC/merchant_down_1.png");
+        npc = new NPC("Momo", 2,4,0,0,NPCType.SPECIAL,"PokeSmart/NPC/merchant_down_1.png");
         entities.add(npc);
-        monsters.add(new Monster("BatMan", 7, 3, 0, 0, 1, MonsterType.BAT, 1, 1, 1,"src/PokeSmart/Monster/bat_down_2.png"));
+        monsters.add(new Monster("BatMan", 7, 3, 0, 0, 1, MonsterType.BAT, 1, 1, 1,"PokeSmart/Monster/bat_down_2.png"));
         monsters.add(skeleton);
 
         items = new ArrayList<Item>();
-        items.add(new Item(7,4,"HealPotion", "this can heal you", Effet.HEAL,1,"src/PokeSmart/Object/potion_red.png"));
-        items.add(new Item(7,7,"Car", "this can heal you", Effet.VICTORY,1,"src/PokeSmart/Items/911-removebg-preview.png"));
+        items.add(new Item(7,4,"HealPotion", "this can heal you", Effet.HEAL,1,"PokeSmart/Object/potion_red.png"));
+        items.add(new Item(7,7,"Car", "this can heal you", Effet.VICTORY,1,"PokeSmart/Items/911-removebg-preview.png"));
     }
 
     private void updateHealthPointsLabel(BorderPane root, Monster monster) {
@@ -633,11 +642,11 @@ public class Main extends Application {
 
     private String getImagePathForValue(int value) {
         return switch (value) {
-            case 0 -> "file:src/PokeSmart/Tiles/ground/wall.png";
-            case 1 -> "file:src/PokeSmart/Tiles/ground/water.png";
-            case 2 -> "file:src/PokeSmart/Tiles/ground/sand.png";
-            case 3 -> "file:src/PokeSmart/Tiles/ground/earth.png";
-            case 4 -> "file:src/PokeSmart/Tiles/ground/grass.png";
+            case 0 -> "file:PokeSmart/Tiles/ground/wall.png";
+            case 1 -> "file:PokeSmart/Tiles/ground/water.png";
+            case 2 -> "file:PokeSmart/Tiles/ground/sand.png";
+            case 3 -> "file:PokeSmart/Tiles/ground/earth.png";
+            case 4 -> "file:PokeSmart/Tiles/ground/grass.png";
             default -> null;
         };
     }

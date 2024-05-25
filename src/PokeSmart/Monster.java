@@ -46,12 +46,13 @@ public class Monster extends Entity {
         }
     }
 
-    public void robItem(Monster monster, Player player, Item item) { // permet au monstre de voler un item du joueur selon l'effet voulu
+    public void robItem(Monster monster, Player player) { // permet au monstre de voler un item du joueur selon l'effet voulu
         if (monster.getMonsterType().equals(MonsterType.BAT)) {
+            Effet randomEffet = Effet.getRandomEffet();
             for (Item items : player.getInventory()) {
-                if (items.getEffet().equals(item.getEffet())) {
-                    item.setQuantity(item.getQuantity() - 1);
-                    monster.addItem(item);
+                if (items.getEffet().equals(randomEffet)) {
+                    items.setQuantity(items.getQuantity() - 1);
+                    monster.addItem(items);
                 }
             }
         }
