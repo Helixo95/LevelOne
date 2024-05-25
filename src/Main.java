@@ -584,17 +584,15 @@ public class Main extends Application {
         }
         for (Entity entity : entities) {
             root.getChildren().remove(entity.getImage());
-            entities.remove(entity);
         }
         for (Monster monster : monsters) {
             root.getChildren().remove(monster.getImage());
-            monsters.remove(monster);
         }
 
-        /*entities.clear(); // vérifier que ça supprime bien les entités du monde précédent
+        entities.clear(); // vérifier que ça supprime bien les entités du monde précédent
         entities = null;
         monsters.clear();
-        monsters = null;*/
+        monsters = null;
         // supprimer tous les items précédents et regarder le bug quand on change de monde et récupère un item ça change la carte
         checkDestroyedPlayer(primaryStage, npc, root);
 
