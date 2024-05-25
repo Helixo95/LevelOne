@@ -502,7 +502,6 @@ public class Main extends Application {
             } else if (monster.getMonsterType().equals(MonsterType.SKELETON)) {
                 System.out.println("Skeleton Monster encountered");
                 showMonsterDialog(root, monster);
-                //player.attack(monster);
                 if (monster.getHealthPoints() <= 0) {
                     monsterKilled = true;
                     monster.showAlert("Monster defeated", null, "You defeated the boss !");
@@ -515,7 +514,6 @@ public class Main extends Application {
         for (Monster monster1 : monsters) {
             if (monster1.getMonsterType().equals(MonsterType.BAT) && player.equals(monster1)) {
                 System.out.println("Bat Monster encountered");
-                //showMonsterDialog(root, monster1);
             }
         }
     }
