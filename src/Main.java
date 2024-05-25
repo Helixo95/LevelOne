@@ -47,8 +47,7 @@ public class Main extends Application {
         entities = new ArrayList<Entity>();
         monster = new Monster("Papa", 7, 2, 0, 0, 100, MonsterType.ORC, 1, 30, 100,"src/PokeSmart/Monster/orc_down_2.png");
         monster.TypeMonster(monster);
-        System.out.println("Monster health : "+monster.getHealthPoints());
-        npc = new NPC("Jojo", 7,8,0,0,1,3,"src/PokeSmart/NPC/oldman_down_1.png");
+        npc = new NPC("Jojo", 7,8,0,0,NPCType.QUEST,"src/PokeSmart/NPC/oldman_down_1.png");
         entities.add(monster);
         entities.add(npc);
 
@@ -183,7 +182,7 @@ public class Main extends Application {
                     x += 1;
                     break;
                 case I:
-                    showInventoryWindow(entities, root);
+                    showInventoryWindow(player, root);
                 default:
                     return; // Ne rien faire pour d'autres touches
             }
@@ -199,14 +198,14 @@ public class Main extends Application {
                         player.setY(y);
                     }
                     else {
-                        showAlert("Collision alert",null,"You can't go over walls. You have to pick up the WallPotion first");
+                        player.showAlert("Collision alert",null,"You can't go over walls. You have to pick up the WallPotion first");
                     }
                 } else if (collisionMap[(int) x][(int) y] == 2) {
                     if (player.isCanSwim()) {
                         player.setX(x);
                         player.setY(y);
                     } else {
-                        showAlert("Collision alert", null, "You can't swim. You have to pick up the SwimPotion first");
+                        player.showAlert("Collision alert", null, "You can't swim. You have to pick up the SwimPotion first");
                         Random random = new Random();
                         int randomNumber = random.nextInt(2); // Générer un nombre aléatoire soit 0 soit 1
                         if (randomNumber == 1) {
@@ -231,21 +230,17 @@ public class Main extends Application {
         });
     }
 
-    private void showAlert(String title, String header, String phrase) {
+    /*private void showAlert(String title, String header, String phrase) {
         Alert alterWall = new Alert(Alert.AlertType.INFORMATION);
         alterWall.setTitle(title);
         alterWall.setHeaderText(header);
         alterWall.setContentText(phrase);
         alterWall.showAndWait();
-    }
+    }*/
 
     private void checkDestroyedPlayer(Stage primaryStage, Entity entity, BorderPane root) {
         if (player.getDestroyed()) {
-            Alert endGame = new Alert(Alert.AlertType.INFORMATION);
-            endGame.setTitle("Game Over");
-            endGame.setHeaderText(null);
-            endGame.setContentText("You are dead !");
-            endGame.showAndWait();
+            player.showAlert("Game Over", null, "You are dead !");
             System.out.println("You are dead !");
             primaryStage.close();
         }
@@ -288,7 +283,7 @@ public class Main extends Application {
     }
 
 
-    private void showInventoryWindow(List<Entity> entities, BorderPane root) {
+    private void showInventoryWindow(Entity entity, BorderPane root) {
         // stage for inventory window
         Stage inventoryStage = new Stage();
         inventoryStage.setTitle("Player inventory");
@@ -336,11 +331,7 @@ public class Main extends Application {
                 item.useItem(player);
                 updateDoor(root);
                 item.setQuantity(item.getQuantity() - 1);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Item Used");
-                alert.setHeaderText(null);
-                alert.setContentText(item.getItemDescription());
-                alert.showAndWait();
+                item.showAlert("Item Used", null, item.getItemDescription());
                 if (item.getQuantity() == 0) {
                     inventoryGridPane.getChildren().remove(useButton);
                     inventoryGridPane.getChildren().remove(potionNameLabel);
@@ -391,25 +382,19 @@ public class Main extends Application {
                 }
                 if (item.getItemName() == "Key") {
                     System.out.println("You picked up a key !");
+                    item.setQuantity(1);
+                    player.addItem(item);
                     updateDoor(root);
                 }
                 if (player.getDiscoverNewWorld() == 1 && item.getEffet() == Effet.NEWWORLD) { // condition sur la clé
                     System.out.println("You finish first world !");
                     primaryStage.close();
-                    Alert alertNewWorld = new Alert(Alert.AlertType.INFORMATION);
-                    alertNewWorld.setTitle("Congratulations !");
-                    alertNewWorld.setHeaderText(null);
-                    alertNewWorld.setContentText("You finish first world !");
-                    alertNewWorld.showAndWait();
+                    player.showAlert("Congratulations !", null, "You finish first world !");
                     createNewWorld(primaryStage, root);
                 }
                 if (player.getDiscoverNewWorld() == 0 && item.getEffet() == Effet.NEWWORLD) {
                     System.out.println("You need a key to open the door");
-                    Alert alertNewWorld1 = new Alert(Alert.AlertType.INFORMATION);
-                    alertNewWorld1.setTitle("Information Dialog");
-                    alertNewWorld1.setHeaderText(null);
-                    alertNewWorld1.setContentText("You need a key to open the door ! (Your player is behind the door.");
-                    alertNewWorld1.showAndWait();
+                    item.showAlert("Information Dialog", null, "You need a key to open the door ! (Your player is behind the door.");
                 }
                 if (item.getEffet() == Effet.DEATH) {
                     System.out.println("You are dead !");
@@ -417,7 +402,7 @@ public class Main extends Application {
                 }
             }
         }
-        if (pickedUpItems != null) {
+        if (pickedUpItems != null && pickedUpItems.getEffet() != Effet.NEWWORLD) {
             items.remove(pickedUpItems);
             root.getChildren().remove(pickedUpItems.getImage());
         }
@@ -446,8 +431,20 @@ public class Main extends Application {
     private void checkForNPCEncounter(BorderPane root, ImageView playerImageView, Stage primaryStage) {
         if (player.equals(npc) && !firstQuest) { //if (player.getX() == npc.getX() && player.getY() == npc.getY()) {
             System.out.println("NPC encountered");
+            if (npc.getNPCType().equals(NPCType.QUEST)) {
+                npc.startQuest(player, root);
+                System.out.println("Quest NPC encountered");
+                firstQuest(root);
+            } else if (npc.getNPCType().equals(NPCType.VILLAGER)) {
+                System.out.println("Villager NPC encountered");
+                npc.showAlert("Villager encountered", null, "Hello " + player.getName() + " I am " + npc.getName());
+            } else if (npc.getNPCType().equals(NPCType.SPECIAL)) {
+                System.out.println("Special NPC encountered");
+                npc.showAlert("Special NPC encountered", null, "Hello " + player.getName() + " I am " + npc.getName());
+                //npc.giveItem(player, new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png
 
-            firstQuest(root);
+                //firstQuest(root);
+            }
         }
     }
 
@@ -456,7 +453,7 @@ public class Main extends Application {
         if (questAccepted) {
             if (monsterKilled) {
                 System.out.println("Quest completed");
-                showAlert("Quest completed", null, "You completed the quest! You can go to the next world.");
+                npc.showAlert("Quest completed", null, "You completed the quest! Pick up the key and go to the next world.");
                 //player.setDiscoverNewWorld(1);
                 Item seaPotion = new Item(7,5,"SwimPotion", "water is no more a problem", Effet.SWIM,1,"src/PokeSmart/Object/potion_blue.png");
                 items.add(seaPotion);
@@ -477,7 +474,7 @@ public class Main extends Application {
                 firstQuest = true;
                 return;
             }
-            showAlert("Quest not completed", null, "You have to kill the Monster first.");
+            npc.showAlert("Quest not completed", null, "You have to kill the Monster first.");
             return;
         }
         else {
@@ -502,11 +499,11 @@ public class Main extends Application {
         dialog.setResultConverter(buttonType -> {
             if (buttonType == acceptButtonType) {
                 questAccepted = true;
-                showAlert("Quest accepted", null, "You accepted the quest! You have to kill the Monster.");
+                npc.showAlert("Quest accepted", null, "You accepted the quest! You have to kill the Monster.");
                 return "Accepted";
             } else if (buttonType == refuseButtonType) {
                 // Handle the player refusing the quest
-                showAlert("Quest refused", null, "You refused the quest.");
+                npc.showAlert("Quest refused", null, "You refused the quest.");
                 System.out.println("You refused the quest.");
                 return "Refused";
             }
@@ -522,7 +519,7 @@ public class Main extends Application {
         if (player.equals(monster)) { //if (player.getX() == monster.getX() && player.getY() == monster.getY()) {
             System.out.println("Monster encountered");
             if (!questAccepted && !firstQuest) {
-                showAlert("Monster encountered", null, "You have to accept the quest first.");
+                monster.showAlert("Monster encountered", null, "You have to accept the quest first.");
                 return;
             } else if (questAccepted && !monsterKilled) {
                 showMonsterDialog(root);
@@ -550,7 +547,7 @@ public class Main extends Application {
                 updateHealthPointsLabel(root);
                 if (monster.getHealthPoints() <= 0) {
                     monsterKilled = true;
-                    showAlert("Monster defeated", null, "You defeated the monster!");
+                    monster.showAlert("Monster defeated", null, "You defeated the monster!");
                     root.getChildren().remove(monster.getImage());
                     return "Defeated";
                 }
@@ -642,4 +639,6 @@ public class Main extends Application {
         launch(args);
     }
 }
+
+
 
