@@ -26,8 +26,10 @@ public class Main extends Application {
     private Monster orc;
     private Monster skeleton;
     private NPC npc;
+    private NPC npcQ2;
     private int[][] collisionMap;
     private List<Item> items;
+    private List<Item> itemsNPC;
     private List<Entity> entities;
     private List<Monster> monsters;
     private VBox inventoryBox;
@@ -57,6 +59,20 @@ public class Main extends Application {
         entities.add(orc);
         entities.add(npc);
         monsters.add(orc);
+
+        npcQ2 = new NPC("Item lister", 6,5,0,0,NPCType.LISTITEM,"resources/NPC/bigrock.png");
+        entities.add(npcQ2);
+
+        npcQ2.setInventory(new ArrayList<Item>());
+
+        Random random = new Random();
+        int randomNumber = random.nextInt(2); // Générer aléatoirement 0 ou 1
+        if (randomNumber == 1) {
+            npcQ2.addItem(new Item(7,5,"HealPotion", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
+            npcQ2.addItem(new Item(7,6,"HealPotion", "this can heal you", Effet.OVERWALL,1,"resources/Object/potion_grey.png"));
+        }
+
+
 
         items = new ArrayList<Item>();
 
@@ -226,7 +242,7 @@ public class Main extends Application {
                     x += 1;
                     break;
                 case I:
-                    showInventoryWindow(monster, root);
+                    showInventoryWindow(player, monster, root);
                 default:
                     return; // Ne rien faire pour d'autres touches
             }
@@ -341,10 +357,10 @@ public class Main extends Application {
      * @param monster
      * @param root
      */
-    private void showInventoryWindow(Monster monster, BorderPane root) {
+    private void showInventoryWindow(Entity entity, Monster monster, BorderPane root) {
         // stage pour la fenêtre de l'inventaire
         Stage inventoryStage = new Stage();
-        inventoryStage.setTitle("Player inventory");
+        inventoryStage.setTitle("Inventory");
         inventoryStage.setWidth(400);
         inventoryStage.setHeight(400);
 
@@ -355,70 +371,113 @@ public class Main extends Application {
 
         Scene inventoryScene = new Scene(inventoryGridPane);
 
-        // Crée les labels pour le nom, l'argent et la vie du joueur
-        Label nameLabel = new Label("Name : " + player.getName());
-        Label moneyLabel = new Label("Money : " + player.getMoney());
-        Label lifeLabel = new Label("Life : " + player.getHealthPoints());
+        if (entity instanceof Player) {
+            // Crée les labels pour le nom, l'argent et la vie du joueur
+            Label nameLabel = new Label("Name : " + player.getName());
+            Label moneyLabel = new Label("Money : " + player.getMoney());
+            Label lifeLabel = new Label("Life : " + player.getHealthPoints());
 
-        // Ajoute les labels au GridPane
-        inventoryGridPane.add(nameLabel, 0, 0);
-        inventoryGridPane.add(moneyLabel, 1, 0);
-        inventoryGridPane.add(lifeLabel, 2, 0);
+            // Ajoute les labels au GridPane
+            inventoryGridPane.add(nameLabel, 0, 0);
+            inventoryGridPane.add(moneyLabel, 1, 0);
+            inventoryGridPane.add(lifeLabel, 2, 0);
 
-        // Méthode pour mettre à jour les labels
-        Runnable updateLabels = () -> {
-            nameLabel.setText("Name : " + player.getName());
-            moneyLabel.setText("Money : " + player.getMoney());
-            lifeLabel.setText("Life : " + player.getHealthPoints());
-        };
+            // Méthode pour mettre à jour les labels
+            Runnable updateLabels = () -> {
+                nameLabel.setText("Name : " + player.getName());
+                moneyLabel.setText("Money : " + player.getMoney());
+                lifeLabel.setText("Life : " + player.getHealthPoints());
+            };
 
-        int rowIndex = 1;
-        for (Item item : player.getInventory()) {
-            System.out.println("Inventory bag : ");
-            System.out.println("Item : " + item.getItemName());
-            System.out.println("Q : " + item.getQuantity());
+            int rowIndex = 1;
+            for (Item item : player.getInventory()) {
+                System.out.println("Inventory bag : ");
+                System.out.println("Item : " + item.getItemName());
+                System.out.println("Q : " + item.getQuantity());
 
-            // Crée une image pour l'item de l'inventaire
-            ImageView itemImageView = item.getImage();
-            itemImageView.setFitWidth(TILE_SIZE);
-            itemImageView.setFitHeight(TILE_SIZE);
-            itemImageView.setLayoutX(item.getX() * TILE_SIZE);
-            itemImageView.setLayoutY(item.getY() * TILE_SIZE);
+                // Crée une image pour l'item de l'inventaire
+                ImageView itemImageView = item.getImage();
+                itemImageView.setFitWidth(TILE_SIZE);
+                itemImageView.setFitHeight(TILE_SIZE);
+                itemImageView.setLayoutX(item.getX() * TILE_SIZE);
+                itemImageView.setLayoutY(item.getY() * TILE_SIZE);
 
-            // Crée un label pour le nom de l'item et un label pour la quantité de l'item
-            Label potionNameLabel = new Label(item.getItemName());
-            Label quantityLabel = new Label("Quantity : " + item.getQuantity());
+                // Crée un label pour le nom de l'item et un label pour la quantité de l'item
+                Label potionNameLabel = new Label(item.getItemName());
+                Label quantityLabel = new Label("Quantity : " + item.getQuantity());
 
-            // Crée un bouton pour utiliser l'item
-            Button useButton = new Button("Use");
-            useButton.setOnAction(e -> {
-                item.useItem(player, monster);
-                updateDoor(root);
-                item.setQuantity(item.getQuantity() - 1);
-                item.showAlert("Item Used", null, item.getItemDescription());
-                if (item.getQuantity() == 0) {
-                    inventoryGridPane.getChildren().remove(useButton);
-                    inventoryGridPane.getChildren().remove(potionNameLabel);
-                    inventoryGridPane.getChildren().remove(quantityLabel);
-                    inventoryGridPane.getChildren().remove(itemImageView);
-                    player.getInventory().remove(item);
-                } else {
-                    quantityLabel.setText("Quantity : " + item.getQuantity());
-                }
-                updateLabels.run();
-                updateHealthPointsLabel(root, monster);
-                updateInventoryBox();
-            });
+                // Crée un bouton pour utiliser l'item
+                Button useButton = new Button("Use");
+                useButton.setOnAction(e -> {
+                    item.useItem(player, monster);
+                    updateDoor(root);
+                    item.setQuantity(item.getQuantity() - 1);
+                    item.showAlert("Item Used", null, item.getItemDescription());
+                    if (item.getQuantity() == 0) {
+                        inventoryGridPane.getChildren().remove(useButton);
+                        inventoryGridPane.getChildren().remove(potionNameLabel);
+                        inventoryGridPane.getChildren().remove(quantityLabel);
+                        inventoryGridPane.getChildren().remove(itemImageView);
+                        player.getInventory().remove(item);
+                    } else {
+                        quantityLabel.setText("Quantity : " + item.getQuantity());
+                    }
+                    updateLabels.run();
+                    updateHealthPointsLabel(root, monster);
+                    updateInventoryBox();
+                });
 
-            // Ajoute le bouton "Use", le label du nom de l'item, le label de la quantité de l'item et l'image de l'item au GridPane
-            inventoryGridPane.add(useButton, 0, rowIndex);
-            inventoryGridPane.add(potionNameLabel, 1, rowIndex);
-            inventoryGridPane.add(quantityLabel, 2, rowIndex);
-            inventoryGridPane.add(itemImageView, 3, rowIndex);
-            rowIndex++;
+                // Ajoute le bouton "Use", le label du nom de l'item, le label de la quantité de l'item et l'image de l'item au GridPane
+                inventoryGridPane.add(useButton, 0, rowIndex);
+                inventoryGridPane.add(potionNameLabel, 1, rowIndex);
+                inventoryGridPane.add(quantityLabel, 2, rowIndex);
+                inventoryGridPane.add(itemImageView, 3, rowIndex);
+                rowIndex++;
+            }
+            inventoryStage.setScene(inventoryScene);
+            inventoryStage.show();
         }
-        inventoryStage.setScene(inventoryScene);
-        inventoryStage.show();
+
+        if (entity instanceof NPC) {
+            // Crée les labels pour le nom, l'argent et la vie du joueur
+            Label nameLabel = new Label("Name : " + ((NPC) entity).getName());
+
+            // Ajoute les labels au GridPane
+            inventoryGridPane.add(nameLabel, 0, 0);
+
+
+            // Méthode pour mettre à jour les labels
+            Runnable updateLabels = () -> {
+                nameLabel.setText("Name : " + ((NPC) entity).getName());
+            };
+
+            int rowIndex = 1;
+            for (Item item : ((NPC) entity).getInventory()) {
+
+                // Crée une image pour l'item de l'inventaire
+                ImageView itemImageView = item.getImage();
+                itemImageView.setFitWidth(TILE_SIZE);
+                itemImageView.setFitHeight(TILE_SIZE);
+                itemImageView.setLayoutX(item.getX() * TILE_SIZE);
+                itemImageView.setLayoutY(item.getY() * TILE_SIZE);
+
+                // Crée un label pour le nom de l'item et un label pour la quantité de l'item
+                Label potionNameLabel = new Label(item.getItemName());
+                Label quantityLabel = new Label("Quantity : " + item.getQuantity());
+
+                // Ajoute le bouton "Use", le label du nom de l'item, le label de la quantité de l'item et l'image de l'item au GridPane
+                inventoryGridPane.add(potionNameLabel, 1, rowIndex);
+                inventoryGridPane.add(quantityLabel, 2, rowIndex);
+                inventoryGridPane.add(itemImageView, 3, rowIndex);
+                rowIndex++;
+            }
+            inventoryStage.setScene(inventoryScene);
+            inventoryStage.show();
+        }
+
+
+
+
     }
 
 
@@ -513,21 +572,36 @@ public class Main extends Application {
      * @param primaryStage
      */
     private void checkForNPCEncounter(BorderPane root, ImageView playerImageView, Stage primaryStage) {
-        if (entities.contains(npc) && player.equals(npc) /*&& !npc.isFirstQuestAccepted()*/) {
-            System.out.println("NPC encountered");
-            if (npc.getNPCType().equals(NPCType.QUEST)) {
-                System.out.println("Quest NPC encountered");
-                firstQuest(root);
-            } else if (npc.getNPCType().equals(NPCType.VILLAGER)) {
-                System.out.println("Villager NPC encountered");
-                npc.showAlert("Villager encountered", null, "Hello " + player.getName() + " I am " + npc.getName());
-            } else if (npc.getNPCType().equals(NPCType.SPECIAL)) {
-                System.out.println("Special NPC encountered");
-                npc.showAlert("Special NPC encountered", null, "Hello " + player.getName() + ", I am " + npc.getName()+ " and I have a gift for you !");
-                npc.giveItem(player, new Item(7,5,"Sword", "Monster are no more a problem.", Effet.ATTAQUEPLUS,1,"resources/Object/sword_normal.png"));
-                player.showAlert("Gift received", null, "You received a gift from "+npc.getName()+" !");
+        for (Entity entity : entities) {
+            if (entity instanceof NPC) {
+                NPC npc = (NPC) entity;
+                if (entities.contains(npc) && player.equals(npc) /*&& !npc.isFirstQuestAccepted()*/) {
+                    System.out.println("NPC encountered");
+                    if (npc.getNPCType().equals(NPCType.QUEST)) {
+                        System.out.println("Quest NPC encountered");
+                        firstQuest(root);
+                    } else if (npc.getNPCType().equals(NPCType.VILLAGER)) {
+                        System.out.println("Villager NPC encountered");
+                        npc.showAlert("Villager encountered", null, "Hello " + player.getName() + " I am " + npc.getName());
+                    } else if (npc.getNPCType().equals(NPCType.SPECIAL)) {
+                        System.out.println("Special NPC encountered");
+                        npc.showAlert("Special NPC encountered", null, "Hello " + player.getName() + ", I am " + npc.getName()+ " and I have a gift for you !");
+                        npc.giveItem(player, new Item(7,5,"Sword", "Monster are no more a problem.", Effet.ATTAQUEPLUS,1,"resources/Object/sword_normal.png"));
+                        player.showAlert("Gift received", null, "You received a gift from "+npc.getName()+" !");
+                    } else if (npc.getNPCType().equals(NPCType.LISTITEM)) {
+                        System.out.println("List item NPC encountered");
+                        //npc.TypeNPC(npc, itemsNPC);
+                        if (npc.getInventory().isEmpty()) {
+                            npc.showAlert("No items", null, "There are no items to show you.");
+                        }
+                        else {
+                            showInventoryWindow(npc, null, root);
+                        }
+                    }
+                }
             }
         }
+
     }
 
 

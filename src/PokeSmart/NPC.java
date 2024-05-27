@@ -1,11 +1,13 @@
 package PokeSmart;
 
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
+import java.util.List;
 import java.util.Optional;
 
 public class NPC extends Entity {
@@ -74,16 +76,20 @@ public class NPC extends Entity {
         player.setMoney(player.getMoney() - money);
     }
 
-    public void TypeNPC(NPC npc) {
+    public void TypeNPC(NPC npc, List<Item> items) {
         switch (NPCType) {
-            case QUEST -> {
+            /*case QUEST -> {
             }
             case VILLAGER -> {
             }
             case SPECIAL -> {
+            }*/
+            case LISTITEM -> {
+                //listItem(items);
             }
         }
     }
+
 
     public PokeSmart.NPCType getNPCType() {
         return NPCType;
