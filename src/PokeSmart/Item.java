@@ -64,6 +64,9 @@ public class Item extends Entity {
                 player.setHealthPoints(player.getHealthPoints() + monster.getHealthPoints());
                 monster.setHealthPoints(0);
             }
+            case VICTORY -> {
+                player.setVictory(true);
+            }
         }
     }
 

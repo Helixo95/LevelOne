@@ -7,6 +7,7 @@ public class Player extends Entity {
     private double defences;
     private double money;
     private double type; //if 0 young, if 1 villager, if 2 old, if 3 special
+    private boolean victory = false;
 
     public Player(String nom, double x, double y, double vx, double vy, double healthPoints, double strength, double attacks, double defences, double money, double type, String imagePath) {
         super(x, y, vx, vy, healthPoints, imagePath);
@@ -76,5 +77,12 @@ public class Player extends Entity {
     }
     public void setType(double type) {
         this.type = type;
+    }
+
+    public boolean isVictory() {
+        return victory;
+    }
+    public void setVictory(boolean victory) {
+        this.victory = victory;
     }
 }

@@ -83,6 +83,9 @@ public class Main extends Application {
         player.addItem(new Item(7,6,"Téléportation dans le monde", "Téléportation", Effet.TELEPORTATION,10,"resources/Items/Pistol.PNG"));
         player.addItem(new Item(7,7,"RIP le monstre", "Absorbe les pv du monstre", Effet.ABSORB,1,"resources/Object/axe.png"));
 
+        items.add(new Item(7,7,"911", "Vroum vroum", Effet.VICTORY,1,"resources/Items/911-removebg-preview.png"));
+
+
 
         items.add(new Item(7,3,"HealPotion1", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
         items.add(new Item(7,4,"HealPotion2", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
@@ -248,7 +251,7 @@ public class Main extends Application {
                     x += 1;
                     break;
                 case I:
-                    showInventoryWindow(player, monster, root);
+                    showInventoryWindow(player, monster, root, primaryStage);
                 default:
                     return; // Ne rien faire pour d'autres touches
             }
@@ -363,7 +366,7 @@ public class Main extends Application {
      * @param monster
      * @param root
      */
-    private void showInventoryWindow(Entity entity, Monster monster, BorderPane root) {
+    private void showInventoryWindow(Entity entity, Monster monster, BorderPane root, Stage stage) {
         // stage pour la fenêtre de l'inventaire
         Stage inventoryStage = new Stage();
         inventoryStage.setTitle("Inventory");
@@ -438,6 +441,9 @@ public class Main extends Application {
                         updateLabels.run();
                         updateHealthPointsLabel(root, monster);
                         updateInventoryBox();
+
+                        // si le joueur utilise l'item qui le fait gagner
+                        finishGame(root, stage, inventoryStage);
                     });
 
                     // Ajoute le bouton "Use", le label du nom de l'item, le label de la quantité de l'item et l'image de l'item au GridPane
@@ -617,12 +623,12 @@ public class Main extends Application {
                             npc.showAlert("No items", null, "There are no items to show you.");
                         }
                         else {
-                            showInventoryWindow(npc, null, root);
+                            showInventoryWindow(npc, null, root, primaryStage);
                         }
                     }
                     for (Item item : player.getInventory()) {
                         if (item.getEffet().equals(Effet.SHOWINVENTORY) && npc.isRencontrePlayer()) {
-                            showInventoryWindow(npc, null, root);
+                            showInventoryWindow(npc, null, root, primaryStage);
                         }
                     }
                     npc.setRencontrePlayer(true);
@@ -761,6 +767,16 @@ public class Main extends Application {
 
         // Affiche la boîte de dialogue
         Optional<String> result = dialog.showAndWait();
+    }
+
+
+    private void finishGame(BorderPane root, Stage primaryStage, Stage inventoryStage) {
+        if (player.isVictory()) {
+            player.showAlert("Congratulations !", null, "You finished the game !");
+            root.getChildren().removeAll();
+            inventoryStage.close();
+            primaryStage.close();
+        }
     }
 
 
