@@ -28,13 +28,15 @@ public class Item extends Entity {
         this.quantity = quantity;
     }
 
-    public void useItem(Player player, Monster monster){
+    public void useItem(Player player, Entity entity){
         switch (effet){
             case HEAL -> {
                 player.setHealthPoints((int) (player.getHealthPoints()+20));
             }
             case DAMAGE -> {
-                monster.setHealthPoints(monster.getHealthPoints() - player.getAttacks());
+                if (entity instanceof Monster){
+                    entity.setHealthPoints(entity.getHealthPoints() - player.getAttacks());
+                }
             }
             case ATTAQUEPLUS -> {
                 player.setAttacks(player.getAttacks() + 1000);
@@ -61,11 +63,15 @@ public class Item extends Entity {
                 player.setY(randomYf);
             }
             case ABSORB -> {
-                player.setHealthPoints(player.getHealthPoints() + monster.getHealthPoints());
-                monster.setHealthPoints(0);
+                if (entity instanceof Monster) {
+                    player.setHealthPoints(player.getHealthPoints() + entity.getHealthPoints());
+                    entity.setHealthPoints(0);
+                }
             }
             case VICTORY -> {
                 player.setVictory(true);
+            }
+            case ROB -> {
             }
         }
     }

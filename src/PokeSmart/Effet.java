@@ -14,6 +14,7 @@ public enum Effet {
     SHOWINVENTORY,
     TELEPORTATION,
     ABSORB,
+    ROB,
     NEWWORLD,
     VICTORY,
     SWIM,

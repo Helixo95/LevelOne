@@ -16,7 +16,7 @@ public class NPC extends Entity {
     private boolean acceptFirstQuest = false;
     private boolean secondQuest = false;
     private boolean monsterKilled = false;
-    private boolean rencontrePlayer = false;
+    private boolean rencontrePlayer;
 
     // imagePath : src/PokeSmart/NPC/oldman_down_1.png
 
@@ -24,6 +24,7 @@ public class NPC extends Entity {
         super(x, y, vx, vy, 1000, imagePath);
         this.name = nom;
         this.NPCType = NPCType;
+        this.rencontrePlayer = false;
     }
 
 

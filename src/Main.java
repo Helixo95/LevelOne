@@ -43,6 +43,9 @@ public class Main extends Application {
         String worldPath1 = "resources/Tiles/world1.csv";
         GenMap(primaryStage, worldPath1, orc); // génération de la carte du monde 1 et appel aux autres fonctions
         updateInventoryBox(); // mise à jour de la boîte d'inventaire qui s'affiche à droite de la carte
+        Random rand = new Random();
+        int randomNumber = rand.nextInt(2) * 2 - 1; // Génère aléatoirement 0 ou 1, puis le transforme en -1 ou 1
+        System.out.println("Random number : " + randomNumber);
     }
 
     /**
@@ -65,12 +68,12 @@ public class Main extends Application {
 
         npcQ2.setInventory(new ArrayList<Item>());
 
-        Random random = new Random();
+        /*Random random = new Random();
         int randomNumber = random.nextInt(2); // Générer aléatoirement 0 ou 1
-        if (randomNumber == 1) {
+        if (randomNumber == 1) {*/
             npcQ2.addItem(new Item(7,5,"HealPotion", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
             npcQ2.addItem(new Item(7,6,"HealPotion", "this can heal you", Effet.OVERWALL,1,"resources/Object/potion_grey.png"));
-        }
+        //}
 
 
 
@@ -82,8 +85,10 @@ public class Main extends Application {
         player.addItem(new Item(7,5,"Show NPC Inventory", "You can see NPC Inventory", Effet.SHOWINVENTORY,1,"resources/Items/HealPotion.png"));
         player.addItem(new Item(7,6,"Téléportation dans le monde", "Téléportation", Effet.TELEPORTATION,10,"resources/Items/Pistol.PNG"));
         player.addItem(new Item(7,7,"RIP le monstre", "Absorbe les pv du monstre", Effet.ABSORB,1,"resources/Object/axe.png"));
+        player.addItem(new Item(7,8,"Rob", "Rob l'item du joueur", Effet.ROB,1,"resources/Object/coin_bronze.png"));
 
         items.add(new Item(7,7,"911", "Vroum vroum", Effet.VICTORY,1,"resources/Items/911-removebg-preview.png"));
+
 
 
 
@@ -400,9 +405,9 @@ public class Main extends Application {
 
             int rowIndex = 1;
             for (Item item : player.getInventory()) {
-                System.out.println("Inventory bag : ");
+                /*System.out.println("Inventory bag : ");
                 System.out.println("Item : " + item.getItemName());
-                System.out.println("Q : " + item.getQuantity());
+                System.out.println("Q : " + item.getQuantity());*/
 
                 // Crée une image pour l'item de l'inventaire
                 ImageView itemImageView = item.getImage();
@@ -416,7 +421,7 @@ public class Main extends Application {
                 Label quantityLabel = new Label("Quantity : " + item.getQuantity());
 
                 // Crée un bouton pour utiliser l'item
-                if (item.getEffet() != Effet.SHOWINVENTORY && item.getEffet() != Effet.ABSORB) {
+                if (item.getEffet() != Effet.SHOWINVENTORY && item.getEffet() != Effet.ABSORB && item.getEffet() != Effet.ROB) {
                     Button useButton = new Button("Use");
                     useButton.setOnAction(e -> {
                         item.useItem(player, monster);
@@ -492,6 +497,37 @@ public class Main extends Application {
                 // Crée un label pour le nom de l'item et un label pour la quantité de l'item
                 Label potionNameLabel = new Label(item.getItemName());
                 Label quantityLabel = new Label("Quantity : " + item.getQuantity());
+
+
+                Button useButton = new Button("Use");
+                useButton.setOnAction(e -> {
+                    item.useItem(player, monster);
+
+
+                    // Met à jour l'image du joueur sur la carte
+                    player.getImage().setLayoutX(player.getX() * TILE_SIZE);
+                    player.getImage().setLayoutY(player.getY() * TILE_SIZE);
+
+                    updateDoor(root);
+                    item.setQuantity(item.getQuantity() - 1);
+                    item.showAlert("Item Used", null, item.getItemDescription());
+                    if (item.getQuantity() == 0) {
+                        inventoryGridPane.getChildren().remove(useButton);
+                        inventoryGridPane.getChildren().remove(potionNameLabel);
+                        inventoryGridPane.getChildren().remove(quantityLabel);
+                        inventoryGridPane.getChildren().remove(itemImageView);
+                        player.getInventory().remove(item);
+                    } else {
+                        quantityLabel.setText("Quantity : " + item.getQuantity());
+                    }
+                    updateLabels.run();
+                    updateHealthPointsLabel(root, monster);
+                    updateInventoryBox();
+
+                    // si le joueur utilise l'item qui le fait gagner
+                    finishGame(root, stage, inventoryStage);
+                });
+
 
                 // Ajoute le bouton "Use", le label du nom de l'item, le label de la quantité de l'item et l'image de l'item au GridPane
                 inventoryGridPane.add(potionNameLabel, 1, rowIndex);
@@ -600,6 +636,7 @@ public class Main extends Application {
      * @param primaryStage
      */
     private void checkForNPCEncounter(BorderPane root, ImageView playerImageView, Stage primaryStage) {
+        Item robItem = null;
         for (Entity entity : entities) {
             if (entity instanceof NPC) {
                 NPC npc = (NPC) entity;
@@ -616,7 +653,7 @@ public class Main extends Application {
                         npc.showAlert("Special NPC encountered", null, "Hello " + player.getName() + ", I am " + npc.getName()+ " and I have a gift for you !");
                         npc.giveItem(player, new Item(7,5,"Sword", "Monster are no more a problem.", Effet.ATTAQUEPLUS,1,"resources/Object/sword_normal.png"));
                         player.showAlert("Gift received", null, "You received a gift from "+npc.getName()+" !");
-                    } else if (npc.getNPCType().equals(NPCType.LISTITEM)) {
+                    } /*else if (npc.getNPCType().equals(NPCType.LISTITEM)) { // item 1
                         System.out.println("List item NPC encountered");
                         //npc.TypeNPC(npc, itemsNPC);
                         if (npc.getInventory().isEmpty()) {
@@ -625,11 +662,30 @@ public class Main extends Application {
                         else {
                             showInventoryWindow(npc, null, root, primaryStage);
                         }
-                    }
+                    }*/
                     for (Item item : player.getInventory()) {
-                        if (item.getEffet().equals(Effet.SHOWINVENTORY) && npc.isRencontrePlayer()) {
-                            showInventoryWindow(npc, null, root, primaryStage);
+                        System.out.println("Première boucle");
+                        if (item.getEffet().equals(Effet.SHOWINVENTORY) && npc.isRencontrePlayer()/* && item.getEffet().equals(Effet.ROB)*/) {
+                            System.out.println("if show inventory");
+                            for (Item item2 : player.getInventory()) {
+                                System.out.println("boucle 2");
+                                if (item2.getEffet().equals(Effet.ROB)) {
+                                    System.out.println("item rob");
+                                    if (npc.getInventory().isEmpty()) {
+                                        npc.showAlert("No items", null, "There are no items to show you.");
+                                        robItem = item2;
+                                    }
+                                    else {
+                                        System.out.println("affiche inventaire pnj");
+                                        showInventoryWindow(npc, null, root, primaryStage);
+                                    }
+                                }
+                            }
                         }
+                    }
+                    if (robItem != null && robItem.getEffet() == Effet.ROB) { // si l'item est ramassé, il est supprimé de la liste d'inventaire du monde
+                        player.getInventory().remove(robItem);
+                        root.getChildren().remove(robItem.getImage());
                     }
                     npc.setRencontrePlayer(true);
                 }
