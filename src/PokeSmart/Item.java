@@ -1,6 +1,7 @@
 package PokeSmart;
 
 import java.util.Objects;
+import java.util.Random;
 
 public class Item extends Entity {
     private String itemName;
@@ -50,6 +51,14 @@ public class Item extends Entity {
             case NEWWORLD -> { // à changer
                 //entity.setX(0);
                 //entity.setY(0);
+            }
+            case TELEPORTATION -> {
+                Random randomX = new Random();
+                int randomXf = randomX.nextInt(16);
+                Random randomY = new Random();
+                int randomYf = randomY.nextInt(12);
+                player.setX(randomXf);
+                player.setY(randomYf);
             }
         }
     }

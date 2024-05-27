@@ -77,6 +77,8 @@ public class Main extends Application {
         items = new ArrayList<Item>();
 
         player.addItem(new Item(7,4,"HealPotionStart", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
+        player.addItem(new Item(7,5,"Show NPC Inventory", "You can see NPC Inventory", Effet.SHOWINVENTORY,1,"resources/Items/HealPotion.png"));
+        player.addItem(new Item(7,6,"Téléportation dans le monde", "Téléportation", Effet.TELEPORTATION,10,"resources/Items/Pistol.PNG"));
 
         items.add(new Item(7,3,"HealPotion1", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
         items.add(new Item(7,4,"HealPotion2", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
@@ -407,31 +409,47 @@ public class Main extends Application {
                 Label quantityLabel = new Label("Quantity : " + item.getQuantity());
 
                 // Crée un bouton pour utiliser l'item
-                Button useButton = new Button("Use");
-                useButton.setOnAction(e -> {
-                    item.useItem(player, monster);
-                    updateDoor(root);
-                    item.setQuantity(item.getQuantity() - 1);
-                    item.showAlert("Item Used", null, item.getItemDescription());
-                    if (item.getQuantity() == 0) {
-                        inventoryGridPane.getChildren().remove(useButton);
-                        inventoryGridPane.getChildren().remove(potionNameLabel);
-                        inventoryGridPane.getChildren().remove(quantityLabel);
-                        inventoryGridPane.getChildren().remove(itemImageView);
-                        player.getInventory().remove(item);
-                    } else {
-                        quantityLabel.setText("Quantity : " + item.getQuantity());
-                    }
-                    updateLabels.run();
-                    updateHealthPointsLabel(root, monster);
-                    updateInventoryBox();
-                });
+                if (item.getEffet() != Effet.SHOWINVENTORY) {
+                    Button useButton = new Button("Use");
+                    useButton.setOnAction(e -> {
+                        item.useItem(player, monster);
 
-                // Ajoute le bouton "Use", le label du nom de l'item, le label de la quantité de l'item et l'image de l'item au GridPane
-                inventoryGridPane.add(useButton, 0, rowIndex);
-                inventoryGridPane.add(potionNameLabel, 1, rowIndex);
-                inventoryGridPane.add(quantityLabel, 2, rowIndex);
-                inventoryGridPane.add(itemImageView, 3, rowIndex);
+
+                        // Met à jour l'image du joueur sur la carte
+                        player.getImage().setLayoutX(player.getX() * TILE_SIZE);
+                        player.getImage().setLayoutY(player.getY() * TILE_SIZE);
+
+                        updateDoor(root);
+                        item.setQuantity(item.getQuantity() - 1);
+                        item.showAlert("Item Used", null, item.getItemDescription());
+                        if (item.getQuantity() == 0) {
+                            inventoryGridPane.getChildren().remove(useButton);
+                            inventoryGridPane.getChildren().remove(potionNameLabel);
+                            inventoryGridPane.getChildren().remove(quantityLabel);
+                            inventoryGridPane.getChildren().remove(itemImageView);
+                            player.getInventory().remove(item);
+                        } else {
+                            quantityLabel.setText("Quantity : " + item.getQuantity());
+                        }
+                        updateLabels.run();
+                        updateHealthPointsLabel(root, monster);
+                        updateInventoryBox();
+                    });
+
+                    // Ajoute le bouton "Use", le label du nom de l'item, le label de la quantité de l'item et l'image de l'item au GridPane
+                    inventoryGridPane.add(useButton, 0, rowIndex);
+                    inventoryGridPane.add(potionNameLabel, 1, rowIndex);
+                    inventoryGridPane.add(quantityLabel, 2, rowIndex);
+                    inventoryGridPane.add(itemImageView, 3, rowIndex);
+                }
+                else {
+                    inventoryGridPane.add(potionNameLabel, 1, rowIndex);
+                    inventoryGridPane.add(quantityLabel, 2, rowIndex);
+                    inventoryGridPane.add(itemImageView, 3, rowIndex);
+                }
+
+
+
                 rowIndex++;
             }
             inventoryStage.setScene(inventoryScene);
@@ -598,6 +616,12 @@ public class Main extends Application {
                             showInventoryWindow(npc, null, root);
                         }
                     }
+                    for (Item item : player.getInventory()) {
+                        if (item.getEffet().equals(Effet.SHOWINVENTORY) && npc.isRencontrePlayer()) {
+                            showInventoryWindow(npc, null, root);
+                        }
+                    }
+                    npc.setRencontrePlayer(true);
                 }
             }
         }

@@ -16,6 +16,7 @@ public class NPC extends Entity {
     private boolean acceptFirstQuest = false;
     private boolean secondQuest = false;
     private boolean monsterKilled = false;
+    private boolean rencontrePlayer = false;
 
     // imagePath : src/PokeSmart/NPC/oldman_down_1.png
 
@@ -129,5 +130,13 @@ public class NPC extends Entity {
 
     public void setMonsterKilled(boolean monsterKilled) {
         this.monsterKilled = monsterKilled;
+    }
+
+    public boolean isRencontrePlayer() {
+        return rencontrePlayer;
+    }
+
+    public void setRencontrePlayer(boolean rencontrePlayer) {
+        this.rencontrePlayer = rencontrePlayer;
     }
 }

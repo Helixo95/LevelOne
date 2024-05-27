@@ -11,6 +11,8 @@ public enum Effet {
     DAMAGE,
     OPENDOOR,
     OVERWALL,
+    SHOWINVENTORY,
+    TELEPORTATION,
     NEWWORLD,
     VICTORY,
     SWIM,
