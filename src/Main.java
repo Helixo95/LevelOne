@@ -27,15 +27,16 @@ public class Main extends Application {
     private Monster skeleton;
     private NPC npc;
     private NPC npcQ2;
+    private NPC npcQ11;
+    private NPC npcQ12;
     private int[][] collisionMap;
     private List<Item> items;
-    private List<Item> itemsNPC;
+    private List<Item> itemsNPC = new ArrayList<Item>();
     private List<Entity> entities;
     private List<Monster> monsters;
     private VBox inventoryBox;
     private Label healthPointsLabel;
     private Label monsterHealthPointsLabel;
-    private boolean monde1 = true;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -62,7 +63,18 @@ public class Main extends Application {
         monsters.add(orc);
 
         npcQ2 = new NPC("Item lister", 6,5,0,0,NPCType.LISTITEM,"resources/NPC/bigrock.png");
+        npcQ11 = new NPC("Proximité pnj 1", 7,1,0,0,NPCType.LISTITEM,"resources/NPC/oldman_right_1.png");
+        npcQ12 = new NPC("Proximité pnj 1", 8,1,0,0,NPCType.LISTITEM,"resources/NPC/oldman_right_1.png");
         entities.add(npcQ2);
+        entities.add(npcQ11);
+        entities.add(npcQ12);
+
+        itemsNPC.add(new Item(7,5,"HealPotion", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
+        itemsNPC.add(new Item(7,5,"wallPotion", "wall no more problem", Effet.OVERWALL,1,"resources/Object/potion_grey.png"));
+
+        npcQ11.setInventory(itemsNPC);
+        npcQ12.setInventory(itemsNPC);
+
 
         npcQ2.setInventory(new ArrayList<Item>());
 
@@ -81,7 +93,7 @@ public class Main extends Application {
 
         // items questions examen
         player.addItem(new Item(7,5,"Show NPC Inventory", "You can see NPC Inventory", Effet.SHOWINVENTORY,1,"resources/Items/HealPotion.png"));
-        player.addItem(new Item(7,6,"Téléportation dans le monde", "Téléportation", Effet.TELEPORTATION,10,"resources/Items/Pistol.PNG"));
+        player.addItem(new Item(7,6,"Téléportation dans le monde", "Téléportation", Effet.TELEPORTATION,1,"resources/Items/Pistol.PNG"));
         player.addItem(new Item(7,7,"RIP le monstre", "Absorbe les pv du monstre", Effet.ABSORB,1,"resources/Object/axe.png"));
         player.addItem(new Item(7,8,"Rob", "Rob l'item du joueur", Effet.ROB,1,"resources/Object/coin_bronze.png"));
 
@@ -560,39 +572,55 @@ public class Main extends Application {
                 System.out.println("Item : " + item.getItemName());
                 System.out.println("Q : " + item.getQuantity());
                 pickedUpItems = item;
-                if (item.getEffet() != Effet.NEWWORLD) {
-                    System.out.println("Ajout d'item : "+item.getItemName());
-                    if(item.getQuantity() == 1) {
-                        for (Item item1 : player.getInventory()) {
-                            if (item1.getEffet().equals(item.getEffet())) {
-                                item1.setQuantity(item1.getQuantity() + 1);
-                                isInInventory = true;
-                                break;
+                if (player.getInventory().size() < 5) {
+                    if (item.getEffet() != Effet.NEWWORLD) {
+                        System.out.println("Ajout d'item : " + item.getItemName());
+                        if (item.getQuantity() == 1) {
+                            for (Item item1 : player.getInventory()) {
+                                if (item1.getEffet().equals(item.getEffet())) {
+                                    item1.setQuantity(item1.getQuantity() + 1);
+                                    isInInventory = true;
+                                    break;
+                                }
+                            }
+                            if (!isInInventory) {
+                                player.addItem(item);
                             }
                         }
-                        if (!isInInventory) {
-                            player.addItem(item);
-                        }
                     }
-                }
-                if (item.getItemName() == "Key") { // met à jour la porte si le joueur a ramassé la clé
-                    System.out.println("You picked up a key !");
-                    updateDoor(root);
-                }
-                if (player.getDiscoverNewWorld() == 1 && item.getEffet() == Effet.NEWWORLD) { // condition sur la clé et la porte
-                    System.out.println("You finish first world !");
+                    if (item.getItemName() == "Key") { // met à jour la porte si le joueur a ramassé la clé
+                        System.out.println("You picked up a key !");
+                        updateDoor(root);
+                    }
+                    if (player.getDiscoverNewWorld() == 1 && item.getEffet() == Effet.NEWWORLD && player.isWorld1()) { // condition sur la clé et la porte
+                        System.out.println("You finish first world !");
+                        root.getChildren().removeAll();
+                        primaryStage.close();
+                        player.showAlert("Congratulations !", null, "You finish first world !");
+                        createNewWorld(primaryStage, root);
+                    }
+                /*if (player.getDiscoverNewWorld() == 1 && item.getEffet() == Effet.NEWWORLD && !player.isWorld1()) { // condition sur la clé et la porte
+                    System.out.println("Go back to world 1 !");
                     root.getChildren().removeAll();
                     primaryStage.close();
-                    player.showAlert("Congratulations !", null, "You finish first world !");
-                    createNewWorld(primaryStage, root);
-                }
-                if (player.getDiscoverNewWorld() == 0 && item.getEffet() == Effet.NEWWORLD) { // invite l'utilisateur à aller chercher la clé pour ouvrir la porte
-                    System.out.println("You need a key to open the door");
-                    item.showAlert("Information Dialog", null, "You need a key to open the door ! (Your player is behind the door.");
-                }
-                if (item.getEffet() == Effet.DEATH) { // si le joueur ramasse un item qui le tue
-                    System.out.println("You are dead !");
-                    primaryStage.close();
+                    player.showAlert("Come back", null, "Going back to first world !");
+                    //start(primaryStage);
+                    //createNewWorld(primaryStage, root);
+                    Stage primaryStage1 = new Stage();
+                    primaryStage1.setTitle("PokeSmart - world1");
+                    initCaractersWorld1(); // initialisation des personnages, monstres, pnj et items du monde 1
+                    String worldPath1 = "resources/Tiles/world1.csv";
+                    GenMap(primaryStage1, worldPath1, orc); // génération de la carte du monde 1 et appel aux autres fonctions
+                    updateInventoryBox(); // mise à jour de la boîte d'inventaire qui s'affiche à droite de la carte
+                }*/
+                    if (player.getDiscoverNewWorld() == 0 && item.getEffet() == Effet.NEWWORLD) { // invite l'utilisateur à aller chercher la clé pour ouvrir la porte
+                        System.out.println("You need a key to open the door");
+                        item.showAlert("Information Dialog", null, "You need a key to open the door ! (Your player is behind the door.");
+                    }
+                    if (item.getEffet() == Effet.DEATH) { // si le joueur ramasse un item qui le tue
+                        System.out.println("You are dead !");
+                        primaryStage.close();
+                    }
                 }
             }
         }
