@@ -35,6 +35,7 @@ public class Main extends Application {
     private VBox inventoryBox;
     private Label healthPointsLabel;
     private Label monsterHealthPointsLabel;
+    private boolean monde1 = true;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -43,9 +44,6 @@ public class Main extends Application {
         String worldPath1 = "resources/Tiles/world1.csv";
         GenMap(primaryStage, worldPath1, orc); // génération de la carte du monde 1 et appel aux autres fonctions
         updateInventoryBox(); // mise à jour de la boîte d'inventaire qui s'affiche à droite de la carte
-        Random rand = new Random();
-        int randomNumber = rand.nextInt(2) * 2 - 1; // Génère aléatoirement 0 ou 1, puis le transforme en -1 ou 1
-        System.out.println("Random number : " + randomNumber);
     }
 
     /**
@@ -849,6 +847,7 @@ public class Main extends Application {
         newWorldStage.setTitle("PokeSmart - world2");
         initCaractersWorld2(primaryStage, root);
         GenMap(newWorldStage, newWorldPath, skeleton);
+        player.setWorld1(false);
     }
 
 

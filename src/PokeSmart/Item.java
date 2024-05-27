@@ -55,12 +55,28 @@ public class Item extends Entity {
                 //entity.setY(0);
             }
             case TELEPORTATION -> {
-                Random randomX = new Random();
-                int randomXf = randomX.nextInt(16);
-                Random randomY = new Random();
-                int randomYf = randomY.nextInt(12);
-                player.setX(randomXf);
-                player.setY(randomYf);
+                if (player.isWorld1()) {
+                    Random randX = new Random();
+                    int randomXf = randX.nextInt(3) - 1; // Génère aléatoirement 0, 1 ou 2, puis le transforme en -1, 0 ou 1
+                    System.out.println("Random number : " + randomXf);
+                    player.setX(14 + randomXf);
+
+                    Random randY = new Random();
+                    int randomYf = randY.nextInt(3) - 1; // Génère aléatoirement 0, 1 ou 2, puis le transforme en -1, 0 ou 1
+                    System.out.println("Random number : " + randomYf);
+                    player.setY(10 + randomYf);
+                }
+                if (!player.isWorld1()) {
+                    Random randX = new Random();
+                    int randomXf = randX.nextInt(3) - 1; // Génère aléatoirement 0, 1 ou 2, puis le transforme en -1, 0 ou 1
+                    System.out.println("Random number : " + randomXf);
+                    player.setX(10 + randomXf);
+
+                    Random randY = new Random();
+                    int randomYf = randY.nextInt(3) - 1; // Génère aléatoirement 0, 1 ou 2, puis le transforme en -1, 0 ou 1
+                    System.out.println("Random number : " + randomYf);
+                    player.setY(5 + randomYf);
+                }
             }
             case ABSORB -> {
                 if (entity instanceof Monster) {

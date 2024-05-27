@@ -8,6 +8,7 @@ public class Player extends Entity {
     private double money;
     private double type; //if 0 young, if 1 villager, if 2 old, if 3 special
     private boolean victory = false;
+    private boolean world1 = true;
 
     public Player(String nom, double x, double y, double vx, double vy, double healthPoints, double strength, double attacks, double defences, double money, double type, String imagePath) {
         super(x, y, vx, vy, healthPoints, imagePath);
@@ -84,5 +85,13 @@ public class Player extends Entity {
     }
     public void setVictory(boolean victory) {
         this.victory = victory;
+    }
+
+    public boolean isWorld1() {
+        return world1;
+    }
+
+    public void setWorld1(boolean world1) {
+        this.world1 = world1;
     }
 }
