@@ -888,6 +888,7 @@ public class Main extends Application {
         items = new ArrayList<Item>();
         items.add(new Item(7,4,"HealPotion", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
         items.add(new Item(7,7,"911", "Vroum vroum", Effet.VICTORY,1,"resources/Items/911-removebg-preview.png"));
+        items.add(new Item(14,8,"Door", "go to an other world", Effet.NEWWORLD,1,"resources/Object/door_iron.png"));
     }
 
 

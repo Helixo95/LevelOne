@@ -70,12 +70,12 @@ public class Item extends Entity {
                     Random randX = new Random();
                     int randomXf = randX.nextInt(3) - 1; // Génère aléatoirement 0, 1 ou 2, puis le transforme en -1, 0 ou 1
                     System.out.println("Random number : " + randomXf);
-                    player.setX(10 + randomXf);
+                    player.setX(13 + randomXf);
 
                     Random randY = new Random();
                     int randomYf = randY.nextInt(3) - 1; // Génère aléatoirement 0, 1 ou 2, puis le transforme en -1, 0 ou 1
                     System.out.println("Random number : " + randomYf);
-                    player.setY(5 + randomYf);
+                    player.setY(8 + randomYf);
                 }
             }
             case ABSORB -> {
