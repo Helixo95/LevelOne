@@ -60,6 +60,10 @@ public class Item extends Entity {
                 player.setX(randomXf);
                 player.setY(randomYf);
             }
+            case ABSORB -> {
+                player.setHealthPoints(player.getHealthPoints() + monster.getHealthPoints());
+                monster.setHealthPoints(0);
+            }
         }
     }
 

@@ -26,6 +26,11 @@ public class Player extends Entity {
                 monster.setHealthPoints((int) (monster.getHealthPoints() - this.attacks));
                 this.setHealthPoints((int) (this.getHealthPoints() - monster.getAttacks()));
                 System.out.println("Player attacks Monster");
+                for (Item item : this.getInventory()) {
+                    if (item.getEffet() == Effet.ABSORB) {
+                        item.useItem(this, monster);
+                    }
+                }
             }
         }
     }

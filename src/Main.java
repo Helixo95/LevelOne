@@ -77,8 +77,12 @@ public class Main extends Application {
         items = new ArrayList<Item>();
 
         player.addItem(new Item(7,4,"HealPotionStart", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
+
+        // items questions examen
         player.addItem(new Item(7,5,"Show NPC Inventory", "You can see NPC Inventory", Effet.SHOWINVENTORY,1,"resources/Items/HealPotion.png"));
         player.addItem(new Item(7,6,"Téléportation dans le monde", "Téléportation", Effet.TELEPORTATION,10,"resources/Items/Pistol.PNG"));
+        player.addItem(new Item(7,7,"RIP le monstre", "Absorbe les pv du monstre", Effet.ABSORB,1,"resources/Object/axe.png"));
+
 
         items.add(new Item(7,3,"HealPotion1", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
         items.add(new Item(7,4,"HealPotion2", "this can heal you", Effet.HEAL,1,"resources/Object/potion_red.png"));
@@ -409,7 +413,7 @@ public class Main extends Application {
                 Label quantityLabel = new Label("Quantity : " + item.getQuantity());
 
                 // Crée un bouton pour utiliser l'item
-                if (item.getEffet() != Effet.SHOWINVENTORY) {
+                if (item.getEffet() != Effet.SHOWINVENTORY && item.getEffet() != Effet.ABSORB) {
                     Button useButton = new Button("Use");
                     useButton.setOnAction(e -> {
                         item.useItem(player, monster);

@@ -13,6 +13,7 @@ public enum Effet {
     OVERWALL,
     SHOWINVENTORY,
     TELEPORTATION,
+    ABSORB,
     NEWWORLD,
     VICTORY,
     SWIM,
